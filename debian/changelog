@@ -1,3 +1,9 @@
+dpkg-repack (1.17) unstable; urgency=low
+
+  * Swtich from build-depend-indep to build-depends.
+
+ -- Joey Hess <joeyh@debian.org>  Mon,  8 Sep 2003 20:45:07 -0400
+
 dpkg-repack (1.16) unstable; urgency=low
 
   * Work again on packages _without_ conffiles. Closes: #193884

@@ -229,7 +229,7 @@ $build_dir="./dpkg-repack-$$";
 # Some sanity checks.
 if ($> ne 0) { Die "This program should be run as root (or you could use fakeroot -u). Aborting." }
 if (exists $ENV{FAKED_MODE} && $ENV{FAKED_MODE} ne 'unknown-is-real') {
-	Warn "Fakeroot run without its -u flag may corrupt some file permission.";
+	Warn "fakeroot run without its -u flag may corrupt some file permissions.";
 }
 
 foreach $packagename (@ARGV) {
