@@ -160,6 +160,7 @@ sub Install_Files {
 			# There has to be a better way to do this!
 			my $st=stat($fn);
 			SafeMkdir "$build_dir/$origfn",$st->mode;
+			chown($st->uid, $st->gid, "$build_dir/$origfn");
 		}
 		else {
 			SafeSystem "cp","-pd",$fn,"$build_dir/$origfn","";

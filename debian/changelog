@@ -1,3 +1,18 @@
+dpkg-repack (1.13) unstable; urgency=low
+
+  * Chown directories after making them to deal with directories not owned by
+    root. Closes: #191323
+    (There is still a bug in fakeroot that makes dpkg-repack not work under
+    fakeroot, but I will file a separate bug for that.)
+
+ -- Joey Hess <joeyh@debian.org>  Thu,  1 May 2003 10:47:38 -0400
+
+dpkg-repack (1.12) unstable; urgency=low
+
+  * Remove "L" from man page section.
+
+ -- Joey Hess <joeyh@debian.org>  Tue, 29 Apr 2003 18:30:31 -0400
+
 dpkg-repack (1.11) unstable; urgency=low
 
   * Rebuild w/o /usr/doc link.
