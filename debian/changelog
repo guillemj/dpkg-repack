@@ -1,3 +1,9 @@
+dpkg-repack (1.5) unstable; urgency=low
+
+  * Documented a conffile problem I can do nothing about. Closes: #69009
+
+ -- Joey Hess <joeyh@debian.org>  Fri,  1 Sep 2000 16:55:52 -0700
+
 dpkg-repack (1.4) unstable; urgency=low
 
   * Applied a cleaner fix for the mkdir problem, by David Lively
