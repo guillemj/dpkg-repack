@@ -7,7 +7,7 @@ Standards-Version: 3.6.1.0
 
 Package: dpkg-repack
 Architecture: all
-Depends: ${misc:Depends}, ${perl:Depends}
+Depends: ${misc:Depends}, ${perl:Depends}, dpkg-dev
 Description: puts an unpacked .deb file back together
  dpkg-repack creates a .deb file out of a debian package that has already
  been installed. If any changes have been made to the package while it was

@@ -1,3 +1,9 @@
+dpkg-repack (1.19) unstable; urgency=low
+
+  * Add missing dependency on dpkg-dev.
+
+ -- Joey Hess <joeyh@debian.org>  Fri, 20 Aug 2004 13:42:03 +0100
+
 dpkg-repack (1.18) unstable; urgency=low
 
   * Add a note that the package was produced by dpkg-repack to its
