@@ -1,12 +1,12 @@
-.TH DPKG-REPACK 1 "Debian Utilities" "DEBIAN" \" -*- nroff -*-
+.TH DPKG-REPACK 1 "Debian Utilities" "DEBIAN"
 .SH NAME
-dpkg-repack \- Utility to put an unpacked .deb file back together
+dpkg-repack \- put an unpacked .deb file back together
 .SH SYNOPSIS
 \fBdpkg-repack\fP [\fB--root=dir\fP] [\fB--arch=architecture\fP] \fBpackagename\fP [\fBpackagename ...\fP]
 .br
 .SH DESCRIPTION
 .I dpkg-repack
-creates a .deb file out of a debian package
+creates a .deb file out of a Debian package
 that has already been installed on your system. If any changes have
 been made to the package while it was unpacked (ie, files in /etc
 modified), the new package will inherit the changes.
@@ -57,6 +57,13 @@ modified. So if you later upgrade to a new version of the package, dpkg
 will belive that the old (repacked) package has older conffiles than the
 new version, and will silently replace the conffiles with those in the
 package you are upgrading to.
+
+.P
+
+While dpkg-repack can be run under fakeroot and will work most of the time,
+fakeroot -u must be used if any of the files to be repacked are owned by
+non-root users. Otherwise the package will have them owned by root.
+dpkg-repack will warn if you run it under fakeroot without the -u flag.
 
 .SH AUTHOR
 Joey Hess <joeyh@debian.org>

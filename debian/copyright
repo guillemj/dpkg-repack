@@ -2,7 +2,7 @@ This is dpkg-repack, a Debian utility by Joey Hess <joeyh@debian.org>.
 
 The following copyright applies to this package:
 
-dpkg-repack is Copyright (c) 1996-1999 by Joey Hess <joeyh@debian.org>
+dpkg-repack is Copyright (c) 1996-2003 by Joey Hess <joeyh@debian.org>
 
  This program is free software; you can redistribute it and/or modify it
  under the terms of the GNU General Public License as published by the Free

@@ -2,7 +2,7 @@
 #
 # This program puts humpty-dumpty back together again.
 #
-# dpkg-repack is Copyright (c) 1996-2002 by Joey Hess <joeyh@debian.org>
+# dpkg-repack is Copyright (c) 1996-2003 by Joey Hess <joeyh@debian.org>
 #
 #   This program is free software; you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -31,8 +31,12 @@ Usage: dpkg-repack [--root=dir] packagename [packagename ..]
 eof
 }
 
-sub Error {
+sub Warn {
         print STDERR "dpkg-repack: @_\n";
+}
+
+sub Error {
+	Warn @_;
 	$error_flag=1;
 }
 
@@ -73,6 +77,7 @@ sub CleanUp {
 # This makes the directories we will rebuild the package in.
 sub Make_Dirs {
 	$dirty_flag=1;
+	
 	SafeMkdir $build_dir,0755;
 	SafeMkdir "$build_dir/DEBIAN",0755;
 }
@@ -184,7 +189,10 @@ $dpkg_lib=$rootdir.'/var/lib/dpkg';
 $build_dir="./dpkg-repack-$$";
 
 # Some sanity checks.
-if ($> ne 0) { Die "This program should be run as root (or you could use fakeroot, but that will not always work). Aborting." }
+if ($> ne 0) { Die "This program should be run as root (or you could use fakeroot -u). Aborting." }
+if (exists $ENV{FAKED_MODE} && $ENV{FAKED_MODE} ne 'unknown-is-real') {
+	Warn "Fakeroot run without its -u flag may corrupt some file permission.";
+}
 
 foreach $packagename (@ARGV) {
 	if (! -f "$dpkg_lib/info/$packagename.list") {
@@ -211,8 +219,8 @@ foreach $packagename (@ARGV) {
 	# Finish up.
 	CleanUp();
 	if ($error_flag) {
-	        Error("Errors were encountered in processing.");
-	        Error("The package may not unpack correctly.");
+	        Error("Problems were encountered in processing.");
+	        Error("The package may be broken.");
 		$error_flag=0;
 	}
 }

@@ -30,8 +30,7 @@ binary-indep: build
 
 VERSION=$(shell expr "`dpkg-parsechangelog 2>/dev/null |grep Version:`" : '.*Version: \(.*\)')
 
-# Update the debhelper web page. Not intended for use by anyone except the
-# author.
+# Update the web page. Not intended for use by anyone except the author.
 DIR=/home/web/kitenet.net/programs/dpkg-repack
 installhook:
 	cp debian/changelog $(DIR)/CHANGES

@@ -1,4 +1,4 @@
-Dpkg-repack creates a .deb file out of a debian package that has already 
+dpkg-repack creates a .deb file out of a debian package that has already 
 been installed on your system. If any changes have been made to the 
 package while it was unpacked (ie, files in /etc modified), the new 
 package will inherit the changes.
@@ -12,4 +12,4 @@ the package.
 If there are ever cases where this program fails to work, please report
 them to the author of dpkg-repack, Joey Hess <joeyh@debian.org>.
 
-Dpkg-repack's homepage is http://kitenet.net/programs/dpkg-repack/
+dpkg-repack's homepage is http://kitenet.net/programs/dpkg-repack/
