@@ -32,13 +32,10 @@ VERSION=$(shell expr "`dpkg-parsechangelog 2>/dev/null |grep Version:`" : '.*Ver
 
 # Update the debhelper web page. Not intended for use by anyone except the
 # author.
+DIR=/home/web/kitenet.net/programs/dpkg-repack
 installhook:
-	rm /home/ftp/pub/code/dpkg-repack/* || true
-	cp debian/changelog /home/pub/programs/dpkg-repack/CHANGES
-	echo -n $(VERSION) > /home/pub/programs/dpkg-repack/LATEST-VERSION-IS
-	cd /home/ftp/pub/code/dpkg-repack; \
-		ln -sf ../debian/dpkg-repack_$(VERSION).tar.gz dpkg-repack_$(VERSION).tar.gz; \
-		ln -sf ../debian/dpkg-repack_$(VERSION).tar.gz dpkg-repack.tar.gz; \
+	cp debian/changelog $(DIR)/CHANGES
+	echo -n $(VERSION) > $(DIR)/LATEST-VERSION-IS
 
 binary: binary-indep binary-arch
 .PHONY: build clean binary-indep binary-arch binary dist
