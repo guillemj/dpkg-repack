@@ -1,3 +1,11 @@
+dpkg-repack (1.15) unstable; urgency=low
+
+  * Trim missing conffiles from the conffiles list, since dpkg-deb requires
+    all listed conffiles exist. Closes: #193393
+  * Skip over "diverts others" lines in dpkg -L. Closes: #193394
+
+ -- Joey Hess <joeyh@debian.org>  Thu, 15 May 2003 13:58:08 -0400
+
 dpkg-repack (1.14) unstable; urgency=low
 
   * fakeroot's new -u flag should be used if using dpkg-repack with fakeroot.

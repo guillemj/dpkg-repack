@@ -86,7 +86,7 @@ sub Make_Dirs {
 sub Extract_Control {
 	my $info=`dpkg --root=$rootdir/ -s $packagename |grep -v "^Status:"`;
 	chomp $info;
-
+	
 	# Add an Architecture: field
 	if (!$arch) {
 		$arch=`dpkg --print-installation-architecture`;
@@ -95,6 +95,17 @@ sub Extract_Control {
 	$info.="Architecture: $arch\n";
 
 	return $info;
+}
+		
+# Get the list of conffiles.
+sub Get_Conffiles {
+	my @conffiles;
+	my $fn="$dpkg_lib/info/$packagename.conffiles";
+	open (CONFFILES, $fn) || Die "$fn: $!";
+	while (<CONFFILES>) {
+		push @conffiles, $_;
+	}
+	close CONFFILES;
 }
 
 # Install the control file. Pass it the text of the file.
@@ -112,7 +123,27 @@ sub Install_Control {
 sub Install_DEBIAN {
 	foreach my $fn (glob("$dpkg_lib/info/$packagename.*")) {
 		my ($basename)=$fn=~m/^.*\.(.*?)$/;
-		if ($basename ne 'list') {
+		if ($basename eq 'conffiles') {
+			# If the conffiles file lists conffiles that are
+			# not present on the file system, and so were not
+			# copied to the build tree, dpkg-deb would cmplain
+			# and abort the build. So check the list of
+			# conffiles.
+			open (CONFFILES, $fn) || Die "$fn: $!";
+			open (OUT, ">$build_dir/DEBIAN/$basename") || Die "write conffiles: $!";
+			while (<CONFFILES>) {
+				chomp;
+				if (-e "$build_dir/$_" || -l "$build_dir/$_") {
+					print OUT "$_\n";
+				}
+				else {
+					Warn "Skipping missing conffile: $_";
+				}
+			}
+			close OUT;
+			close CONFFILES;
+		}
+		elsif ($basename ne 'list') {
 			SafeSystem "cp","-p",$fn,"$build_dir/DEBIAN/$basename","";
 		}
 	}
@@ -121,6 +152,8 @@ sub Install_DEBIAN {
 # This looks at the list of files in this package, and places them
 # all on the directory tree.
 sub Install_Files {
+	my @conffiles=@_;
+	
 	# I need a list of all the files, for later lookups
 	# when I test to see where symlinks point to.
 	# Note that because I parse the output of the command (for
@@ -147,12 +180,16 @@ sub Install_Files {
 			$fn="$rootdir/$1";
 			$x++; # skip over that line.
 		}
+		elsif ($origfn=~m/package diverts others to: (.*)/) {
+			# not a file at all, skip over it
+			next;
+		}
 		else {
-			$fn="$rootdir/$origfn";
+			$fn=$rootdir.$origfn;
 		}
 
 		if (!-e $fn && !-l $fn) {
-			Error "File not found: $fn"
+			Error "File not found: $fn" unless grep $_, @conffiles;
 		}
 		elsif ((-d $fn and !-l $fn) or
 		       (-d $fn and -l $fn and !$filelist{readlink($fn)}
@@ -196,22 +233,24 @@ if (exists $ENV{FAKED_MODE} && $ENV{FAKED_MODE} ne 'unknown-is-real') {
 
 foreach $packagename (@ARGV) {
 	if (! -f "$dpkg_lib/info/$packagename.list") {
-		Error("Package $packagename not found");
+		Error("Package $packagename not installed");
 		next;
 	}
 	
 	my $control=Extract_Control();
 	if (!$control) { Die "Unable to locate $packagename in the package list." }
 
+	my @conffiles=Get_Conffiles();
+	
 	# If the umask is set wrong, the directories will end up with the wrong
 	# perms. (Is this still needed?)
 	umask 022;
 
 	# Generate the directory tree.
 	Make_Dirs();
+	Install_Files(@conffiles);
 	Install_DEBIAN();
 	Install_Control($control);
-	Install_Files();
 
 	# Let dpkg do its magic.
 	SafeSystem("dpkg","--build",$build_dir,".","");
