@@ -1,3 +1,9 @@
+dpkg-repack (1.1) unstable; urgency=low
+
+  * Build deps.
+
+ -- Joey Hess <joeyh@debian.org>  Sat,  4 Dec 1999 00:52:53 -0800
+
 dpkg-repack (1.0) unstable; urgency=low
 
   * FHS
