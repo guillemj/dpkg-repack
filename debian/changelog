@@ -1,3 +1,9 @@
+dpkg-repack (1.16) unstable; urgency=low
+
+  * Work again on packages _without_ conffiles. Closes: #193884
+
+ -- Joey Hess <joeyh@debian.org>  Mon, 19 May 2003 18:46:21 -0400
+
 dpkg-repack (1.15) unstable; urgency=low
 
   * Trim missing conffiles from the conffiles list, since dpkg-deb requires

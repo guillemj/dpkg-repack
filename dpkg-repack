@@ -101,11 +101,12 @@ sub Extract_Control {
 sub Get_Conffiles {
 	my @conffiles;
 	my $fn="$dpkg_lib/info/$packagename.conffiles";
-	open (CONFFILES, $fn) || Die "$fn: $!";
+	open (CONFFILES, $fn) || return;
 	while (<CONFFILES>) {
 		push @conffiles, $_;
 	}
 	close CONFFILES;
+	return @conffiles;
 }
 
 # Install the control file. Pass it the text of the file.
