@@ -1,0 +1,23 @@
+dpkg-repack (0.3) unstable; urgency=low
+
+  * New author/maintainer email address.
+
+ -- Joey Hess <joeyh@master.debian.org>  Tue, 24 Dec 1996 15:30:21 -0500
+
+dpkg-repack (0.2) experimental; urgency=low
+
+  * Fixed bug where it did not install shlibs and other control files.
+  * Routine update of debian/rules (now uses debmake).
+  * Fixed problem with perl 5.003.07.
+
+ -- Joey Hess <joeyh@master.debian.org>  Wed, 6 Nov 1996 22:28:20 -0500
+
+dpkg-repack (0.1) experimental; urgency=low
+
+  * First release.
+
+ -- Joey Hess <joeyh@master.debian.org>  Fri, 18 Oct 1996 00:07:24 -0400
+
+Local variables:
+mode: debian-changelog
+End:

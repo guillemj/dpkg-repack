@@ -1,0 +1,157 @@
+#!/usr/bin/perl
+#
+# This program puts humpty-dumpty back together again.
+#
+# dpkg-repack is Copyright (c) 1996  Joey Hess <joeyh@master.debian.org>
+#
+#   This program is free software; you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with this program;  if not, write to the Free Software
+#   Foundation, Inc., 675 Mass Ave., Cambridge, MA 02139, USA.
+
+sub Syntax {
+	print <<eof;
+Usage: dpkg-repack packagename
+	packagename	The name of the package to attempt to repack.
+eof
+}
+
+sub Error {
+        print STDERR "dpkg-repack: @_\n";
+	$error_flag=1;
+}
+
+sub Die {
+        Error('Fatal Error:',@_);
+	CleanUp();
+        exit 1;
+}
+
+# This removes the temporary directory where we built the package.
+sub CleanUp {
+	system "rm -rf $build_dir" if $dirty_flag;
+}
+
+# This makes the directories we will rebuild the package in.
+sub Make_Dirs {
+	$dirty_flag=1;
+	mkdir $build_dir,0755;
+	mkdir "$build_dir/DEBIAN",0755;
+}
+
+# Pull the control files info out out the available file (like dpkg -s)
+# and return it.
+sub Extract_Control {
+	open (AVAIL,"<$dpkg_lib/available") 
+		|| Die "Can't open $dpkg_lib/available";
+	my $prev=undef;
+	my $info=undef;
+	while (<AVAIL>) {
+		if (($prev eq "\n") && (m/^Package: (.*)\n/ ne undef)) {
+			if ($1 eq $packagename) {
+				$info=$_;
+				while (<AVAIL>) {
+					last if $_ eq "\n";
+					$info.=$_;
+				}
+				last;
+			}
+		}
+		$prev=$_;
+	}
+	close AVAIL;
+
+	return $info;
+}
+
+# Install the control file. Pass it the text of the file.
+sub Install_Control {
+	my $control=shift;
+	
+	open (CONTROL,">$build_dir/DEBIAN/control");
+	print CONTROL $control;
+	close CONTROL;
+}
+
+# Install all the files in the DEBIAN directory. (Except control file.)
+sub Install_DEBIAN {
+	foreach $fn (glob("$dpkg_lib/info/$packagename.*")) {
+		my ($basename)=$fn=~m/^.*\.(.*?)$/;
+		system "cp -p $fn $build_dir/DEBIAN/$basename";
+	}
+}
+
+# This looks at the list of files in this package, and places them
+# all on the directory tree.
+sub Install_Files {
+	open (LIST,"<$dpkg_lib/info/$packagename.list")
+		|| Die "$packagename does not seem to be installed.";
+	while (<LIST>) {
+		chomp;
+		if (!-e) {
+			Error "File not found: $_"
+		}
+		elsif (-d) {
+			my ($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,$atime,
+				$mtime,$ctime,$blksize,$blocks) = stat($_);
+			mkdir "$build_dir/$_",$mode;
+			chown $uid,$gid,"$build_dir/$_";
+			chmod "$build_dir/$_",$mode; # chown can mess up s-bits.
+			
+			# *FIX* For some reason, the above isn't enough to
+			# fix up s-bits. So if the old and new directories
+			# don't match perfectly, make the new directory with
+			# tar instead. Thanks to Randolph Chung.
+			($dev,$ino,$mode_new,$nlink,$uid,$gid,$rdev,$size,
+				$atime,$mtime,$ctime,$blksize,$blocks) 
+				= stat("$build_dir/$_");
+			if ($mode ne $mode_new) {
+				#system "tar -c --exclude $_/\* -f - $_ | tar -x --atime-preserve --preserve -f - -C $build_dir/$_";
+				Error "Bad perms on directory: $_";
+			}
+		}
+		else {
+			system "cp -pd $_ $build_dir/$_";
+		}
+	}
+	close LIST;
+}
+
+$dpkg_lib='/var/lib/dpkg';
+$build_dir="/tmp/dpkg-repack-$$";
+
+# Parse parameters.
+$packagename=shift;
+if (!$packagename) { 
+	Syntax();
+	exit 1;
+}
+
+# Some sanity checks.
+if ($> ne 0) { Die "This program should be run as root. Aborting." }
+$control=Extract_Control();
+if (!$control) { Die "Unable to locate $packagename in the package list." }
+
+# Generate the directory tree.
+Make_Dirs();
+Install_DEBIAN();
+Install_Control($control);
+Install_Files();
+
+# Let dpkg do its magic.
+system "dpkg --build $build_dir .";
+
+# Finish up.
+CleanUp();
+if ($error_flag) {
+        Error "Errors were encountered in processing.";
+        Error "The package may not unpack correctly.";
+}
