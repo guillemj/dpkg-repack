@@ -1,7 +1,7 @@
-Source: dpkg-repack
+aource: dpkg-repack
 Section: admin
 Priority: optional
-Build-Depends-Indep: debhelper
+Build-Depends-Indep: debhelper (>= 0.2.1)
 Maintainer: Joey Hess <joeyh@debian.org>
 Standards-Version: 3.2.1.0
 
