@@ -77,6 +77,10 @@ sub CleanUp {
 sub Make_Dirs {
 	$dirty_flag=1;
 	SafeMkdir $build_dir,0755;
+	# If the parent directory is suid/sgid, mkdir will make the root
+	# directory of the package inherit those bits. That is a bad thing,
+	# so explicitly force perms to 755.
+	chmod 0755, $build_dir;
 	SafeMkdir "$build_dir/DEBIAN",0755;
 }
 
