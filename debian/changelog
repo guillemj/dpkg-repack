@@ -1,3 +1,9 @@
+dpkg-repack (1.11) unstable; urgency=low
+
+  * Rebuild w/o /usr/doc link.
+
+ -- Joey Hess <joeyh@debian.org>  Fri, 15 Nov 2002 15:28:39 -0500
+
 dpkg-repack (1.10) unstable; urgency=low
 
   * use dh_installman.
