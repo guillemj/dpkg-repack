@@ -2,18 +2,18 @@ Source: dpkg-repack
 Section: admin
 Priority: optional
 Maintainer: Joey Hess <joeyh@master.debian.org>
-Standards-Version: 2.1.1.0
+Standards-Version: 3.0.1.1
 
 Package: dpkg-repack
 Architecture: all
-Depends: perl
-Description: attempts to put an unpacked .deb file back together
- dpkg-repack tries to create a .deb file out of a debian package 
- that has already been installed. If any changes have been made to
- the package while it was unpacked (ie, files in /etc were modified),
- the new package will inherit the changes.
+Depends: perl5 | perl (>= 5.004)
+Description: puts an unpacked .deb file back together
+ dpkg-repack creates a .deb file out of a debian package that has already
+ been installed. If any changes have been made to the package while it was
+ unpacked (ie, files in /etc were modified), the new package will inherit
+ the changes.
  .
- When it works, this utility can make it easy to copy packages
- from one computer to another, or to recreate packages that are
- installed on your system, but no longer available elsewhere, or to 
- store the current state of a package before you upgrade it.
+ This utility can make it easy to copy packages from one computer to another,
+ or to recreate packages that are installed on your system, but no longer
+ available elsewhere, or to store the current state of a package before you
+ upgrade it.
