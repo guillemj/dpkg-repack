@@ -63,6 +63,8 @@ sub SafeMkdir {
 	my ($dir,$perms)=@_;
 	
 	mkdir $dir,$perms || Error("Unable to make directory, \"$dir\": $!");
+	# mkdir doesn't do sticky bits and suidness.
+	chmod $perms, $dir || Error("Unable to change permissions on \"$dir\": $!");
 }
 
 # This removes the temporary directory where we built the package.
@@ -77,10 +79,6 @@ sub CleanUp {
 sub Make_Dirs {
 	$dirty_flag=1;
 	SafeMkdir $build_dir,0755;
-	# If the parent directory is suid/sgid, mkdir will make the root
-	# directory of the package inherit those bits. That is a bad thing,
-	# so explicitly force perms to 755.
-	chmod 0755, $build_dir;
 	SafeMkdir "$build_dir/DEBIAN",0755;
 }
 
@@ -167,8 +165,6 @@ sub Install_Files {
 			# There has to be a better way to do this!
 			my $st=stat($fn);
 			SafeMkdir "$build_dir/$origfn",$st->mode;
-			# mkdir doesn't do sticky bits and suidness.
-			chmod $st->mode, "$build_dir/$origfn";
 		}
 		else {
 			SafeSystem "cp","-pd",$fn,"$build_dir/$origfn","";
