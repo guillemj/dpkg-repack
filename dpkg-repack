@@ -186,6 +186,11 @@ $build_dir="./dpkg-repack-$$";
 if ($> ne 0) { Die "This program should be run as root (or you could use fakeroot, but that will not always work). Aborting." }
 
 foreach $packagename (@ARGV) {
+	if (! -f "$dpkg_lib/info/$packagename.list") {
+		Error("Package $packagename not found");
+		next;
+	}
+	
 	my $control=Extract_Control();
 	if (!$control) { Die "Unable to locate $packagename in the package list." }
 
@@ -207,5 +212,6 @@ foreach $packagename (@ARGV) {
 	if ($error_flag) {
 	        Error("Errors were encountered in processing.");
 	        Error("The package may not unpack correctly.");
+		$error_flag=0;
 	}
 }

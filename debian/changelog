@@ -1,3 +1,9 @@
+dpkg-repack (1.8) unstable; urgency=low
+
+  * Better error handling thanks to Bill Allombert. Closes: #141499
+
+ -- Joey Hess <joeyh@debian.org>  Sat,  6 Apr 2002 22:10:39 -0500
+
 dpkg-repack (1.7) unstable; urgency=low
 
   * Fixed uninitalized value if the last item in a package's file list
