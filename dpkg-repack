@@ -42,11 +42,6 @@ sub Die {
         exit 1;
 }
 
-# Print out a status line.
-sub Status { my $message=shift;
-	print "-- $message\n";
-}
-
 # Run a system command, and print an error message if it fails.
 sub SafeSystem {
 	my $errormessage=pop @_;
@@ -156,7 +151,7 @@ sub Install_Files {
 		}
 		elsif ((-d $fn and !-l $fn) or
 		       (-d $fn and -l $fn and !$filelist{readlink($fn)}
-		        and $filelist[$x+1]=~m/^\Q$origfn\E\//)) {
+		        and ($x+1 <= $#filelist and $filelist[$x+1]=~m/^\Q$origfn\E\//))) {
 			# See the changelog for version 0.17 for an
 			# explanation of what I'm doing here with
 			# directory symlinks. I rely on the order of the
@@ -199,25 +194,18 @@ foreach $packagename (@ARGV) {
 	umask 022;
 
 	# Generate the directory tree.
-	Status("Creating control files");
 	Make_Dirs();
 	Install_DEBIAN();
 	Install_Control($control);
-	Status("Copying files");
 	Install_Files();
 
 	# Let dpkg do its magic.
-	Status("Building package");
 	SafeSystem("dpkg","--build",$build_dir,".","");
 
 	# Finish up.
-	Status("Cleaning up");
 	CleanUp();
 	if ($error_flag) {
 	        Error("Errors were encountered in processing.");
 	        Error("The package may not unpack correctly.");
-	}
-	else {
-		Status("Package build successful");
 	}
 }

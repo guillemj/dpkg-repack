@@ -1,3 +1,13 @@
+dpkg-repack (1.7) unstable; urgency=low
+
+  * Fixed uninitalized value if the last item in a package's file list
+    was a symlink to a directory that also exists in the package.
+    Closes: #88978
+  * Removed the debstd-style output.
+  * Use debhelper v3.
+
+ -- Joey Hess <joeyh@debian.org>  Thu,  8 Mar 2001 16:18:26 -0800
+
 dpkg-repack (1.6) unstable; urgency=low
 
   * Use debhelper v2.
