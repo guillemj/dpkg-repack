@@ -265,7 +265,3 @@ dpkg-repack (0.1) experimental; urgency=low
   * First release.
 
  -- Joey Hess <joeyh@debian.org>  Fri, 18 Oct 1996 00:07:24 -0400
-
-Local variables:
-mode: debian-changelog
-End:
