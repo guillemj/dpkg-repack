@@ -1,3 +1,9 @@
+dpkg-repack (1.10) unstable; urgency=low
+
+  * use dh_installman.
+
+ -- Joey Hess <joeyh@debian.org>  Thu, 13 Jun 2002 18:26:31 -0400
+
 dpkg-repack (1.9) unstable; urgency=low
 
   * Debhelper v4.

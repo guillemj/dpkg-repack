@@ -1,7 +1,6 @@
 #!/usr/bin/make -f
 
 build:
-# Nothing to do.
 
 clean:
 	dh_testdir
@@ -15,13 +14,10 @@ binary-indep: build
 	dh_testdir
 	dh_testroot
 	dh_clean
-	dh_installdirs usr/bin
-	install dpkg-repack debian/dpkg-repack/usr/bin
+	dh_install dpkg-repack usr/bin
 	dh_installdocs README
 	dh_installexamples
-	dh_installmenu
-	dh_installcron
-	dh_installmanpages
+	dh_installman dpkg-repack.1
 	dh_installchangelogs
 	dh_strip
 	dh_compress
