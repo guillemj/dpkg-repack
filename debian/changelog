@@ -1,3 +1,10 @@
+dpkg-repack (1.18) unstable; urgency=low
+
+  * Add a note that the package was produced by dpkg-repack to its
+    description. Closes: #217377
+
+ -- Joey Hess <joeyh@debian.org>  Fri, 24 Oct 2003 13:50:13 -0400
+
 dpkg-repack (1.17) unstable; urgency=low
 
   * Swtich from build-depend-indep to build-depends.
