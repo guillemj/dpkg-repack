@@ -84,17 +84,32 @@ sub Make_Dirs {
 
 # Get package control file via dpkg -s.
 sub Extract_Control {
-	my $info=`dpkg --root=$rootdir/ -s $packagename |grep -v "^Status:"`;
-	chomp $info;
+	my @control=`dpkg --root=$rootdir/ -s $packagename |grep -v "^Status:"`;
+	chomp foreach @control;
+	
+	# Add something to the Description to mention dpkg-repack.
+	my $indesc=0;
+	my $x;
+	for ($x=0; $x < @control; $x++) {
+		if ($control[$x] =~/^(\S+):/) {
+			last if $indesc; # end of description
+			$indesc=1 if lc $1 eq "description";
+		}
+	}
+	if ($indesc) {
+		my $date=`822-date`;
+		chomp $date;
+		$control[$x-1]=$control[$x-1]." .\n"." (Repackaged on $date by dpkg-repack.)";
+	}
 	
 	# Add an Architecture: field
 	if (!$arch) {
 		$arch=`dpkg --print-installation-architecture`;
 		chomp $arch;
 	}
-	$info.="Architecture: $arch\n";
+	push @control, "Architecture: $arch\n";
 
-	return $info;
+	return join("\n", @control);
 }
 		
 # Get the list of conffiles.
