@@ -1,3 +1,9 @@
+dpkg-repack (1.9) unstable; urgency=low
+
+  * Debhelper v4.
+
+ -- Joey Hess <joeyh@debian.org>  Sat,  1 Jun 2002 16:41:04 -0400
+
 dpkg-repack (1.8) unstable; urgency=low
 
   * Better error handling thanks to Bill Allombert. Closes: #141499

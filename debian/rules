@@ -1,8 +1,4 @@
 #!/usr/bin/make -f
-# Sample debian/rules that uses debhelper. GNU copyright 1997 by Joey Hess.
-
-# Uncomment this to turn on verbose mode.
-#export DH_VERBOSE=1
 
 build:
 # Nothing to do.
@@ -13,11 +9,8 @@ clean:
 	rm -f build-stamp
 	dh_clean
 
-# Build architecture-dependent files here.
 binary-arch: build
-# We have nothing to do by default.
 
-# Build architecture-independent files here.
 binary-indep: build
 	dh_testdir
 	dh_testroot
@@ -33,6 +26,7 @@ binary-indep: build
 	dh_strip
 	dh_compress
 	dh_fixperms
+	dh_perl
 	dh_installdeb
 	dh_gencontrol
 	dh_md5sums
