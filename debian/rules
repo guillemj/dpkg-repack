@@ -46,7 +46,7 @@ VERSION=$(shell expr "`dpkg-parsechangelog 2>/dev/null |grep Version:`" : '.*Ver
 installhook:
 	rm /home/ftp/pub/code/dpkg-repack/* || true
 	cp debian/changelog /home/pub/programs/dpkg-repack/CHANGES
-	echo $(VERSION) > /home/pub/programs/dpkg-repack/LATEST-VERSION-IS
+	echo -n $(VERSION) > /home/pub/programs/dpkg-repack/LATEST-VERSION-IS
 	cd /home/ftp/pub/code/dpkg-repack; \
 		ln -sf ../debian/dpkg-repack_$(VERSION).tar.gz dpkg-repack_$(VERSION).tar.gz; \
 		ln -sf ../debian/dpkg-repack_$(VERSION).tar.gz dpkg-repack.tar.gz; \
