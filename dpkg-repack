@@ -2,7 +2,7 @@
 #
 # This program puts humpty-dumpty back together again.
 #
-# dpkg-repack is Copyright (c) 1996  Joey Hess <joeyh@master.debian.org>
+# dpkg-repack is Copyright (c) 1996-8  Joey Hess <joeyh@debian.org>
 #
 #   This program is free software; you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -19,7 +19,9 @@
 
 sub Syntax {
 	print <<eof;
-Usage: dpkg-repack packagename
+Usage: dpkg-repack [--root=dir] packagename
+	--root=dir	Take package from filesystem rooted on <dir>.
+	--arch=arch	Force the parch to be built for architecture <arch>.
 	packagename	The name of the package to attempt to repack.
 eof
 }
@@ -35,123 +37,190 @@ sub Die {
         exit 1;
 }
 
+# Print out a status line.
+sub Status { my $message=shift;
+	print "-- $message\n";
+}
+
+# Run a system command, and print an error message if it fails.
+sub SafeSystem { my (@commands)=@_; my $errormessage=pop @commands;
+	my $ret=system @commands;
+	if (int($ret/256) > 0) {
+		$errormessage="Error running: @commands" if !$errormessage;
+		Error($errormessage);
+	}
+}
+
+# Make the passed directory, print an error message if it fails.
+sub SafeMkdir { my ($dir,$perms)=@_;
+	mkdir $dir,$perms || Error("Unable to make directory, \"$dir\": $!");
+}
+
 # This removes the temporary directory where we built the package.
 sub CleanUp {
-	system "rm -rf $build_dir" if $dirty_flag;
+	if ($dirty_flag) {
+		SafeSystem("rm","-rf",$build_dir,
+			"Unable to remove $build_dir . Please remove it by hand.");
+	}
 }
 
 # This makes the directories we will rebuild the package in.
 sub Make_Dirs {
 	$dirty_flag=1;
-	mkdir $build_dir,0755;
-	mkdir "$build_dir/DEBIAN",0755;
+	SafeMkdir $build_dir,0755;
+	SafeMkdir "$build_dir/DEBIAN",0755;
 }
 
-# Pull the control files info out out the available file (like dpkg -s)
+# Pull the control files info out out the status file (like dpkg -s)
 # and return it.
 sub Extract_Control {
-	open (AVAIL,"<$dpkg_lib/available") 
-		|| Die "Can't open $dpkg_lib/available";
-	my $prev=undef;
-	my $info=undef;
-	while (<AVAIL>) {
-		if (($prev eq "\n") && (m/^Package: (.*)\n/ ne undef)) {
-			if ($1 eq $packagename) {
-				$info=$_;
-				while (<AVAIL>) {
-					last if $_ eq "\n";
-					$info.=$_;
-				}
-				last;
-			}
-		}
-		$prev=$_;
+	$info=`dpkg --root=$rootdir/ -s $packagename |grep -v "^Status:"`;
+	chomp $info;
+
+	# Add an Architecture: field
+	if (!$arch) {
+		$arch=`dpkg --print-installation-architecture`;
+		chomp $arch;
 	}
-	close AVAIL;
+	$info.="Architecture: $arch\n";
 
 	return $info;
 }
 
 # Install the control file. Pass it the text of the file.
-sub Install_Control {
-	my $control=shift;
-	
-	open (CONTROL,">$build_dir/DEBIAN/control");
+sub Install_Control { my $control=shift;
+	open (CONTROL,">$build_dir/DEBIAN/control") || Die "Can't write to $build_dir/DEBIAN/control";
 	print CONTROL $control;
 	close CONTROL;
 }
 
-# Install all the files in the DEBIAN directory. (Except control file.)
+# Install all the files in the DEBIAN directory. (Except control file and
+# file list file.)
 sub Install_DEBIAN {
 	foreach $fn (glob("$dpkg_lib/info/$packagename.*")) {
 		my ($basename)=$fn=~m/^.*\.(.*?)$/;
-		system "cp -p $fn $build_dir/DEBIAN/$basename";
+		if ($basename ne 'list') {
+			SafeSystem "cp","-p",$fn,"$build_dir/DEBIAN/$basename","";
+		}
 	}
 }
 
 # This looks at the list of files in this package, and places them
 # all on the directory tree.
 sub Install_Files {
-	open (LIST,"<$dpkg_lib/info/$packagename.list")
-		|| Die "$packagename does not seem to be installed.";
-	while (<LIST>) {
-		chomp;
-		if (!-e) {
-			Error "File not found: $_"
+	# I need a list of all the files, for later lookups
+	# when I test to see where symlinks point to.
+	# Note that because I parse the output of the command (for
+	# diversions, below) it's important to make sure it runs with English
+	# language output.
+	my $lc_all=$ENV{LC_ALL};
+	$ENV{LC_ALL}='C';
+	@filelist=split /\n/,`dpkg --root=$rootdir/ -L $packagename`;
+	$ENV{LC_ALL}=$lc_all; # important to reset it.
+
+	# Set up a hash for easy lookups.
+	foreach $file (@filelist) {
+		$filelist{$file}=1;
+	}
+
+	for ($x=0;$x<=$#filelist;$x++) {
+		$origfn=$filelist[$x];
+
+		# dpkg -L spits out extra lines to report diversions.
+		# we have to parse those (ugly..), to find out where the
+		# file was diverted to, and use the diverted file.
+		if ($filelist[$x+1]=~m/locally diverted to: (.*)/ ne undef ||
+		    $filelist[$x+1]=~m/diverted by .*? to: (.*)/ ne undef) {
+			$fn="$rootdir/$1";
+			$x++; # skip over that line.
 		}
-		elsif (-d) {
+		else {
+			$fn="$rootdir/$origfn";
+		}
+
+		if (!-e $fn && !-l $fn) {
+			Error "File not found: $fn"
+		}
+		elsif ((-d $fn and !-l $fn) or
+		       (-d $fn and -l $fn and !$filelist{readlink($fn)}
+		        and $filelist[$x+1]=~m/^\Q$origfn\E\//)) {
+			# See the changelog for version 0.17 for an
+			# explination of what I'm doing here with
+			# directory symlinks. I rely on the order of the
+			# filelist listing parent directories first, and 
+			# then their contents.
+			# There has to be a better way to do this!
 			my ($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,$atime,
-				$mtime,$ctime,$blksize,$blocks) = stat($_);
-			mkdir "$build_dir/$_",$mode;
-			chown $uid,$gid,"$build_dir/$_";
-			chmod "$build_dir/$_",$mode; # chown can mess up s-bits.
+			    $mtime,$ctime,$blksize,$blocks) = stat($fn);
+			SafeMkdir "$build_dir/$origfn",$mode;
+			chown $uid,$gid,"$build_dir/$origfn";
 			
-			# *FIX* For some reason, the above isn't enough to
-			# fix up s-bits. So if the old and new directories
-			# don't match perfectly, make the new directory with
-			# tar instead. Thanks to Randolph Chung.
+			if (-u _) { # setuid
+				SafeSystem "chmod","u+s","$build_dir/$origfn","";
+			}
+			if (-g _) { # setgid
+				SafeSystem "chmod","g+s","$build_dir/$origfn","";
+			}
+			if (-k _) { # sticky
+				SafeSystem "chmod","+t","$build_dir/$origfn","";
+			}
+			chmod "$build_dir/$origfn",$mode;
 			($dev,$ino,$mode_new,$nlink,$uid,$gid,$rdev,$size,
 				$atime,$mtime,$ctime,$blksize,$blocks) 
-				= stat("$build_dir/$_");
+				= stat("$build_dir/$origfn");
 			if ($mode ne $mode_new) {
-				#system "tar -c --exclude $_/\* -f - $_ | tar -x --atime-preserve --preserve -f - -C $build_dir/$_";
-				Error "Bad perms on directory: $_";
+				Error "Bad perms on directory: $origfn";
 			}
 		}
 		else {
-			system "cp -pd $_ $build_dir/$_";
+			SafeSystem "cp","-pd",$fn,"$build_dir/$origfn","";
 		}
 	}
 	close LIST;
 }
 
-$dpkg_lib='/var/lib/dpkg';
-$build_dir="/tmp/dpkg-repack-$$";
-
 # Parse parameters.
+use Getopt::Long;
+$ret=&GetOptions(
+	"root|r=s", \$rootdir,
+	"arch|a=s", \$arch,
+);
 $packagename=shift;
-if (!$packagename) { 
+if (!$packagename || !$ret) { 
 	Syntax();
 	exit 1;
 }
+$dpkg_lib=$rootdir.'/var/lib/dpkg';
+$build_dir="./dpkg-repack-$$";
 
 # Some sanity checks.
-if ($> ne 0) { Die "This program should be run as root. Aborting." }
+if ($> ne 0) { Die "This program should be run as root (or you could use fakeroot). Aborting." }
 $control=Extract_Control();
 if (!$control) { Die "Unable to locate $packagename in the package list." }
 
+# If the umask is set wrong, the directories will end up with the wrong
+# perms.
+umask 022;
+
 # Generate the directory tree.
+Status("Creating control files");
 Make_Dirs();
 Install_DEBIAN();
 Install_Control($control);
+Status("Copying files");
 Install_Files();
 
 # Let dpkg do its magic.
-system "dpkg --build $build_dir .";
+Status("Building package");
+SafeSystem("dpkg","--build",$build_dir,".","");
 
 # Finish up.
+Status("Cleaning up");
 CleanUp();
 if ($error_flag) {
-        Error "Errors were encountered in processing.";
-        Error "The package may not unpack correctly.";
+        Error("Errors were encountered in processing.");
+        Error("The package may not unpack correctly.");
+}
+else {
+	Status("Package build successful");
 }

@@ -2,11 +2,11 @@
 .SH NAME
 dpkg-repack \- Utility to put an unpacked .deb file back together
 .SH SYNOPSIS
-\fBdpkg-repack\fP [\fBpackage\fP]
+\fBdpkg-repack\fP [\fB--root=dir\fP] [\fB--arch=architecture\fP] \fBpackagename\fP
 .br
 .SH DESCRIPTION
 .I dpkg-repack
-tries to create a .deb file out of a debian package 
+creates a .deb file out of a debian package 
 that has already been installed on your system. If any changes have 
 been made to the package while it was unpacked (ie, files in /etc 
 modified), the new package will inherit the changes.
@@ -15,15 +15,42 @@ This utility can make it easy to copy packages from one computer
 to another, or to recreate packages that are installed on your 
 system, but no longer available elsewhere.
 
-.SS BUGS
+Note: 
+.I dpkg-repack
+will place the created package in the current directory.
 
-There will certainly be cases where this program fails to work.
-Please report them to the author of dpkg-repack.
+.SH OPTIONS
+
+.TP
+.I --root=dir
+Take package from filesystem rooted on <dir>. This is useful if, for
+example, you have another computer nfs mounted on /mnt, then you can use
+--root=/mnt to reassemble packages from that computer.
+
+.TP
+.I --arch=architecture
+Make the package be for a different architecture.
+.I dpkg-repack
+cannot tell if an installed package is architecture all or is
+specific to the system's architecture, so by default it uses 
+.B dpkg --print-architecture
+to determine the build architecture. If you know the package is architecture
+all, you can use this option to force 
+.I dpkg-repack
+to use the right architecture.
+
+.TP
+.I packagename
+The name of the package to attempt to repack.
+
+.SH BUGS
 
 Be warned that the author has only a shallow understanding of the 
 dpkg packaging system, so there are probably tons of bugs in this
-program. Also, this program is experimental code. Use at your own 
-risk!
+program.
 
-.SS AUTHOR
-Joey Hess <joeyh@master.debian.org>
+This program accesses the dpkg database directly in places, querying 
+for data that cannot be gotten via dpkg.
+
+.SH AUTHOR
+Joey Hess <joeyh@debian.org>

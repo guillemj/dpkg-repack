@@ -1,7 +1,7 @@
 Source: dpkg-repack
 Section: admin
 Priority: optional
-Maintainer: Joey Hess <joeyh@master.debian.org>
+Maintainer: Joey Hess <joeyh@debian.org>
 Standards-Version: 3.0.1.1
 
 Package: dpkg-repack

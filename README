@@ -1,18 +1,15 @@
-Dpkg-repack tries to create a .deb file out of a debian package 
-that has already been installed on your system. If any changes have 
-been made to the package while it was unpacked (ie, files in /etc 
-modified), the new package will inherit the changes.
+Dpkg-repack creates a .deb file out of a debian package that has already 
+been installed on your system. If any changes have been made to the 
+package while it was unpacked (ie, files in /etc modified), the new 
+package will inherit the changes.
 
-When it works, this utility can make it easy to copy packages
-from one computer to another, or to recreate packages that are
-installed on your system, but no longer available elsewhere, or
-to save the state of a package before you upgrade it or make some
-other change that you fear may break the package.
+This utility can make it easy to copy packages from one computer to 
+another, or to recreate packages that are installed on your system, 
+but no longer available elsewhere, or to save the state of a package 
+before you upgrade it or make some other change that you fear may break
+the package.
 
-There will certianly be cases where this program fails to work.
-Please report them to the author of dpkg-repack, Joey Hess
-<joeyh@master.debian.org>.
+If there are ever cases where this program fails to work, please report
+them to the author of dpkg-repack, Joey Hess <joeyh@debian.org>.
 
-Be warned that the author has only a shallow understanding of the 
-dpkg packaging system, so there are probably tons of bugs in this
-program. Use at your own risk!
+Dpkg-repack's homepage is http://kitenet.net/programs/dpkg-repack/
