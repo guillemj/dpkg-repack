@@ -29,7 +29,6 @@ binary-indep: build
 	dh_installmenu
 	dh_installcron
 	dh_installmanpages
-#	dh_undocumented
 	dh_installchangelogs
 	dh_strip
 	dh_compress
@@ -37,7 +36,6 @@ binary-indep: build
 	dh_suidregister
 	dh_installdeb
 	dh_gencontrol
-#	dh_makeshlibs
 	dh_md5sums
 	dh_builddeb
 

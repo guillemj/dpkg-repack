@@ -1,3 +1,12 @@
+dpkg-repack (1.2) unstable; urgency=low
+
+  * Removed more historical cautions in the man page.
+  * Dragged screaming and kicking into the world of perl5. Now -w and use
+    strict safe; lots of cleanups. Still needs a bit of a rewrite.
+  * Can repack multiple packages in sequence now.
+
+ -- Joey Hess <joeyh@debian.org>  Fri, 17 Dec 1999 19:00:07 -0800
+
 dpkg-repack (1.1) unstable; urgency=low
 
   * Build deps.
