@@ -1,3 +1,11 @@
+dpkg-repack (1.20) UNRELEASED; urgency=low
+
+  * Use dpkg --print-architecture instead of now-deprecated
+    --print-installation-architecture. How to reconcile this with the change
+    in version 0.21, I don't know.
+
+ -- Joey Hess <joeyh@debian.org>  Sun, 12 Jun 2005 18:50:29 -0400
+
 dpkg-repack (1.19) unstable; urgency=low
 
   * Add missing dependency on dpkg-dev.

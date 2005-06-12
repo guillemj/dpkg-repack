@@ -104,7 +104,7 @@ sub Extract_Control {
 	
 	# Add an Architecture: field
 	if (!$arch) {
-		$arch=`dpkg --print-installation-architecture`;
+		$arch=`dpkg --print-architecture`;
 		chomp $arch;
 	}
 	push @control, "Architecture: $arch\n";
