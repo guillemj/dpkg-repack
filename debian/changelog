@@ -1,3 +1,11 @@
+dpkg-repack (1.21) unstable; urgency=low
+
+  * chown conffiles and control after writing them, necessary so that in
+    fakeroot -u these files are not recorded as owned by the user doing the
+    packing. Closes: #320233
+
+ -- Joey Hess <joeyh@debian.org>  Thu, 28 Jul 2005 10:48:10 -0400
+
 dpkg-repack (1.20) unstable; urgency=low
 
   * Use dpkg --print-architecture instead of now-deprecated

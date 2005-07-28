@@ -132,6 +132,7 @@ sub Install_Control {
 		|| Die "Can't write to $build_dir/DEBIAN/control";
 	print CONTROL $control;
 	close CONTROL;
+	SafeSystem "chown","0:0","$build_dir/DEBIAN/control","";
 }
 
 # Install all the files in the DEBIAN directory. (Except control file and
@@ -158,6 +159,7 @@ sub Install_DEBIAN {
 			}
 			close OUT;
 			close CONFFILES;
+			SafeSystem "chown","0:0","$build_dir/DEBIAN/$basename", "";
 		}
 		elsif ($basename ne 'list') {
 			SafeSystem "cp","-p",$fn,"$build_dir/DEBIAN/$basename","";
