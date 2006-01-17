@@ -2,7 +2,7 @@
 #
 # This program puts humpty-dumpty back together again.
 #
-# dpkg-repack is Copyright (c) 1996-2003 by Joey Hess <joeyh@debian.org>
+# dpkg-repack is Copyright (c) 1996-2006 by Joey Hess <joeyh@debian.org>
 #
 #   This program is free software; you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -20,15 +20,20 @@
 use strict;
 use File::stat;
 use vars qw($error_flag $dirty_flag $build_dir $arch $rootdir $packagename
-	    $dpkg_lib);
+	    $dpkg_lib $generate);
 
 sub Syntax {
 	print STDERR <<eof;
-Usage: dpkg-repack [--root=dir] packagename [packagename ..]
+Usage: dpkg-repack [options] packagename [packagename ..]
 	--root=dir	Take package from filesystem rooted on <dir>.
 	--arch=arch	Force the parch to be built for architecture <arch>.
+	--generate	Generate build directory but do not build deb.
 	packagename	The name of the package to attempt to repack.
 eof
+}
+
+sub Info {
+	print "dpkg-repack: @_\n";
 }
 
 sub Warn {
@@ -234,6 +239,7 @@ $rootdir='';
 my $ret=&GetOptions(
 	"root|r=s", \$rootdir,
 	"arch|a=s", \$arch,
+	"generate|g" , \$generate,
 );
 
 if (!@ARGV || !$ret) {
@@ -270,6 +276,12 @@ foreach $packagename (@ARGV) {
 	Install_DEBIAN();
 	Install_Control($control);
 
+	# Stop here?
+	if ($generate) {
+		Info "dpkg-repack: created $build_dir for $packagename";
+		next;
+	}
+	
 	# Let dpkg do its magic.
 	SafeSystem("dpkg","--build",$build_dir,".","");
 

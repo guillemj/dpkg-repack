@@ -2,7 +2,7 @@
 .SH NAME
 dpkg-repack \- put an unpacked .deb file back together
 .SH SYNOPSIS
-\fBdpkg-repack\fP [\fB--root=dir\fP] [\fB--arch=architecture\fP] \fBpackagename\fP [\fBpackagename ...\fP]
+\fBdpkg-repack\fP [\fB--root=dir\fP] [\fB--arch=architecture\fP] [\fB--generate\fP] \fBpackagename\fP [\fBpackagename ...\fP]
 .br
 .SH DESCRIPTION
 .I dpkg-repack
@@ -38,6 +38,14 @@ to determine the build architecture. If you know the package is architecture
 all, you can use this option to force
 .I dpkg-repack
 to use the right architecture.
+
+.TP
+.I --generate
+Generate a temporary directory suitable for building a package from, but do
+not actually create the package. This is useful if you want to move files
+around in the package before building it. The package can be built from
+this temporary directory by running "dpkg --build", passing it the generated
+directory.
 
 .TP
 .I packagename
