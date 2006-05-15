@@ -62,7 +62,7 @@ There is a tricky situation that can occur if you dpkg-repack a package
 that has modified conffiles. The modified conffiles are packed up. Now if
 you install the package, dpkg does not realize that the conffiles in it are
 modified. So if you later upgrade to a new version of the package, dpkg
-will belive that the old (repacked) package has older conffiles than the
+will believe that the old (repacked) package has older conffiles than the
 new version, and will silently replace the conffiles with those in the
 package you are upgrading to.
 

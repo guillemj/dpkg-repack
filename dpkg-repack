@@ -227,6 +227,10 @@ sub Install_Files {
 			SafeMkdir "$build_dir/$origfn",$st->mode;
 			chown($st->uid, $st->gid, "$build_dir/$origfn");
 		}
+		else if (-p $fn) {
+			# Copy a named pipe with cp -a.
+			SafeSystem "cp","-a",$fn,"$build_dir/$origfn","";
+		}
 		else {
 			SafeSystem "cp","-pd",$fn,"$build_dir/$origfn","";
 		}

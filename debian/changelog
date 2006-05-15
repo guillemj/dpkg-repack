@@ -1,3 +1,11 @@
+dpkg-repack (1.23) UNRELEASED; urgency=low
+
+  * Man page typo. Closes: #362044
+  * Patch from Tomas Pospisek to use cp -a whe copying a named pipe,
+    as cp -pd will read from the pipe. Closes: #287319
+
+ -- Joey Hess <joeyh@debian.org>  Mon, 15 May 2006 17:12:48 -0500
+
 dpkg-repack (1.22) unstable; urgency=low
 
   * Add --generate option. Closes: #273468
