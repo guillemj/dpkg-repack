@@ -117,18 +117,6 @@ sub Extract_Control {
 	return join("\n", @control);
 }
 		
-# Get the list of conffiles.
-sub Get_Conffiles {
-	my @conffiles;
-	my $fn="$dpkg_lib/info/$packagename.conffiles";
-	open (CONFFILES, $fn) || return;
-	while (<CONFFILES>) {
-		push @conffiles, $_;
-	}
-	close CONFFILES;
-	return @conffiles;
-}
-
 # Install the control file. Pass it the text of the file.
 sub Install_Control {
 	my $control=shift;
@@ -175,7 +163,27 @@ sub Install_DEBIAN {
 # This looks at the list of files in this package, and places them
 # all on the directory tree.
 sub Install_Files {
-	my @conffiles=@_;
+	my $control=shift;
+
+	# There are two types of conffiles. Obsolete conffiles should be
+	# skipped, while other conffiles should be included if present.
+	my @conffiles;
+	my @obsolete_conffiles;
+	my $in_conffiles=0;
+	foreach my $line (split /\n/,$control) {
+		if ($line=~/^Conffiles:/) {
+			$in_conffiles=1;
+		}
+		elsif ($in_conffiles && $line=~/^ (.*)\s+([^\s]+)\s+obsolete$/) {
+			push @obsolete_conffiles, $1;
+		}
+		elsif ($in_conffiles && $line=~/^ (.*)\s+([^\s]+)$/) {
+			push @conffiles, $1;
+		}
+		else {
+			$in_conffiles=0;
+		}
+	}
 	
 	# I need a list of all the files, for later lookups
 	# when I test to see where symlinks point to.
@@ -211,8 +219,13 @@ sub Install_Files {
 			$fn=$rootdir.$origfn;
 		}
 
+		if (grep { $_ eq $fn } @obsolete_conffiles) {
+			Warn "Skipping obsolete conffile $fn\n";
+			next;
+		}
+
 		if (!-e $fn && !-l $fn) {
-			Error "File not found: $fn" unless grep $_, @conffiles;
+			Error "File not found: $fn" unless grep { $_ eq $fn } @conffiles;
 		}
 		elsif ((-d $fn and !-l $fn) or
 		       (-d $fn and -l $fn and !$filelist{readlink($fn)}
@@ -268,15 +281,13 @@ foreach $packagename (@ARGV) {
 	my $control=Extract_Control();
 	if (!$control) { Die "Unable to locate $packagename in the package list." }
 
-	my @conffiles=Get_Conffiles();
-	
 	# If the umask is set wrong, the directories will end up with the wrong
 	# perms. (Is this still needed?)
 	umask 022;
 
 	# Generate the directory tree.
 	Make_Dirs();
-	Install_Files(@conffiles);
+	Install_Files($control);
 	Install_DEBIAN();
 	Install_Control($control);
 

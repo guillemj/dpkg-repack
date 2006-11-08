@@ -1,3 +1,9 @@
+dpkg-repack (1.25) unstable; urgency=low
+
+  * Skip obsolete conffiles, don't include in repacked debs. Closes: #397666
+
+ -- Joey Hess <joeyh@debian.org>  Wed,  8 Nov 2006 16:24:12 -0500
+
 dpkg-repack (1.24) unstable; urgency=low
 
   * Typo. Closes: #367826
