@@ -102,7 +102,7 @@ sub Extract_Control {
 		}
 	}
 	if ($indesc) {
-		my $date=`822-date`;
+		my $date=`date -R`;
 		chomp $date;
 		$control[$x-1]=$control[$x-1]." .\n"." (Repackaged on $date by dpkg-repack.)";
 	}

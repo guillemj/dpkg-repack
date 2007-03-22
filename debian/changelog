@@ -1,3 +1,9 @@
+dpkg-repack (1.26) unstable; urgency=low
+
+  * Update for 822-date deprecation. Closes: #415796
+
+ -- Joey Hess <joeyh@debian.org>  Thu, 22 Mar 2007 16:17:08 -0400
+
 dpkg-repack (1.25) unstable; urgency=low
 
   * Skip obsolete conffiles, don't include in repacked debs. Closes: #397666
