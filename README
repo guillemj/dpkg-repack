@@ -12,4 +12,4 @@ the package.
 If there are ever cases where this program fails to work, please report
 them to the author of dpkg-repack, Joey Hess <joeyh@debian.org>.
 
-dpkg-repack's homepage is http://kitenet.net/programs/dpkg-repack/
+dpkg-repack's homepage is http://kitenet.net/~joey/code/dpkg-repack/

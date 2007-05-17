@@ -1,3 +1,10 @@
+dpkg-repack (1.27) UNRELEASED; urgency=low
+
+  * Update url to web page in README.
+  * Remove installhook stuff in debian/rules no longer used.
+
+ -- Joey Hess <joeyh@debian.org>  Thu, 17 May 2007 00:11:57 -0400
+
 dpkg-repack (1.26) unstable; urgency=low
 
   * Update for 822-date deprecation. Closes: #415796
