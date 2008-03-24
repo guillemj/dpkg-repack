@@ -231,14 +231,19 @@ sub Install_Files {
 		       (-d $fn and -l $fn and !$filelist{readlink($fn)}
 		        and ($x+1 <= $#filelist and $filelist[$x+1]=~m/^\Q$origfn\E\//))) {
 			# See the changelog for version 0.17 for an
-			# explanation of what I'm doing here with
+			# explanation of what I'm doing above with
 			# directory symlinks. I rely on the order of the
 			# filelist listing parent directories first, and 
 			# then their contents.
 			# There has to be a better way to do this!
-			my $st=stat($fn);
-			SafeMkdir "$build_dir/$origfn",$st->mode;
-			chown($st->uid, $st->gid, "$build_dir/$origfn");
+			my $f="";
+			foreach my $dir (split(m/\/+/, $origfn)) {
+				$f.="/$dir";
+				next if -d $build_dir.$f;
+				my $st=stat($rootdir.$f);
+				SafeMkdir "$build_dir/$f",$st->mode;
+				chown($st->uid, $st->gid, "$build_dir/$f");
+			}
 		}
 		elsif (-p $fn) {
 			# Copy a named pipe with cp -a.

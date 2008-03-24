@@ -1,3 +1,11 @@
+dpkg-repack (1.29) unstable; urgency=low
+
+  * Apparently knoppix, dpkg -L does not individually list all parent
+    directories of files in a package. So don't rely on the parent directories
+    always having been made, and create any that are missing.
+
+ -- Joey Hess <joeyh@debian.org>  Sun, 23 Mar 2008 20:33:14 -0400
+
 dpkg-repack (1.28) unstable; urgency=low
 
   * dpkg-repack's repository has moved from subversion to git.
