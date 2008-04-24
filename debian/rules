@@ -1,32 +1,13 @@
 #!/usr/bin/make -f
-
-build:
-
-clean:
-	dh_testdir
-	dh_testroot
-	rm -f build-stamp
-	dh_clean
-
-binary-arch: build
+export DH_VERBOSE=1
+%:
+	dh $@
 
 binary-indep: build
-	dh_testdir
-	dh_testroot
-	dh_clean
+	dh binary-indep --until dh_prep
 	dh_install dpkg-repack usr/bin
 	dh_installdocs README
-	dh_installexamples
 	dh_installman dpkg-repack.1
-	dh_installchangelogs
-	dh_strip
-	dh_compress
-	dh_fixperms
-	dh_perl
-	dh_installdeb
-	dh_gencontrol
-	dh_md5sums
-	dh_builddeb
+	dh binary-indep --remaining
 
 binary: binary-indep binary-arch
-.PHONY: build clean binary-indep binary-arch binary dist
