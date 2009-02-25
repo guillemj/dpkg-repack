@@ -1,3 +1,9 @@
+dpkg-repack (1.31) UNRELEASED; urgency=low
+
+  * Update the man page re ucf.
+
+ -- Joey Hess <joeyh@debian.org>  Tue, 24 Feb 2009 21:57:02 -0500
+
 dpkg-repack (1.30) unstable; urgency=low
 
   * Use debhelper v7; rules file minimisation.

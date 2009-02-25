@@ -7,9 +7,12 @@ dpkg-repack \- put an unpacked .deb file back together
 .SH DESCRIPTION
 .I dpkg-repack
 creates a .deb file out of a Debian package
-that has already been installed on your system. If any changes have
-been made to the package while it was unpacked (ie, files in /etc
-modified), the new package will inherit the changes.
+that has already been installed on your system.
+
+If any changes have been made to the package while it was unpacked (ie,
+conffiles files in /etc modified), the new package will inherit the
+changes. (There are exceptions to this, including changes to configuration
+files that are not conffiles, including those managed by ucf.)
 
 This utility can make it easy to copy packages from one computer
 to another, or to recreate packages that are installed on your
