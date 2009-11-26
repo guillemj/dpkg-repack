@@ -1,3 +1,10 @@
+dpkg-repack (1.32) unstable; urgency=low
+
+  * Avoid adding a second Architecture field to the control file.
+    Closes: #558135
+
+ -- Joey Hess <joeyh@debian.org>  Thu, 26 Nov 2009 12:19:39 -0500
+
 dpkg-repack (1.31) unstable; urgency=low
 
   * Update the man page re ucf.

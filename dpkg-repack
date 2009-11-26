@@ -107,14 +107,12 @@ sub Extract_Control {
 		$control[$x-1]=$control[$x-1]." .\n"." (Repackaged on $date by dpkg-repack.)";
 	}
 	
-	# Add an Architecture: field
-	if (!$arch) {
-		$arch=`dpkg --print-architecture`;
-		chomp $arch;
+	if ($arch) {
+		@control=grep { !/^Architecture:/ } @control;
+		push @control, "Architecture: $arch\n";
 	}
-	push @control, "Architecture: $arch\n";
 
-	return join("\n", @control);
+	return join("\n", @control)."\n";
 }
 		
 # Install the control file. Pass it the text of the file.
