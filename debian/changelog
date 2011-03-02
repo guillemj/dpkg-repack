@@ -1,9 +1,9 @@
-dpkg-repack (1.33) UNRELEASED; urgency=low
+dpkg-repack (1.33) unstable; urgency=low
 
   * Use dpkg-query --control-path rather than hardcoding dpkg path info.
     Will be needed for multiarch.
 
- -- Joey Hess <joeyh@debian.org>  Wed, 02 Mar 2011 15:15:34 -0400
+ -- Joey Hess <joeyh@debian.org>  Wed, 02 Mar 2011 15:16:04 -0400
 
 dpkg-repack (1.32) unstable; urgency=low
 
