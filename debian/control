@@ -9,7 +9,7 @@ Homepage: http://kitenet.net/~joey/code/dpkg-repack/
 
 Package: dpkg-repack
 Architecture: all
-Depends: ${misc:Depends}, ${perl:Depends}, dpkg-dev
+Depends: ${misc:Depends}, ${perl:Depends}, dpkg-dev (>= 1.15.4)
 Description: puts an unpacked .deb file back together
  dpkg-repack creates a .deb file out of a package that has already
  been installed. If any changes have been made to the package while it was

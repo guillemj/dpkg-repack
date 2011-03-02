@@ -1,5 +1,4 @@
 Format: http://dep.debian.net/deps/dep5/
-Source: native package
 
 Files: *
 Copyright: 1996-2009 Joey Hess <joeyh@debian.org>

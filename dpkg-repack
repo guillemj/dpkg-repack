@@ -20,7 +20,7 @@
 use strict;
 use File::stat;
 use vars qw($error_flag $dirty_flag $build_dir $arch $rootdir $packagename
-	    $dpkg_lib $generate);
+	    $generate @control_files);
 
 sub Syntax {
 	print STDERR <<eof;
@@ -129,7 +129,7 @@ sub Install_Control {
 # Install all the files in the DEBIAN directory. (Except control file and
 # file list file.)
 sub Install_DEBIAN {
-	foreach my $fn (glob("$dpkg_lib/info/$packagename.*")) {
+	foreach my $fn (@control_files) {
 		my ($basename)=$fn=~m/^.*\.(.*?)$/;
 		if ($basename eq 'conffiles') {
 			# If the conffiles file lists conffiles that are
@@ -266,7 +266,6 @@ if (!@ARGV || !$ret) {
 	Syntax();
 	exit 1;
 }	
-$dpkg_lib=$rootdir.'/var/lib/dpkg';
 $build_dir="./dpkg-repack-$$";
 
 # Some sanity checks.
@@ -276,11 +275,16 @@ if (exists $ENV{FAKED_MODE} && $ENV{FAKED_MODE} ne 'unknown-is-real') {
 }
 
 foreach $packagename (@ARGV) {
-	if (! -f "$dpkg_lib/info/$packagename.list") {
-		Error("Package $packagename not installed");
-		next;
+	open (Q, "dpkg-query --control-path $packagename 2>/dev/null |") || die "dpkg-query failed: $!";
+	while (my $fn=<Q>) {
+		chomp $fn;
+		push @control_files, $fn;
 	}
-	
+	close Q;
+	if (! @control_files) {
+		Die("Package $packagename not installed");
+	}
+
 	my $control=Extract_Control();
 	if (!$control) { Die "Unable to locate $packagename in the package list." }
 

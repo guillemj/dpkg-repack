@@ -1,3 +1,10 @@
+dpkg-repack (1.33) UNRELEASED; urgency=low
+
+  * Use dpkg-query --control-path rather than hardcoding dpkg path info.
+    Will be needed for multiarch.
+
+ -- Joey Hess <joeyh@debian.org>  Wed, 02 Mar 2011 15:15:34 -0400
+
 dpkg-repack (1.32) unstable; urgency=low
 
   * Avoid adding a second Architecture field to the control file.
