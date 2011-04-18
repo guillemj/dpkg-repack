@@ -1,13 +1,3 @@
 #!/usr/bin/make -f
-export DH_VERBOSE=1
 %:
 	dh $@
-
-binary-indep: build
-	dh binary-indep --until dh_prep
-	dh_install dpkg-repack usr/bin
-	dh_installdocs README
-	dh_installman dpkg-repack.1
-	dh binary-indep --remaining
-
-binary: binary-indep binary-arch

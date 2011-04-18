@@ -1,8 +1,9 @@
-dpkg-repack (1.34) UNRELEASED; urgency=low
+dpkg-repack (1.34) unstable; urgency=low
 
   * Only needs to depend on dpkg, not dpkg-dev. Closes: #616318
+  * Clean up rules file.
 
- -- Joey Hess <joeyh@debian.org>  Thu, 03 Mar 2011 13:40:35 -0400
+ -- Joey Hess <joeyh@debian.org>  Mon, 18 Apr 2011 15:04:11 -0400
 
 dpkg-repack (1.33) unstable; urgency=low
 
