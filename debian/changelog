@@ -1,6 +1,7 @@
 dpkg-repack (1.35) UNRELEASED; urgency=low
 
   * Does not need to depend on dpkg-dev. Closes: #616318
+  * Fix dpkg-querty call to support --rootdir. (Evan Dandresa) Closes: #630765
 
  -- Joey Hess <joeyh@debian.org>  Wed, 15 Jun 2011 16:35:30 -0400
 

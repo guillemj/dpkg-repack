@@ -275,7 +275,7 @@ if (exists $ENV{FAKED_MODE} && $ENV{FAKED_MODE} ne 'unknown-is-real') {
 }
 
 foreach $packagename (@ARGV) {
-	open (Q, "dpkg-query --control-path $packagename 2>/dev/null |") || die "dpkg-query failed: $!";
+	open (Q, "dpkg-query --admindir=$rootdir/var/lib/dpkg --control-path $packagename 2>/dev/null |") || die "dpkg-query failed: $!";
 	while (my $fn=<Q>) {
 		chomp $fn;
 		push @control_files, $fn;
