@@ -89,7 +89,7 @@ sub Make_Dirs {
 
 # Get package control file via dpkg -s.
 sub Extract_Control {
-	my @control=`dpkg --root=$rootdir/ -s $packagename |grep -v "^Status:"`;
+	my @control=`dpkg --root=$rootdir/ -s $packagename`;
 	chomp foreach @control;
 	
 	# Add something to the Description to mention dpkg-repack.
@@ -111,6 +111,11 @@ sub Extract_Control {
 		@control=grep { !/^Architecture:/ } @control;
 		push @control, "Architecture: $arch\n";
 	}
+
+	if (! grep { /^Status:\s+.*\s+installed/ } @control) {
+		Die "Package $packagename not fully installed";
+	}
+	@control=grep { !/^Status:\s+/ } @control;
 
 	return join("\n", @control)."\n";
 }
@@ -281,9 +286,6 @@ foreach $packagename (@ARGV) {
 		push @control_files, $fn;
 	}
 	close Q;
-	if (! @control_files) {
-		Die("Package $packagename not installed");
-	}
 
 	my $control=Extract_Control();
 	if (!$control) { Die "Unable to locate $packagename in the package list." }
