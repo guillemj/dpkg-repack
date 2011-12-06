@@ -1,3 +1,13 @@
+dpkg-repack (1.37) unstable; urgency=low
+
+  * Fix generation of conffiles list file. For some reason dpkg-query
+    does not list this file, so it has to be generated when there's a
+    Conffiles stanza in the package status. Closes: #651165
+  * Remove the Conffiles stanza from the generated package's control file;
+    dpkg ignores it anyway.
+
+ -- Joey Hess <joeyh@debian.org>  Tue, 06 Dec 2011 12:20:13 -0400
+
 dpkg-repack (1.36) unstable; urgency=low
 
   * Fix check for non-installed packages to not misfire on a package that

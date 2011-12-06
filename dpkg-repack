@@ -20,7 +20,7 @@
 use strict;
 use File::stat;
 use vars qw($error_flag $dirty_flag $build_dir $arch $rootdir $packagename
-	    $generate @control_files);
+	    $generate);
 
 sub Syntax {
 	print STDERR <<eof;
@@ -122,11 +122,21 @@ sub Extract_Control {
 		
 # Install the control file. Pass it the text of the file.
 sub Install_Control {
-	my $control=shift;
+	my @control=split("\n", shift);
 	
 	open (CONTROL,">$build_dir/DEBIAN/control")
 		|| Die "Can't write to $build_dir/DEBIAN/control";
-	print CONTROL $control;
+	
+	my $control;
+	my $skip=0;
+	foreach (@control) {
+		# Remove the Conffiles stanza
+		if (/^(\S+):/) {
+			$skip = lc $1 eq "conffiles";
+		}
+		print CONTROL "$_\n" unless $skip;
+	}
+
 	close CONTROL;
 	SafeSystem "chown","0:0","$build_dir/DEBIAN/control","";
 }
@@ -134,32 +144,34 @@ sub Install_Control {
 # Install all the files in the DEBIAN directory. (Except control file and
 # file list file.)
 sub Install_DEBIAN {
+	my @conffiles=@_;
+	
+	my @control_files;
+	open (Q, "dpkg-query --admindir=$rootdir/var/lib/dpkg --control-path $packagename 2>/dev/null |") || die "dpkg-query failed: $!";
+	while (my $fn=<Q>) {
+		chomp $fn;
+		push @control_files, $fn;
+	}
+	close Q;
+
 	foreach my $fn (@control_files) {
 		my ($basename)=$fn=~m/^.*\.(.*?)$/;
-		if ($basename eq 'conffiles') {
-			# If the conffiles file lists conffiles that are
-			# not present on the file system, and so were not
-			# copied to the build tree, dpkg-deb would cmplain
-			# and abort the build. So check the list of
-			# conffiles.
-			open (CONFFILES, $fn) || Die "$fn: $!";
-			open (OUT, ">$build_dir/DEBIAN/$basename") || Die "write conffiles: $!";
-			while (<CONFFILES>) {
-				chomp;
-				if (-e "$build_dir/$_" || -l "$build_dir/$_") {
-					print OUT "$_\n";
-				}
-				else {
-					Warn "Skipping missing conffile: $_";
-				}
-			}
-			close OUT;
-			close CONFFILES;
-			SafeSystem "chown","0:0","$build_dir/DEBIAN/$basename", "";
-		}
-		elsif ($basename ne 'list') {
+		if ($basename ne 'list' && $basename ne 'conffiles') {
 			SafeSystem "cp","-p",$fn,"$build_dir/DEBIAN/$basename","";
 		}
+	}
+
+	# Conffiles have to be handled specially, because
+	# dpkg-query --control-path does not list the conffiles file.
+	# Also, we need to generate one that only control conffiles
+	# that are still present on the filesystem.
+	if (@conffiles) {
+		open (OUT, ">$build_dir/DEBIAN/conffiles") || Die "write conffiles: $!";
+		foreach (@conffiles) {
+			print OUT "$_\n";
+		}
+		close OUT;
+		SafeSystem "chown","0:0","$build_dir/DEBIAN/conffiles", "";
 	}
 }
 
@@ -170,7 +182,7 @@ sub Install_Files {
 
 	# There are two types of conffiles. Obsolete conffiles should be
 	# skipped, while other conffiles should be included if present.
-	my @conffiles;
+	my @conffiles=();
 	my @obsolete_conffiles;
 	my $in_conffiles=0;
 	foreach my $line (split /\n/,$control) {
@@ -256,6 +268,8 @@ sub Install_Files {
 			SafeSystem "cp","-pd",$fn,"$build_dir/$origfn","";
 		}
 	}
+
+	return @conffiles;
 }
 
 # Parse parameters.
@@ -280,13 +294,6 @@ if (exists $ENV{FAKED_MODE} && $ENV{FAKED_MODE} ne 'unknown-is-real') {
 }
 
 foreach $packagename (@ARGV) {
-	open (Q, "dpkg-query --admindir=$rootdir/var/lib/dpkg --control-path $packagename 2>/dev/null |") || die "dpkg-query failed: $!";
-	while (my $fn=<Q>) {
-		chomp $fn;
-		push @control_files, $fn;
-	}
-	close Q;
-
 	my $control=Extract_Control();
 	if (!$control) { Die "Unable to locate $packagename in the package list." }
 
@@ -296,8 +303,8 @@ foreach $packagename (@ARGV) {
 
 	# Generate the directory tree.
 	Make_Dirs();
-	Install_Files($control);
-	Install_DEBIAN();
+	my @conffiles=Install_Files($control);
+	Install_DEBIAN(@conffiles);
 	Install_Control($control);
 
 	# Stop here?
