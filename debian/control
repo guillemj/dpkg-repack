@@ -1,0 +1,22 @@
+Source: dpkg-repack
+Section: admin
+Priority: optional
+Build-Depends: debhelper (>= 7), dpkg (>= 1.9.0)
+Maintainer: Joey Hess <joeyh@debian.org>
+Standards-Version: 3.9.2
+Vcs-Git: git://git.kitenet.net/dpkg-repack
+Homepage: http://kitenet.net/~joey/code/dpkg-repack/
+
+Package: dpkg-repack
+Architecture: all
+Depends: ${misc:Depends}, ${perl:Depends}
+Description: puts an unpacked .deb file back together
+ dpkg-repack creates a .deb file out of a package that has already
+ been installed. If any changes have been made to the package while it was
+ unpacked (ie, files in /etc were modified), the new package will inherit
+ the changes.
+ .
+ This utility can make it easy to copy packages from one computer to another,
+ or to recreate packages that are installed on your system, but no longer
+ available elsewhere, or to store the current state of a package before you
+ upgrade it.

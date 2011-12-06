@@ -1,0 +1,7 @@
+Format: http://dep.debian.net/deps/dep5/
+
+Files: *
+Copyright: 1996-2009 Joey Hess <joeyh@debian.org>
+License: GPL-2+
+ On Debian systems, the complete text of the GPL is in
+ /usr/share/common-licenses/GPL
