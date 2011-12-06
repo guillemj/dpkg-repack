@@ -1,0 +1,475 @@
+dpkg-repack (1.37) unstable; urgency=low
+
+  * Fix generation of conffiles list file. For some reason dpkg-query
+    does not list this file, so it has to be generated when there's a
+    Conffiles stanza in the package status. Closes: #651165
+  * Remove the Conffiles stanza from the generated package's control file;
+    dpkg ignores it anyway.
+
+ -- Joey Hess <joeyh@debian.org>  Tue, 06 Dec 2011 12:20:13 -0400
+
+dpkg-repack (1.36) unstable; urgency=low
+
+  * Fix check for non-installed packages to not misfire on a package that
+    has no dpkg control files. Closes: #644619
+
+ -- Joey Hess <joeyh@debian.org>  Sat, 08 Oct 2011 00:08:54 -0400
+
+dpkg-repack (1.35) unstable; urgency=low
+
+  * Does not need to depend on dpkg-dev. Closes: #616318
+  * Fix dpkg-query call to support --rootdir. (Evan Dandresa) Closes: #630765
+
+ -- Joey Hess <joeyh@debian.org>  Fri, 17 Jun 2011 11:27:11 -0400
+
+dpkg-repack (1.34) unstable; urgency=low
+
+  * Only needs to build-depend on dpkg, not dpkg-dev. Closes: #616318
+  * Clean up rules file.
+
+ -- Joey Hess <joeyh@debian.org>  Mon, 18 Apr 2011 15:04:11 -0400
+
+dpkg-repack (1.33) unstable; urgency=low
+
+  * Use dpkg-query --control-path rather than hardcoding dpkg path info.
+    Will be needed for multiarch.
+
+ -- Joey Hess <joeyh@debian.org>  Wed, 02 Mar 2011 15:16:04 -0400
+
+dpkg-repack (1.32) unstable; urgency=low
+
+  * Avoid adding a second Architecture field to the control file.
+    Closes: #558135
+
+ -- Joey Hess <joeyh@debian.org>  Thu, 26 Nov 2009 12:19:39 -0500
+
+dpkg-repack (1.31) unstable; urgency=low
+
+  * Update the man page re ucf.
+
+ -- Joey Hess <joeyh@debian.org>  Mon, 09 Mar 2009 22:52:37 -0400
+
+dpkg-repack (1.30) unstable; urgency=low
+
+  * Use debhelper v7; rules file minimisation.
+
+ -- Joey Hess <joeyh@debian.org>  Tue, 22 Jul 2008 00:27:16 -0400
+
+dpkg-repack (1.29) unstable; urgency=low
+
+  * Apparently knoppix, dpkg -L does not individually list all parent
+    directories of files in a package. So don't rely on the parent directories
+    always having been made, and create any that are missing.
+
+ -- Joey Hess <joeyh@debian.org>  Sun, 23 Mar 2008 20:33:14 -0400
+
+dpkg-repack (1.28) unstable; urgency=low
+
+  * dpkg-repack's repository has moved from subversion to git.
+  * Current standards version.
+
+ -- Joey Hess <joeyh@debian.org>  Fri, 19 Oct 2007 20:36:49 -0400
+
+dpkg-repack (1.27) unstable; urgency=low
+
+  * Update url to web page in README.
+  * Remove installhook stuff in debian/rules no longer used.
+
+ -- Joey Hess <joeyh@debian.org>  Mon, 04 Jun 2007 16:43:33 -0400
+
+dpkg-repack (1.26) unstable; urgency=low
+
+  * Update for 822-date deprecation. Closes: #415796
+
+ -- Joey Hess <joeyh@debian.org>  Thu, 22 Mar 2007 16:17:08 -0400
+
+dpkg-repack (1.25) unstable; urgency=low
+
+  * Skip obsolete conffiles, don't include in repacked debs. Closes: #397666
+
+ -- Joey Hess <joeyh@debian.org>  Wed,  8 Nov 2006 16:24:12 -0500
+
+dpkg-repack (1.24) unstable; urgency=low
+
+  * Typo. Closes: #367826
+
+ -- Joey Hess <joeyh@debian.org>  Thu, 18 May 2006 12:09:21 -0500
+
+dpkg-repack (1.23) unstable; urgency=low
+
+  * Man page typo. Closes: #362044
+  * Patch from Tomas Pospisek to use cp -a whe copying a named pipe,
+    as cp -pd will read from the pipe. Closes: #287319
+
+ -- Joey Hess <joeyh@debian.org>  Mon, 15 May 2006 17:15:11 -0500
+
+dpkg-repack (1.22) unstable; urgency=low
+
+  * Add --generate option. Closes: #273468
+
+ -- Joey Hess <joeyh@debian.org>  Tue, 17 Jan 2006 15:58:38 -0500
+
+dpkg-repack (1.21) unstable; urgency=low
+
+  * chown conffiles and control after writing them, necessary so that in
+    fakeroot -u these files are not recorded as owned by the user doing the
+    packing. Closes: #320233
+
+ -- Joey Hess <joeyh@debian.org>  Thu, 28 Jul 2005 10:48:10 -0400
+
+dpkg-repack (1.20) unstable; urgency=low
+
+  * Use dpkg --print-architecture instead of now-deprecated
+    --print-installation-architecture. How to reconcile this with the change
+    in version 0.21, I don't know.
+
+ -- Joey Hess <joeyh@debian.org>  Thu, 30 Jun 2005 18:21:03 -0400
+
+dpkg-repack (1.19) unstable; urgency=low
+
+  * Add missing dependency on dpkg-dev.
+
+ -- Joey Hess <joeyh@debian.org>  Fri, 20 Aug 2004 13:42:03 +0100
+
+dpkg-repack (1.18) unstable; urgency=low
+
+  * Add a note that the package was produced by dpkg-repack to its
+    description. Closes: #217377
+
+ -- Joey Hess <joeyh@debian.org>  Fri, 24 Oct 2003 13:50:13 -0400
+
+dpkg-repack (1.17) unstable; urgency=low
+
+  * Swtich from build-depend-indep to build-depends.
+
+ -- Joey Hess <joeyh@debian.org>  Mon,  8 Sep 2003 20:45:07 -0400
+
+dpkg-repack (1.16) unstable; urgency=low
+
+  * Work again on packages _without_ conffiles. Closes: #193884
+
+ -- Joey Hess <joeyh@debian.org>  Mon, 19 May 2003 18:46:21 -0400
+
+dpkg-repack (1.15) unstable; urgency=low
+
+  * Trim missing conffiles from the conffiles list, since dpkg-deb requires
+    all listed conffiles exist. Closes: #193393
+  * Skip over "diverts others" lines in dpkg -L. Closes: #193394
+
+ -- Joey Hess <joeyh@debian.org>  Thu, 15 May 2003 13:58:08 -0400
+
+dpkg-repack (1.14) unstable; urgency=low
+
+  * fakeroot's new -u flag should be used if using dpkg-repack with fakeroot.
+    Otherwise permisions of non-root-owned files can be messed up. Warn about
+    this if -u is not used.
+  * Other minor changes.
+
+ -- Joey Hess <joeyh@debian.org>  Sat, 10 May 2003 19:27:28 -0400
+
+dpkg-repack (1.13) unstable; urgency=low
+
+  * Chown directories after making them to deal with directories not owned by
+    root. Closes: #191323
+    (There is still a bug in fakeroot that makes dpkg-repack not work under
+    fakeroot, but I will file a separate bug for that.)
+
+ -- Joey Hess <joeyh@debian.org>  Thu,  1 May 2003 10:47:38 -0400
+
+dpkg-repack (1.12) unstable; urgency=low
+
+  * Remove "L" from man page section.
+
+ -- Joey Hess <joeyh@debian.org>  Tue, 29 Apr 2003 18:30:31 -0400
+
+dpkg-repack (1.11) unstable; urgency=low
+
+  * Rebuild w/o /usr/doc link.
+
+ -- Joey Hess <joeyh@debian.org>  Fri, 15 Nov 2002 15:28:39 -0500
+
+dpkg-repack (1.10) unstable; urgency=low
+
+  * use dh_installman.
+
+ -- Joey Hess <joeyh@debian.org>  Thu, 13 Jun 2002 18:26:31 -0400
+
+dpkg-repack (1.9) unstable; urgency=low
+
+  * Debhelper v4.
+
+ -- Joey Hess <joeyh@debian.org>  Sat,  1 Jun 2002 16:41:04 -0400
+
+dpkg-repack (1.8) unstable; urgency=low
+
+  * Better error handling thanks to Bill Allombert. Closes: #141499
+
+ -- Joey Hess <joeyh@debian.org>  Sat,  6 Apr 2002 22:10:39 -0500
+
+dpkg-repack (1.7) unstable; urgency=low
+
+  * Fixed uninitalized value if the last item in a package's file list
+    was a symlink to a directory that also exists in the package.
+    Closes: #88978
+  * Removed the debstd-style output.
+  * Use debhelper v3.
+
+ -- Joey Hess <joeyh@debian.org>  Thu,  8 Mar 2001 16:18:26 -0800
+
+dpkg-repack (1.6) unstable; urgency=low
+
+  * Use debhelper v2.
+
+ -- Joey Hess <joeyh@debian.org>  Mon, 25 Sep 2000 14:56:29 -0700
+
+dpkg-repack (1.5) unstable; urgency=low
+
+  * Documented a conffile problem I can do nothing about. Closes: #69009
+
+ -- Joey Hess <joeyh@debian.org>  Fri,  1 Sep 2000 16:55:52 -0700
+
+dpkg-repack (1.4) unstable; urgency=low
+
+  * Applied a cleaner fix for the mkdir problem, by David Lively
+    <lively@ucentric.com>, Closes: #64605
+
+ -- Joey Hess <joeyh@debian.org>  Wed, 24 May 2000 12:52:31 -0700
+
+dpkg-repack (1.3) unstable; urgency=low
+
+  * Don't bomb out if ran in a directory with the suid/sgid bit set.
+    Closes: #64605
+
+ -- Joey Hess <joeyh@debian.org>  Wed, 24 May 2000 12:42:51 -0700
+
+dpkg-repack (1.2) unstable; urgency=low
+
+  * Removed more historical cautions in the man page.
+  * Dragged screaming and kicking into the world of perl5. Now -w and use
+    strict safe; lots of cleanups. Still needs a bit of a rewrite.
+  * Can repack multiple packages in sequence now.
+
+ -- Joey Hess <joeyh@debian.org>  Fri, 17 Dec 1999 19:00:07 -0800
+
+dpkg-repack (1.1) unstable; urgency=low
+
+  * Build deps.
+
+ -- Joey Hess <joeyh@debian.org>  Sat,  4 Dec 1999 00:52:53 -0800
+
+dpkg-repack (1.0) unstable; urgency=low
+
+  * FHS
+  * Integrated into my cvs build system.
+  * It occurs to me that this is a pretty stable package, so I
+    bumped the version number to 1.0.
+
+ -- Joey Hess <joeyh@debian.org>  Fri, 10 Sep 1999 21:19:21 -0700
+
+dpkg-repack (0.25) unstable; urgency=low
+
+  * Depend on gcc, because it uses dpkg --build which brain-deadly requires
+    dpkg be present (and of course dpkg doesn't depend on gcc..) 
+    (Closes: #40985)
+
+ -- Joey Hess <joeyh@debian.org>  Thu,  8 Jul 1999 11:20:26 -0700
+
+dpkg-repack (0.24) unstable; urgency=low
+
+  * Now depends on perl5 | perl, I'll kill the | perl bit later on, but it
+    seems to make sense for the transition.
+
+ -- Joey Hess <joeyh@debian.org>  Sun,  4 Jul 1999 10:57:57 -0700
+
+dpkg-repack (0.23) unstable; urgency=low
+
+  * Quote another regexp (#39955).
+
+ -- Joey Hess <joeyh@debian.org>  Tue, 22 Jun 1999 09:35:46 -0700
+
+dpkg-repack (0.22) unstable; urgency=low
+
+  * Added note to an error message that fakeroot may be used.
+
+ -- Joey Hess <joeyh@debian.org>  Thu,  8 Apr 1999 21:16:22 -0700
+
+dpkg-repack (0.21) unstable; urgency=low
+
+  * Use --print-installation-architecture instead of --print-architecture
+    (#31738)
+  * Link to new homepage in the README.
+
+ -- Joey Hess <joeyh@debian.org>  Mon, 11 Jan 1999 13:04:49 -0800
+
+dpkg-repack (0.20) unstable; urgency=low
+
+  * Changed how I disable locales when running dpkg -l - now set LC_ALL=C.
+
+ -- Joey Hess <joeyh@debian.org>  Wed, 17 Jun 1998 12:27:16 -0700
+
+dpkg-repack (0.19) unstable; urgency=low
+
+  * Version 0.16 broke repacking packages that had diverted files in them,
+    because of how dpkg -L shows that info. (#23339). It turns out that
+    older versions of dpkg-repack packed up not the original file, but the
+    file that was diverted to replace it. I've decided that is incorrect
+    behavior, and changed it so if there is a diversion, the original file is
+    placed in the repacked package.
+
+ -- Joey Hess <joeyh@debian.org>  Sat, 13 Jun 1998 17:35:22 -0700
+
+dpkg-repack (0.18) unstable; urgency=low
+
+  * Removed some debugging output I accidentially put in the last version.
+  * Workes now for packages that have filenames with spaces in them (like
+    maelstrom).
+  * Checged the descripton to remove the "attempts to". It should always
+    work. (heh)
+
+ -- Joey Hess <joeyh@debian.org>  Thu, 28 May 1998 06:14:27 -0400
+
+dpkg-repack (0.17) unstable; urgency=low
+
+  * Uses dpkg for querying the status file and getting the file list, rather
+    than doing it by hand. However, dpkg-repack still accesses the dpkg
+    database directly, becuase it copies maintainer scripts, etc, from
+    there. There is no way to get that information via dpkg.
+  * Fixed  bug #22603 - a failure when eg. /usr is a symlink.
+    .
+    If the package contains a file, that locally looks like a symlink
+    pointing to a directory that is not in the package, then change it to a
+    real directory in the repacked package. This assummes that in this case,
+    the symlink was a local change (eg, /usr is a symlink).
+    .
+    However, if the directory in question contains no files in the filelist
+    for this package, don't do that, just preserve the symlink in the repacked
+    package. This handles the case where a package contains a symlink to a
+    directory elsewhere.
+
+ -- Joey Hess <joeyh@debian.org>  Tue, 26 May 1998 07:02:14 -0400
+
+dpkg-repack (0.16) frozen unstable; urgency=low
+
+  * Handle directories that are symlinks properly (#20280).
+
+ -- Joey Hess <joeyh@debian.org>  Thu, 26 Mar 1998 22:30:35 -0800
+
+dpkg-repack (0.15) unstable; urgency=low
+
+  * Fixed minor lintian errors.
+
+ -- Joey Hess <joeyh@debian.org>  Sat, 14 Mar 1998 20:00:09 -0800
+
+dpkg-repack (0.14) unstable; urgency=low
+
+  * Updated fsf address.
+
+ -- Joey Hess <joeyh@debian.org>  Mon,  9 Feb 1998 12:54:00 -0800
+
+dpkg-repack (0.13) unstable; urgency=low
+
+  * Depend on perl 5.004 or greater (For Getopt::Long).
+
+ -- Joey Hess <joeyh@debian.org>  Sat, 17 Jan 1998 02:12:58 -0500
+
+dpkg-repack (0.12) unstable; urgency=low
+
+  * Added option to make it build a debian package of a different
+    architecture than the default. (#17173)
+
+ -- Joey Hess <joeyh@debian.org>  Fri, 16 Jan 1998 11:18:35 -0500
+
+dpkg-repack (0.11) unstable; urgency=low
+
+  * Fix bug #17053, the first package listed in the status file can be
+    repacked now.
+
+ -- Joey Hess <joeyh@debian.org>  Tue, 13 Jan 1998 14:16:17 -0500
+
+dpkg-repack (0.10) unstable; urgency=low
+
+  * Don't include file list file in package. (Removes "contained list as info
+    file" error from dpkg when you install dpkg-repacked packages.
+
+ -- Joey Hess <joeyh@debian.org>  Thu, 27 Nov 1997 23:26:07 -0500
+
+dpkg-repack (0.9) unstable; urgency=low
+
+  * Force the umask to 022 (#14516).
+  * Use debhelper.
+  * Be a bit more positive that the package will work in the description,
+    since it seems to have worked pretty much ok for a year.
+
+ -- Joey Hess <joeyh@debian.org>  Tue,  4 Nov 1997 01:08:39 -0500
+
+dpkg-repack (0.8) unstable; urgency=low
+
+  * Routine update of debian/rules:
+    Fixed binary-indep target.
+
+ -- Joey Hess <joeyh@debian.org>  Thu,  4 Sep 1997 19:30:13 -0400
+
+dpkg-repack (0.7) unstable; urgency=low
+
+  * Moved it into unstable.
+  * Changed the program so it puts its temporary directory and the result
+    .deb file into the current directory, instead of /tmp. This is the same
+    as alien works, and I made this change mainly so you can repack some
+    large package on a spare partition when it won't fit on the partition
+    that contains /tmp.
+  * Added --root=<dir> option, to make it operate on the filesystem rooted at
+    <dir>.
+  * Remove temporary directory when done.
+  * Man page fixes.
+  * Added proper error trapping and handling.
+  * Added progress messages.
+  * Routine update of debian/rules:
+    Run dpkg-gencontrol after debstd, and delete substvars during clean.
+
+ -- Joey Hess <joeyh@debian.org>  Thu, 26 Jun 1997 18:54:40 -0400
+
+dpkg-repack (0.6) experimental; urgency=low
+
+  * Fixed problem with packaging dangling symlinks.
+  * Fixed permissions files when creating directories.
+  * Add Architecture: field to the control file.
+  * Removed some debugging info that was left in by mistake.
+  * Routine update of debian/rules:
+    Run dpkg-gencontrol after debstd, and delete substvars during clean.
+
+ -- Joey Hess <joeyh@debian.org>  Sun, 6 Apr 1997 15:11:25 -0400
+
+dpkg-repack (0.5) experimental; urgency=high
+
+  * Oops! This package was not meant to be in unstable. It's supposed to be
+    in experimental.
+
+ -- Joey Hess <joeyh@debian.org>  Thu, 20 Mar 1997 01:59:04 -0500
+
+dpkg-repack (0.4) unstable; urgency=low
+
+  * Use /var/lib/dpkg/status, not /var/lib/dpkg/available.
+  * Routine update of debian/rules:
+    Clean up junk files in subdirs.
+
+ -- Joey Hess <joeyh@debian.org>  Mon, 17 Mar 1997 16:39:05 -0500
+
+dpkg-repack (0.3) unstable; urgency=low
+
+  * New author/maintainer email address.
+
+ -- Joey Hess <joeyh@debian.org>  Tue, 24 Dec 1996 15:30:21 -0500
+
+dpkg-repack (0.2) experimental; urgency=low
+
+  * Fixed bug where it did not install shlibs and other control files.
+  * Routine update of debian/rules (now uses debmake).
+  * Fixed problem with perl 5.003.07.
+
+ -- Joey Hess <joeyh@debian.org>  Wed, 6 Nov 1996 22:28:20 -0500
+
+dpkg-repack (0.1) experimental; urgency=low
+
+  * First release.
+
+ -- Joey Hess <joeyh@debian.org>  Fri, 18 Oct 1996 00:07:24 -0400
