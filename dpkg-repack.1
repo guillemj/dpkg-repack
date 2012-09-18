@@ -32,13 +32,12 @@ example, you have another computer nfs mounted on /mnt, then you can use
 
 .TP
 .I --arch=architecture
-Make the package be for a different architecture.
+Make the package be for a specific architecture.
 .I dpkg-repack
-cannot tell if an installed package is architecture all or is
-specific to the system's architecture, so by default it uses
-.B dpkg --print-architecture
-to determine the build architecture. If you know the package is architecture
-all, you can use this option to force
+might not be able to tell if an installed package is architecture all or
+is specific to the system's architecture, in case it lacks the
+.I Architecture
+field. If you know the package architecture, you can use this option to force
 .I dpkg-repack
 to use the right architecture.
 
