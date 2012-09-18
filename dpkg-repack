@@ -156,9 +156,7 @@ sub Install_DEBIAN {
 
 	foreach my $fn (@control_files) {
 		my ($basename)=$fn=~m/^.*\.(.*?)$/;
-		if ($basename ne 'list' && $basename ne 'conffiles') {
-			SafeSystem "cp","-p",$fn,"$build_dir/DEBIAN/$basename","";
-		}
+		SafeSystem "cp","-p",$fn,"$build_dir/DEBIAN/$basename","";
 	}
 
 	# Conffiles have to be handled specially, because
