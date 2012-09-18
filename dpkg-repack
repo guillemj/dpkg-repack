@@ -147,7 +147,7 @@ sub Install_DEBIAN {
 	my @conffiles=@_;
 	
 	my @control_files;
-	open (Q, "dpkg-query --admindir=$rootdir/var/lib/dpkg --control-path $packagename 2>/dev/null |") || die "dpkg-query failed: $!";
+	open (Q, "dpkg-query --admindir=$rootdir/var/lib/dpkg --control-path $packagename 2>/dev/null |") || Die "dpkg-query failed: $!";
 	while (my $fn=<Q>) {
 		chomp $fn;
 		push @control_files, $fn;
