@@ -163,7 +163,7 @@ sub Install_DEBIAN {
 
 	# Conffiles have to be handled specially, because
 	# dpkg-query --control-path does not list the conffiles file.
-	# Also, we need to generate one that only control conffiles
+	# Also, we need to generate one that only contains conffiles
 	# that are still present on the filesystem.
 	if (@conffiles) {
 		open (OUT, ">$build_dir/DEBIAN/conffiles") || Die "write conffiles: $!";
