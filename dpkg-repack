@@ -313,8 +313,8 @@ foreach $packagename (@ARGV) {
 		next;
 	}
 	
-	# Let dpkg do its magic.
-	SafeSystem("dpkg","--build",$build_dir,".","");
+	# Let dpkg-deb do its magic.
+	SafeSystem("dpkg-deb","--build",$build_dir,".","");
 
 	# Finish up.
 	CleanUp();
