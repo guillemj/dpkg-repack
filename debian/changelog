@@ -1,3 +1,16 @@
+dpkg-repack (1.38) unstable; urgency=medium
+
+  * Do not filter list and conffiles control files from --control-path.
+    Thanks, Guillem Jover
+  * Use Die instead of die so that cleanup is performed on error.
+    Thanks, Guillem Jover
+  * Use dpkg-deb directly instead of indirectly through the dpkg frontend
+    Thanks, Guillem Jover
+  * Misc man page fixes.
+    Thanks, Guillem Jover
+
+ -- Joey Hess <joeyh@debian.org>  Sun, 31 Aug 2014 13:43:59 -0700
+
 dpkg-repack (1.37) unstable; urgency=low
 
   * Fix generation of conffiles list file. For some reason dpkg-query
