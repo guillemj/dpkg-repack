@@ -1,3 +1,9 @@
+dpkg-repack (1.39) unstable; urgency=medium
+
+  * Orphaned dpkg-repack.
+
+ -- Joey Hess <joeyh@debian.org>  Fri, 07 Nov 2014 17:17:56 -0400
+
 dpkg-repack (1.38) unstable; urgency=medium
 
   * Do not filter list and conffiles control files from --control-path.
