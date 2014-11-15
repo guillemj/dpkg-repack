@@ -4,6 +4,8 @@ dpkg-repack (1.40) UNRELEASED; urgency=low
   * Update project information (homepage, releases and VCS).
   * Expand debian/copyright to include an explicit «Copyright ©» and
     the full GPL-2+ license notice.
+  * Update license notice in dpkg-repack to match the one in debian/copyright,
+    by adding the «or later» clause. See #768511.
 
  -- Guillem Jover <guillem@debian.org>  Sat, 08 Nov 2014 05:38:27 +0100
 
