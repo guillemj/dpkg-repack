@@ -31,13 +31,13 @@ my $arch;
 my $generate;
 
 sub Syntax {
-	print { *STDERR } <<eof;
+	print { *STDERR } <<USAGE;
 Usage: dpkg-repack [options] packagename [packagename ..]
 	--root=dir	Take package from filesystem rooted on <dir>.
 	--arch=arch	Force the parch to be built for architecture <arch>.
 	--generate	Generate build directory but do not build deb.
 	packagename	The name of the package to attempt to repack.
-eof
+USAGE
 }
 
 sub Info {
