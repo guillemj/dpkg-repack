@@ -76,7 +76,7 @@ sub SafeSystem {
 
 	my $ret = system @_;
 	if (int($ret / 256) > 0) {
-		$errormessage = "Error running: " . join ' ', @_
+		$errormessage = 'Error running: ' . join ' ', @_
 			if !$errormessage;
 		Error($errormessage);
 	}
@@ -94,7 +94,7 @@ sub SafeMkdir {
 # This removes the temporary directory where we built the package.
 sub CleanUp {
 	if ($dirty_flag) {
-		SafeSystem("rm", "-rf", $build_dir,
+		SafeSystem('rm', '-rf', $build_dir,
 		           "Unable to remove $build_dir ($!). Please remove it by hand.");
 	}
 	$dirty_flag = 0;
@@ -121,7 +121,7 @@ sub Extract_Control {
 	for ($x = 0; $x < @control; $x++) {
 		if ($control[$x] =~ /^(\S+):/) {
 			last if $indesc; # end of description
-			$indesc = 1 if lc $1 eq "description";
+			$indesc = 1 if lc $1 eq 'description';
 		}
 	}
 	if ($indesc) {
@@ -157,13 +157,13 @@ sub Install_Control {
 	foreach (@control) {
 		# Remove the Conffiles stanza
 		if (/^(\S+):/) {
-			$skip = lc $1 eq "conffiles";
+			$skip = lc $1 eq 'conffiles';
 		}
 		print { $control_fh } "$_\n" unless $skip;
 	}
 
 	close $control_fh;
-	SafeSystem "chown", "0:0", "$build_dir/DEBIAN/control","";
+	SafeSystem 'chown', '0:0', "$build_dir/DEBIAN/control", '';
 }
 
 # Install all the files in the DEBIAN directory. (Except control file and
@@ -182,7 +182,7 @@ sub Install_DEBIAN {
 
 	foreach my $fn (@control_files) {
 		my ($basename) = $fn =~ m/^.*\.(.*?)$/;
-		SafeSystem "cp", "-p", $fn, "$build_dir/DEBIAN/$basename", "";
+		SafeSystem 'cp', '-p', $fn, "$build_dir/DEBIAN/$basename", '';
 	}
 
 	# Conffiles have to be handled specially, because
@@ -196,7 +196,7 @@ sub Install_DEBIAN {
 			print { $out_fh } "$_\n";
 		}
 		close $out_fh;
-		SafeSystem "chown", "0:0", "$build_dir/DEBIAN/conffiles", "";
+		SafeSystem 'chown', '0:0', "$build_dir/DEBIAN/conffiles", '';
 	}
 }
 
@@ -276,7 +276,7 @@ sub Install_Files {
 			# filelist listing parent directories first, and 
 			# then their contents.
 			# There has to be a better way to do this!
-			my $f = "";
+			my $f = '';
 			foreach my $dir (split(m/\/+/, $origfn)) {
 				$f .= "/$dir";
 				next if -d $build_dir . $f;
@@ -287,10 +287,10 @@ sub Install_Files {
 		}
 		elsif (-p $fn) {
 			# Copy a named pipe with cp -a.
-			SafeSystem "cp", "-a", $fn, "$build_dir/$origfn", "";
+			SafeSystem 'cp', '-a', $fn, "$build_dir/$origfn", '';
 		}
 		else {
-			SafeSystem "cp", "-pd", $fn, "$build_dir/$origfn", "";
+			SafeSystem 'cp', '-pd', $fn, "$build_dir/$origfn", '';
 		}
 	}
 
@@ -300,9 +300,9 @@ sub Install_Files {
 # Parse parameters.
 $rootdir = '';
 my $ret = &GetOptions(
-	"root|r=s", \$rootdir,
-	"arch|a=s", \$arch,
-	"generate|g" , \$generate,
+	'root|r=s', \$rootdir,
+	'arch|a=s', \$arch,
+	'generate|g' , \$generate,
 	'help|?', sub { Syntax(); exit 0; },
 	'version', sub { Version(); exit 0; },
 );
@@ -315,10 +315,10 @@ $build_dir = "./dpkg-repack-$$";
 
 # Some sanity checks.
 if ($> ne 0) {
-	Die "This program should be run as root (or you could use fakeroot -u). Aborting.";
+	Die 'This program should be run as root (or you could use fakeroot -u). Aborting.';
 }
 if (exists $ENV{FAKED_MODE} && $ENV{FAKED_MODE} ne 'unknown-is-real') {
-	Warn "fakeroot run without its -u flag may corrupt some file permissions.";
+	Warn 'fakeroot run without its -u flag may corrupt some file permissions.';
 }
 
 foreach my $packagename (@ARGV) {
@@ -344,13 +344,13 @@ foreach my $packagename (@ARGV) {
 	}
 	
 	# Let dpkg-deb do its magic.
-	SafeSystem("dpkg-deb", "--build", $build_dir, ".", "");
+	SafeSystem('dpkg-deb', '--build', $build_dir, '.', '');
 
 	# Finish up.
 	CleanUp();
 	if ($error_flag) {
-		Error("Problems were encountered in processing.");
-		Error("The package may be broken.");
+		Error('Problems were encountered in processing.');
+		Error('The package may be broken.');
 		$error_flag = 0;
 	}
 }
