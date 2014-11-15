@@ -25,6 +25,7 @@ dpkg-repack (1.40) UNRELEASED; urgency=low
   * Use package lexical variables instead of global ones.
   * Pass around control file data as an array of lines.
   * Make $packagename a loop lexical variable.
+  * Remove unused $control variable.
 
  -- Guillem Jover <guillem@debian.org>  Sat, 08 Nov 2014 05:38:27 +0100
 

@@ -141,7 +141,6 @@ sub Install_Control {
 	open my $control_fh, '>', "$build_dir/DEBIAN/control"
 		or Die "Can't write to $build_dir/DEBIAN/control";
 
-	my $control;
 	my $skip = 0;
 	foreach (@control) {
 		# Remove the Conffiles stanza
