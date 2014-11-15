@@ -2,6 +2,8 @@ dpkg-repack (1.40) UNRELEASED; urgency=low
 
   * New maintainer. Closes: #768511
   * Update project information (homepage, releases and VCS).
+  * Expand debian/copyright to include an explicit «Copyright ©» and
+    the full GPL-2+ license notice.
 
  -- Guillem Jover <guillem@debian.org>  Sat, 08 Nov 2014 05:38:27 +0100
 
