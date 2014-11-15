@@ -33,6 +33,7 @@ dpkg-repack (1.40) UNRELEASED; urgency=low
   * Add a --help option.
   * Add a --version option.
   * Do not unnecessarily interpolate strings.
+  * Remove & sigil from GetOptions function call.
 
  -- Guillem Jover <guillem@debian.org>  Sat, 08 Nov 2014 05:38:27 +0100
 

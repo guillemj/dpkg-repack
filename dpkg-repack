@@ -299,7 +299,7 @@ sub Install_Files {
 
 # Parse parameters.
 $rootdir = '';
-my $ret = &GetOptions(
+my $ret = GetOptions(
 	'root|r=s', \$rootdir,
 	'arch|a=s', \$arch,
 	'generate|g' , \$generate,
