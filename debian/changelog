@@ -8,6 +8,7 @@ dpkg-repack (1.40) UNRELEASED; urgency=low
     by adding the «or later» clause. See #768511.
   * Switch from FSF postal address to a URL.
   * Move Getopt::Long use declaration to the top of the file.
+  * Replace -w in the shebang with an explicit use warnings declaration.
 
  -- Guillem Jover <guillem@debian.org>  Sat, 08 Nov 2014 05:38:27 +0100
 
