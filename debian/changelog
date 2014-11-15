@@ -20,6 +20,7 @@ dpkg-repack (1.40) UNRELEASED; urgency=low
   * Add references to external man pages, and append the section number to
     program references.
   * Use low-precedence operators for error handling constructs.
+  * Use scalar variables instead of barewords for filehandles.
 
  -- Guillem Jover <guillem@debian.org>  Sat, 08 Nov 2014 05:38:27 +0100
 

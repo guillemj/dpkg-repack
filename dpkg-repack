@@ -131,7 +131,7 @@ sub Extract_Control {
 sub Install_Control {
 	my @control = split("\n", shift);
 
-	open(CONTROL, ">$build_dir/DEBIAN/control")
+	open my $control_fh, ">$build_dir/DEBIAN/control"
 		or Die "Can't write to $build_dir/DEBIAN/control";
 
 	my $control;
@@ -141,10 +141,10 @@ sub Install_Control {
 		if (/^(\S+):/) {
 			$skip = lc $1 eq "conffiles";
 		}
-		print CONTROL "$_\n" unless $skip;
+		print { $control_fh } "$_\n" unless $skip;
 	}
 
-	close CONTROL;
+	close $control_fh;
 	SafeSystem "chown", "0:0", "$build_dir/DEBIAN/control","";
 }
 
@@ -154,13 +154,13 @@ sub Install_DEBIAN {
 	my @conffiles = @_;
 
 	my @control_files;
-	open(Q, "dpkg-query --admindir=$rootdir/var/lib/dpkg --control-path $packagename 2>/dev/null |")
+	open my $q_fh, "dpkg-query --admindir=$rootdir/var/lib/dpkg --control-path $packagename 2>/dev/null |"
 		or Die "dpkg-query failed: $!";
-	while (my $fn = <Q>) {
+	while (my $fn = <$q_fh>) {
 		chomp $fn;
 		push @control_files, $fn;
 	}
-	close Q;
+	close $q_fh;
 
 	foreach my $fn (@control_files) {
 		my ($basename) = $fn =~ m/^.*\.(.*?)$/;
@@ -172,12 +172,12 @@ sub Install_DEBIAN {
 	# Also, we need to generate one that only contains conffiles
 	# that are still present on the filesystem.
 	if (@conffiles) {
-		open(OUT, ">$build_dir/DEBIAN/conffiles")
+		open my $out_fh, ">$build_dir/DEBIAN/conffiles"
 			or Die "write conffiles: $!";
 		foreach (@conffiles) {
-			print OUT "$_\n";
+			print { $out_fh } "$_\n";
 		}
-		close OUT;
+		close $out_fh;
 		SafeSystem "chown", "0:0", "$build_dir/DEBIAN/conffiles", "";
 	}
 }
