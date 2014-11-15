@@ -28,7 +28,6 @@ my $dirty_flag;
 my $build_dir;
 my $rootdir;
 my $arch;
-my $packagename;
 my $generate;
 
 sub Syntax {
@@ -99,6 +98,8 @@ sub Make_Dirs {
 
 # Get package control file via dpkg -s.
 sub Extract_Control {
+	my $packagename = shift;
+
 	my @control = `dpkg --root=$rootdir/ -s $packagename`;
 	chomp foreach @control;
 
@@ -135,7 +136,7 @@ sub Extract_Control {
 
 # Install the control file. Pass it the text of the file.
 sub Install_Control {
-	my (@control) = @_;
+	my ($packagename, @control) = @_;
 
 	open my $control_fh, '>', "$build_dir/DEBIAN/control"
 		or Die "Can't write to $build_dir/DEBIAN/control";
@@ -157,7 +158,7 @@ sub Install_Control {
 # Install all the files in the DEBIAN directory. (Except control file and
 # file list file.)
 sub Install_DEBIAN {
-	my @conffiles = @_;
+	my ($packagename, @conffiles) = @_;
 
 	my @control_files;
 	open my $q_fh, '-|', "dpkg-query --admindir=$rootdir/var/lib/dpkg --control-path $packagename 2>/dev/null"
@@ -191,7 +192,7 @@ sub Install_DEBIAN {
 # This looks at the list of files in this package, and places them
 # all on the directory tree.
 sub Install_Files {
-	my (@control) = @_;
+	my ($packagename, @control) = @_;
 
 	# There are two types of conffiles. Obsolete conffiles should be
 	# skipped, while other conffiles should be included if present.
@@ -307,8 +308,8 @@ if (exists $ENV{FAKED_MODE} && $ENV{FAKED_MODE} ne 'unknown-is-real') {
 	Warn "fakeroot run without its -u flag may corrupt some file permissions.";
 }
 
-foreach $packagename (@ARGV) {
-	my @control = Extract_Control();
+foreach my $packagename (@ARGV) {
+	my @control = Extract_Control($packagename);
 	if (!@control) {
 		Die "Unable to locate $packagename in the package list.";
 	}
@@ -319,9 +320,9 @@ foreach $packagename (@ARGV) {
 
 	# Generate the directory tree.
 	Make_Dirs();
-	my @conffiles = Install_Files(@control);
-	Install_DEBIAN(@conffiles);
-	Install_Control(@control);
+	my @conffiles = Install_Files($packagename, @control);
+	Install_DEBIAN($packagename, @conffiles);
+	Install_Control($packagename, @control);
 
 	# Stop here?
 	if ($generate) {
