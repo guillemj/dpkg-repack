@@ -9,6 +9,14 @@ dpkg-repack (1.40) UNRELEASED; urgency=low
   * Switch from FSF postal address to a URL.
   * Move Getopt::Long use declaration to the top of the file.
   * Replace -w in the shebang with an explicit use warnings declaration.
+  * Improve man page formatting.
+    - Generalize the SYNOPSIS.
+    - Mark programs, command-line arguments and field names in bold.
+    - Mark variable text in italic.
+    - Use italic instead of <> to mark variable text.
+    - Change .TH line to include the date and version, and to mention this is
+      now part of the dpkg suite.
+    - Spell package name with a dash.
 
  -- Guillem Jover <guillem@debian.org>  Sat, 08 Nov 2014 05:38:27 +0100
 
