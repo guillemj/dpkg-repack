@@ -71,9 +71,9 @@ sub SafeSystem {
 sub SafeMkdir {
 	my ($dir, $perms) = @_;
 
-	mkdir $dir, $perms || Error("Unable to make directory, \"$dir\": $!");
+	mkdir $dir, $perms or Error("Unable to make directory, \"$dir\": $!");
 	# mkdir doesn't do sticky bits and suidness.
-	chmod $perms, $dir || Error("Unable to change permissions on \"$dir\": $!");
+	chmod $perms, $dir or Error("Unable to change permissions on \"$dir\": $!");
 }
 
 # This removes the temporary directory where we built the package.
@@ -132,7 +132,7 @@ sub Install_Control {
 	my @control = split("\n", shift);
 
 	open(CONTROL, ">$build_dir/DEBIAN/control")
-		|| Die "Can't write to $build_dir/DEBIAN/control";
+		or Die "Can't write to $build_dir/DEBIAN/control";
 
 	my $control;
 	my $skip = 0;
@@ -155,7 +155,7 @@ sub Install_DEBIAN {
 
 	my @control_files;
 	open(Q, "dpkg-query --admindir=$rootdir/var/lib/dpkg --control-path $packagename 2>/dev/null |")
-		|| Die "dpkg-query failed: $!";
+		or Die "dpkg-query failed: $!";
 	while (my $fn = <Q>) {
 		chomp $fn;
 		push @control_files, $fn;
@@ -173,7 +173,7 @@ sub Install_DEBIAN {
 	# that are still present on the filesystem.
 	if (@conffiles) {
 		open(OUT, ">$build_dir/DEBIAN/conffiles")
-			|| Die "write conffiles: $!";
+			or Die "write conffiles: $!";
 		foreach (@conffiles) {
 			print OUT "$_\n";
 		}
@@ -249,8 +249,8 @@ sub Install_Files {
 		if (!-e $fn && !-l $fn) {
 			Error "File not found: $fn" unless grep { $_ eq $fn } @conffiles;
 		}
-		elsif ((-d $fn and ! -l $fn) or
-		       (-d $fn and -l $fn and !$filelist{readlink($fn)}
+		elsif ((-d $fn and not -l $fn) or
+		       (-d $fn and -l $fn and not $filelist{readlink($fn)}
 		        and ($x + 1 <= $#filelist and $filelist[$x + 1] =~ m/^\Q$origfn\E\//))) {
 			# See the changelog for version 0.17 for an
 			# explanation of what I'm doing above with
@@ -287,7 +287,7 @@ my $ret = &GetOptions(
 	"generate|g" , \$generate,
 );
 
-if (!@ARGV || !$ret) {
+if (not @ARGV or not $ret) {
 	Syntax();
 	exit 1;
 }
