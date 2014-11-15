@@ -57,20 +57,25 @@ The name of the package to attempt to repack. Multiple packages can be listed.
 
 There is a tricky situation that can occur if you \fBdpkg\-repack\fP a package
 that has modified conffiles. The modified conffiles are packed up. Now if
-you install the package, \fBdpkg\fP does not realize that the conffiles
+you install the package, \fBdpkg\fP(1) does not realize that the conffiles
 in it are modified. So if you later upgrade to a new version of the package,
-\fBdpkg\fP will believe that the old (repacked) package has older conffiles
+\fBdpkg\fP(1) will believe that the old (repacked) package has older conffiles
 than the new version, and will silently replace the conffiles with those in
 the package you are upgrading to.
 
 .P
 
-While \fBdpkg\-repack\fP can be run under \fBfakeroot\fP and will work
+While \fBdpkg\-repack\fP can be run under \fBfakeroot\fP(1) and will work
 most of the time, \fBfakeroot \-u\fP must be used if any of the files to be
 repacked are owned by non-root users. Otherwise the package will have them
 owned by root.
-\fBdpkg\-repack\fP will warn if you run it under \fBfakeroot\fP without
+\fBdpkg\-repack\fP will warn if you run it under \fBfakeroot\fP(1) without
 the \fB\-u\fP flag.
+
+.SH SEE ALSO
+.BR dpkg (1),
+.BR dpkg-deb (1),
+.BR fakeroot (1).
 
 .SH AUTHOR
 Joey Hess <joeyh@debian.org>

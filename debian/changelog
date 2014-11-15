@@ -17,6 +17,8 @@ dpkg-repack (1.40) UNRELEASED; urgency=low
     - Change .TH line to include the date and version, and to mention this is
       now part of the dpkg suite.
     - Spell package name with a dash.
+  * Add references to external man pages, and append the section number to
+    program references.
 
  -- Guillem Jover <guillem@debian.org>  Sat, 08 Nov 2014 05:38:27 +0100
 
