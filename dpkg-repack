@@ -70,7 +70,7 @@ sub SafeSystem {
 # Make the passed directory, print an error message if it fails.
 sub SafeMkdir {
 	my ($dir, $perms) = @_;
-	
+
 	mkdir $dir, $perms || Error("Unable to make directory, \"$dir\": $!");
 	# mkdir doesn't do sticky bits and suidness.
 	chmod $perms, $dir || Error("Unable to change permissions on \"$dir\": $!");
@@ -87,7 +87,7 @@ sub CleanUp {
 # This makes the directories we will rebuild the package in.
 sub Make_Dirs {
 	$dirty_flag = 1;
-	
+
 	SafeMkdir $build_dir, 0755;
 	SafeMkdir "$build_dir/DEBIAN", 0755;
 }
@@ -96,7 +96,7 @@ sub Make_Dirs {
 sub Extract_Control {
 	my @control = `dpkg --root=$rootdir/ -s $packagename`;
 	chomp foreach @control;
-	
+
 	# Add something to the Description to mention dpkg-repack.
 	my $indesc = 0;
 	my $x;
@@ -126,14 +126,14 @@ sub Extract_Control {
 
 	return join("\n", @control) . "\n";
 }
-		
+
 # Install the control file. Pass it the text of the file.
 sub Install_Control {
 	my @control = split("\n", shift);
-	
+
 	open(CONTROL, ">$build_dir/DEBIAN/control")
 		|| Die "Can't write to $build_dir/DEBIAN/control";
-	
+
 	my $control;
 	my $skip = 0;
 	foreach (@control) {
@@ -152,7 +152,7 @@ sub Install_Control {
 # file list file.)
 sub Install_DEBIAN {
 	my @conffiles = @_;
-	
+
 	my @control_files;
 	open(Q, "dpkg-query --admindir=$rootdir/var/lib/dpkg --control-path $packagename 2>/dev/null |")
 		|| Die "dpkg-query failed: $!";
@@ -206,7 +206,7 @@ sub Install_Files {
 			$in_conffiles = 0;
 		}
 	}
-	
+
 	# I need a list of all the files, for later lookups
 	# when I test to see where symlinks point to.
 	# Note that because I parse the output of the command (for
@@ -290,7 +290,7 @@ my $ret = &GetOptions(
 if (!@ARGV || !$ret) {
 	Syntax();
 	exit 1;
-}	
+}
 $build_dir = "./dpkg-repack-$$";
 
 # Some sanity checks.
