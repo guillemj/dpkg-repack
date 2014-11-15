@@ -38,6 +38,7 @@ Options:
       --root=<dir>      Take package from filesystem rooted on <dir>.
       --arch=<arch>     Force the parch to be built for architecture <arch>.
       --generate        Generate build directory but do not build deb.
+  -?, --help            Show this usage information.
 
 <packagename> is the name of the package(s) to attempt to repack.
 USAGE
@@ -295,6 +296,7 @@ my $ret = &GetOptions(
 	"root|r=s", \$rootdir,
 	"arch|a=s", \$arch,
 	"generate|g" , \$generate,
+	'help|?', sub { Syntax(); exit 0; },
 );
 
 if (not @ARGV or not $ret) {
