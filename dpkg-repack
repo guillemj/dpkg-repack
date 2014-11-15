@@ -131,7 +131,7 @@ sub Extract_Control {
 sub Install_Control {
 	my @control = split("\n", shift);
 
-	open my $control_fh, ">$build_dir/DEBIAN/control"
+	open my $control_fh, '>', "$build_dir/DEBIAN/control"
 		or Die "Can't write to $build_dir/DEBIAN/control";
 
 	my $control;
@@ -154,7 +154,7 @@ sub Install_DEBIAN {
 	my @conffiles = @_;
 
 	my @control_files;
-	open my $q_fh, "dpkg-query --admindir=$rootdir/var/lib/dpkg --control-path $packagename 2>/dev/null |"
+	open my $q_fh, '-|', "dpkg-query --admindir=$rootdir/var/lib/dpkg --control-path $packagename 2>/dev/null"
 		or Die "dpkg-query failed: $!";
 	while (my $fn = <$q_fh>) {
 		chomp $fn;
@@ -172,7 +172,7 @@ sub Install_DEBIAN {
 	# Also, we need to generate one that only contains conffiles
 	# that are still present on the filesystem.
 	if (@conffiles) {
-		open my $out_fh, ">$build_dir/DEBIAN/conffiles"
+		open my $out_fh, '>', "$build_dir/DEBIAN/conffiles"
 			or Die "write conffiles: $!";
 		foreach (@conffiles) {
 			print { $out_fh } "$_\n";
