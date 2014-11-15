@@ -22,6 +22,7 @@ dpkg-repack (1.40) UNRELEASED; urgency=low
   * Use low-precedence operators for error handling constructs.
   * Use scalar variables instead of barewords for filehandles.
   * Use three-form open call.
+  * Use package lexical variables instead of global ones.
 
  -- Guillem Jover <guillem@debian.org>  Sat, 08 Nov 2014 05:38:27 +0100
 

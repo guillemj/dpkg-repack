@@ -23,8 +23,13 @@ use warnings;
 use File::stat;
 use Getopt::Long;
 
-use vars qw($error_flag $dirty_flag $build_dir $arch $rootdir $packagename
-	    $generate);
+my $error_flag;
+my $dirty_flag;
+my $build_dir;
+my $rootdir;
+my $arch;
+my $packagename;
+my $generate;
 
 sub Syntax {
 	print STDERR <<eof;
