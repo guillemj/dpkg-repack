@@ -128,13 +128,14 @@ sub Extract_Control {
 		Die "Package $packagename not fully installed";
 	}
 	@control = grep { !/^Status:\s+/ } @control;
+	push @control, "\n";
 
-	return join("\n", @control) . "\n";
+	return @control;
 }
 
 # Install the control file. Pass it the text of the file.
 sub Install_Control {
-	my @control = split("\n", shift);
+	my (@control) = @_;
 
 	open my $control_fh, '>', "$build_dir/DEBIAN/control"
 		or Die "Can't write to $build_dir/DEBIAN/control";
@@ -190,14 +191,14 @@ sub Install_DEBIAN {
 # This looks at the list of files in this package, and places them
 # all on the directory tree.
 sub Install_Files {
-	my $control = shift;
+	my (@control) = @_;
 
 	# There are two types of conffiles. Obsolete conffiles should be
 	# skipped, while other conffiles should be included if present.
 	my @conffiles = ();
 	my @obsolete_conffiles;
 	my $in_conffiles = 0;
-	foreach my $line (split /\n/, $control) {
+	foreach my $line (@control) {
 		if ($line =~ /^Conffiles:/) {
 			$in_conffiles = 1;
 		}
@@ -307,8 +308,8 @@ if (exists $ENV{FAKED_MODE} && $ENV{FAKED_MODE} ne 'unknown-is-real') {
 }
 
 foreach $packagename (@ARGV) {
-	my $control = Extract_Control();
-	if (!$control) {
+	my @control = Extract_Control();
+	if (!@control) {
 		Die "Unable to locate $packagename in the package list.";
 	}
 
@@ -318,9 +319,9 @@ foreach $packagename (@ARGV) {
 
 	# Generate the directory tree.
 	Make_Dirs();
-	my @conffiles = Install_Files($control);
+	my @conffiles = Install_Files(@control);
 	Install_DEBIAN(@conffiles);
-	Install_Control($control);
+	Install_Control(@control);
 
 	# Stop here?
 	if ($generate) {
