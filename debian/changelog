@@ -7,6 +7,7 @@ dpkg-repack (1.40) UNRELEASED; urgency=low
   * Update license notice in dpkg-repack to match the one in debian/copyright,
     by adding the «or later» clause. See #768511.
   * Switch from FSF postal address to a URL.
+  * Move Getopt::Long use declaration to the top of the file.
 
  -- Guillem Jover <guillem@debian.org>  Sat, 08 Nov 2014 05:38:27 +0100
 

@@ -19,6 +19,8 @@
 
 use strict;
 use File::stat;
+use Getopt::Long;
+
 use vars qw($error_flag $dirty_flag $build_dir $arch $rootdir $packagename
 	    $generate);
 
@@ -271,7 +273,6 @@ sub Install_Files {
 }
 
 # Parse parameters.
-use Getopt::Long;
 $rootdir='';
 my $ret=&GetOptions(
 	"root|r=s", \$rootdir,
