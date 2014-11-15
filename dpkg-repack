@@ -41,36 +41,37 @@ sub Info {
 }
 
 sub Warn {
-        print STDERR "dpkg-repack: @_\n";
+	print STDERR "dpkg-repack: @_\n";
 }
 
 sub Error {
 	Warn @_;
-	$error_flag=1;
+	$error_flag = 1;
 }
 
 sub Die {
-        Error('Fatal Error:',@_);
+	Error('Fatal Error:', @_);
 	CleanUp();
-        exit 1;
+	exit 1;
 }
 
 # Run a system command, and print an error message if it fails.
 sub SafeSystem {
-	my $errormessage=pop @_;
+	my $errormessage = pop @_;
 
-	my $ret=system @_;
-	if (int($ret/256) > 0) {
-		$errormessage="Error running: ".join(' ', @_) if !$errormessage;
+	my $ret = system @_;
+	if (int($ret / 256) > 0) {
+		$errormessage = "Error running: " . join ' ', @_
+			if !$errormessage;
 		Error($errormessage);
 	}
 }
 
 # Make the passed directory, print an error message if it fails.
 sub SafeMkdir {
-	my ($dir,$perms)=@_;
+	my ($dir, $perms) = @_;
 	
-	mkdir $dir,$perms || Error("Unable to make directory, \"$dir\": $!");
+	mkdir $dir, $perms || Error("Unable to make directory, \"$dir\": $!");
 	# mkdir doesn't do sticky bits and suidness.
 	chmod $perms, $dir || Error("Unable to change permissions on \"$dir\": $!");
 }
@@ -78,61 +79,63 @@ sub SafeMkdir {
 # This removes the temporary directory where we built the package.
 sub CleanUp {
 	if ($dirty_flag) {
-		SafeSystem("rm","-rf",$build_dir,
-			"Unable to remove $build_dir ($!). Please remove it by hand.");
+		SafeSystem("rm", "-rf", $build_dir,
+		           "Unable to remove $build_dir ($!). Please remove it by hand.");
 	}
 }
 
 # This makes the directories we will rebuild the package in.
 sub Make_Dirs {
-	$dirty_flag=1;
+	$dirty_flag = 1;
 	
-	SafeMkdir $build_dir,0755;
-	SafeMkdir "$build_dir/DEBIAN",0755;
+	SafeMkdir $build_dir, 0755;
+	SafeMkdir "$build_dir/DEBIAN", 0755;
 }
 
 # Get package control file via dpkg -s.
 sub Extract_Control {
-	my @control=`dpkg --root=$rootdir/ -s $packagename`;
+	my @control = `dpkg --root=$rootdir/ -s $packagename`;
 	chomp foreach @control;
 	
 	# Add something to the Description to mention dpkg-repack.
-	my $indesc=0;
+	my $indesc = 0;
 	my $x;
-	for ($x=0; $x < @control; $x++) {
-		if ($control[$x] =~/^(\S+):/) {
+	for ($x = 0; $x < @control; $x++) {
+		if ($control[$x] =~ /^(\S+):/) {
 			last if $indesc; # end of description
-			$indesc=1 if lc $1 eq "description";
+			$indesc = 1 if lc $1 eq "description";
 		}
 	}
 	if ($indesc) {
-		my $date=`date -R`;
+		my $date = `date -R`;
 		chomp $date;
-		$control[$x-1]=$control[$x-1]." .\n"." (Repackaged on $date by dpkg-repack.)";
+		$control[$x - 1] = $control[$x - 1] .
+		                   " .\n" .
+		                   " (Repackaged on $date by dpkg-repack.)";
 	}
 	
 	if ($arch) {
-		@control=grep { !/^Architecture:/ } @control;
+		@control = grep { !/^Architecture:/ } @control;
 		push @control, "Architecture: $arch\n";
 	}
 
 	if (! grep { /^Status:\s+.*\s+installed/ } @control) {
 		Die "Package $packagename not fully installed";
 	}
-	@control=grep { !/^Status:\s+/ } @control;
+	@control = grep { !/^Status:\s+/ } @control;
 
-	return join("\n", @control)."\n";
+	return join("\n", @control) . "\n";
 }
 		
 # Install the control file. Pass it the text of the file.
 sub Install_Control {
-	my @control=split("\n", shift);
+	my @control = split("\n", shift);
 	
-	open (CONTROL,">$build_dir/DEBIAN/control")
+	open(CONTROL, ">$build_dir/DEBIAN/control")
 		|| Die "Can't write to $build_dir/DEBIAN/control";
 	
 	my $control;
-	my $skip=0;
+	my $skip = 0;
 	foreach (@control) {
 		# Remove the Conffiles stanza
 		if (/^(\S+):/) {
@@ -142,25 +145,26 @@ sub Install_Control {
 	}
 
 	close CONTROL;
-	SafeSystem "chown","0:0","$build_dir/DEBIAN/control","";
+	SafeSystem "chown", "0:0", "$build_dir/DEBIAN/control","";
 }
 
 # Install all the files in the DEBIAN directory. (Except control file and
 # file list file.)
 sub Install_DEBIAN {
-	my @conffiles=@_;
+	my @conffiles = @_;
 	
 	my @control_files;
-	open (Q, "dpkg-query --admindir=$rootdir/var/lib/dpkg --control-path $packagename 2>/dev/null |") || Die "dpkg-query failed: $!";
-	while (my $fn=<Q>) {
+	open(Q, "dpkg-query --admindir=$rootdir/var/lib/dpkg --control-path $packagename 2>/dev/null |")
+		|| Die "dpkg-query failed: $!";
+	while (my $fn = <Q>) {
 		chomp $fn;
 		push @control_files, $fn;
 	}
 	close Q;
 
 	foreach my $fn (@control_files) {
-		my ($basename)=$fn=~m/^.*\.(.*?)$/;
-		SafeSystem "cp","-p",$fn,"$build_dir/DEBIAN/$basename","";
+		my ($basename) = $fn =~ m/^.*\.(.*?)$/;
+		SafeSystem "cp", "-p", $fn, "$build_dir/DEBIAN/$basename", "";
 	}
 
 	# Conffiles have to be handled specially, because
@@ -168,37 +172,38 @@ sub Install_DEBIAN {
 	# Also, we need to generate one that only contains conffiles
 	# that are still present on the filesystem.
 	if (@conffiles) {
-		open (OUT, ">$build_dir/DEBIAN/conffiles") || Die "write conffiles: $!";
+		open(OUT, ">$build_dir/DEBIAN/conffiles")
+			|| Die "write conffiles: $!";
 		foreach (@conffiles) {
 			print OUT "$_\n";
 		}
 		close OUT;
-		SafeSystem "chown","0:0","$build_dir/DEBIAN/conffiles", "";
+		SafeSystem "chown", "0:0", "$build_dir/DEBIAN/conffiles", "";
 	}
 }
 
 # This looks at the list of files in this package, and places them
 # all on the directory tree.
 sub Install_Files {
-	my $control=shift;
+	my $control = shift;
 
 	# There are two types of conffiles. Obsolete conffiles should be
 	# skipped, while other conffiles should be included if present.
-	my @conffiles=();
+	my @conffiles = ();
 	my @obsolete_conffiles;
-	my $in_conffiles=0;
-	foreach my $line (split /\n/,$control) {
-		if ($line=~/^Conffiles:/) {
-			$in_conffiles=1;
+	my $in_conffiles = 0;
+	foreach my $line (split /\n/, $control) {
+		if ($line =~ /^Conffiles:/) {
+			$in_conffiles = 1;
 		}
-		elsif ($in_conffiles && $line=~/^ (.*)\s+([^\s]+)\s+obsolete$/) {
+		elsif ($in_conffiles && $line =~ /^ (.*)\s+([^\s]+)\s+obsolete$/) {
 			push @obsolete_conffiles, $1;
 		}
-		elsif ($in_conffiles && $line=~/^ (.*)\s+([^\s]+)$/) {
+		elsif ($in_conffiles && $line =~ /^ (.*)\s+([^\s]+)$/) {
 			push @conffiles, $1;
 		}
 		else {
-			$in_conffiles=0;
+			$in_conffiles = 0;
 		}
 	}
 	
@@ -207,33 +212,33 @@ sub Install_Files {
 	# Note that because I parse the output of the command (for
 	# diversions, below) it's important to make sure it runs with English
 	# language output.
-	my $lc_all=$ENV{LC_ALL};
-	$ENV{LC_ALL}='C';
-	my @filelist=split /\n/,`dpkg --root=$rootdir/ -L $packagename`;
-	$ENV{LC_ALL}=$lc_all if defined $lc_all; # important to reset it.
+	my $lc_all = $ENV{LC_ALL};
+	$ENV{LC_ALL} = 'C';
+	my @filelist = split /\n/, `dpkg --root=$rootdir/ -L $packagename`;
+	$ENV{LC_ALL} = $lc_all if defined $lc_all; # important to reset it.
 
 	# Set up a hash for easy lookups.
 	my %filelist = map { $_ => 1 } @filelist;
 
 	my $fn;
-	for (my $x=0;$x<=$#filelist;$x++) {
-		my $origfn=$filelist[$x];
+	for (my $x = 0; $x <= $#filelist; $x++) {
+		my $origfn = $filelist[$x];
 
 		# dpkg -L spits out extra lines to report diversions.
 		# we have to parse those (ugly..), to find out where the
 		# file was diverted to, and use the diverted file.
-		if (defined $filelist[$x+1] &&
-		    ($filelist[$x+1]=~m/locally diverted to: (.*)/ ||
-		     $filelist[$x+1]=~m/diverted by .*? to: (.*)/)) {
-			$fn="$rootdir/$1";
+		if (defined $filelist[$x + 1] &&
+		    ($filelist[$x + 1] =~ m/locally diverted to: (.*)/ ||
+		     $filelist[$x + 1] =~ m/diverted by .*? to: (.*)/)) {
+			$fn = "$rootdir/$1";
 			$x++; # skip over that line.
 		}
-		elsif ($origfn=~m/package diverts others to: (.*)/) {
+		elsif ($origfn =~ m/package diverts others to: (.*)/) {
 			# not a file at all, skip over it
 			next;
 		}
 		else {
-			$fn=$rootdir.$origfn;
+			$fn = $rootdir . $origfn;
 		}
 
 		if (grep { $_ eq $fn } @obsolete_conffiles) {
@@ -244,30 +249,30 @@ sub Install_Files {
 		if (!-e $fn && !-l $fn) {
 			Error "File not found: $fn" unless grep { $_ eq $fn } @conffiles;
 		}
-		elsif ((-d $fn and !-l $fn) or
+		elsif ((-d $fn and ! -l $fn) or
 		       (-d $fn and -l $fn and !$filelist{readlink($fn)}
-		        and ($x+1 <= $#filelist and $filelist[$x+1]=~m/^\Q$origfn\E\//))) {
+		        and ($x + 1 <= $#filelist and $filelist[$x + 1] =~ m/^\Q$origfn\E\//))) {
 			# See the changelog for version 0.17 for an
 			# explanation of what I'm doing above with
 			# directory symlinks. I rely on the order of the
 			# filelist listing parent directories first, and 
 			# then their contents.
 			# There has to be a better way to do this!
-			my $f="";
+			my $f = "";
 			foreach my $dir (split(m/\/+/, $origfn)) {
-				$f.="/$dir";
-				next if -d $build_dir.$f;
-				my $st=stat($rootdir.$f);
-				SafeMkdir "$build_dir/$f",$st->mode;
+				$f .= "/$dir";
+				next if -d $build_dir . $f;
+				my $st = stat($rootdir . $f);
+				SafeMkdir "$build_dir/$f", $st->mode;
 				chown($st->uid, $st->gid, "$build_dir/$f");
 			}
 		}
 		elsif (-p $fn) {
 			# Copy a named pipe with cp -a.
-			SafeSystem "cp","-a",$fn,"$build_dir/$origfn","";
+			SafeSystem "cp", "-a", $fn, "$build_dir/$origfn", "";
 		}
 		else {
-			SafeSystem "cp","-pd",$fn,"$build_dir/$origfn","";
+			SafeSystem "cp", "-pd", $fn, "$build_dir/$origfn", "";
 		}
 	}
 
@@ -275,8 +280,8 @@ sub Install_Files {
 }
 
 # Parse parameters.
-$rootdir='';
-my $ret=&GetOptions(
+$rootdir = '';
+my $ret = &GetOptions(
 	"root|r=s", \$rootdir,
 	"arch|a=s", \$arch,
 	"generate|g" , \$generate,
@@ -286,17 +291,21 @@ if (!@ARGV || !$ret) {
 	Syntax();
 	exit 1;
 }	
-$build_dir="./dpkg-repack-$$";
+$build_dir = "./dpkg-repack-$$";
 
 # Some sanity checks.
-if ($> ne 0) { Die "This program should be run as root (or you could use fakeroot -u). Aborting." }
+if ($> ne 0) {
+	Die "This program should be run as root (or you could use fakeroot -u). Aborting.";
+}
 if (exists $ENV{FAKED_MODE} && $ENV{FAKED_MODE} ne 'unknown-is-real') {
 	Warn "fakeroot run without its -u flag may corrupt some file permissions.";
 }
 
 foreach $packagename (@ARGV) {
-	my $control=Extract_Control();
-	if (!$control) { Die "Unable to locate $packagename in the package list." }
+	my $control = Extract_Control();
+	if (!$control) {
+		Die "Unable to locate $packagename in the package list.";
+	}
 
 	# If the umask is set wrong, the directories will end up with the wrong
 	# perms. (Is this still needed?)
@@ -304,7 +313,7 @@ foreach $packagename (@ARGV) {
 
 	# Generate the directory tree.
 	Make_Dirs();
-	my @conffiles=Install_Files($control);
+	my @conffiles = Install_Files($control);
 	Install_DEBIAN(@conffiles);
 	Install_Control($control);
 
@@ -315,13 +324,13 @@ foreach $packagename (@ARGV) {
 	}
 	
 	# Let dpkg-deb do its magic.
-	SafeSystem("dpkg-deb","--build",$build_dir,".","");
+	SafeSystem("dpkg-deb", "--build", $build_dir, ".", "");
 
 	# Finish up.
 	CleanUp();
 	if ($error_flag) {
-	        Error("Problems were encountered in processing.");
-	        Error("The package may be broken.");
-		$error_flag=0;
+		Error("Problems were encountered in processing.");
+		Error("The package may be broken.");
+		$error_flag = 0;
 	}
 }
