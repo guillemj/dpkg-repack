@@ -31,7 +31,7 @@ my $arch;
 my $generate;
 
 sub Syntax {
-	print STDERR <<eof;
+	print { *STDERR } <<eof;
 Usage: dpkg-repack [options] packagename [packagename ..]
 	--root=dir	Take package from filesystem rooted on <dir>.
 	--arch=arch	Force the parch to be built for architecture <arch>.
@@ -45,7 +45,7 @@ sub Info {
 }
 
 sub Warn {
-	print STDERR "dpkg-repack: @_\n";
+	print { *STDERR } "dpkg-repack: @_\n";
 }
 
 sub Error {

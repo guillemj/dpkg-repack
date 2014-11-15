@@ -27,6 +27,7 @@ dpkg-repack (1.40) UNRELEASED; urgency=low
   * Make $packagename a loop lexical variable.
   * Remove unused $control variable.
   * Set $dirty_flag to 0 when we have done the cleanup.
+  * Pass a filehandle reference instead of a bareword to print().
 
  -- Guillem Jover <guillem@debian.org>  Sat, 08 Nov 2014 05:38:27 +0100
 
