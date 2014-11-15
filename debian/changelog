@@ -31,6 +31,7 @@ dpkg-repack (1.40) UNRELEASED; urgency=low
   * Uppercase and rename HERE-doc marker from eof to USAGE.
   * Rework usage output.
   * Add a --help option.
+  * Add a --version option.
 
  -- Guillem Jover <guillem@debian.org>  Sat, 08 Nov 2014 05:38:27 +0100
 

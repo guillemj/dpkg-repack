@@ -23,6 +23,8 @@ use warnings;
 use File::stat;
 use Getopt::Long;
 
+my $VERSION = '1.40';
+
 my $error_flag;
 my $dirty_flag;
 my $build_dir;
@@ -39,9 +41,14 @@ Options:
       --arch=<arch>     Force the parch to be built for architecture <arch>.
       --generate        Generate build directory but do not build deb.
   -?, --help            Show this usage information.
+      --version         Show the version.
 
 <packagename> is the name of the package(s) to attempt to repack.
 USAGE
+}
+
+sub Version {
+	print 'dpkg-repack ' . $VERSION . "\n";
 }
 
 sub Info {
@@ -297,6 +304,7 @@ my $ret = &GetOptions(
 	"arch|a=s", \$arch,
 	"generate|g" , \$generate,
 	'help|?', sub { Syntax(); exit 0; },
+	'version', sub { Version(); exit 0; },
 );
 
 if (not @ARGV or not $ret) {
