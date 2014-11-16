@@ -314,7 +314,7 @@ if (not @ARGV or not $ret) {
 $build_dir = "./dpkg-repack-$$";
 
 # Some sanity checks.
-if ($> ne 0) {
+if ($> != 0) {
 	Die 'This program should be run as root (or you could use fakeroot -u). Aborting.';
 }
 if (exists $ENV{FAKED_MODE} && $ENV{FAKED_MODE} ne 'unknown-is-real') {
