@@ -1,4 +1,4 @@
-dpkg-repack (1.40) UNRELEASED; urgency=low
+dpkg-repack (1.40) unstable; urgency=low
 
   * New maintainer. Closes: #768511
   * Update project information (homepage, releases and VCS).
@@ -45,7 +45,7 @@ dpkg-repack (1.40) UNRELEASED; urgency=low
   * Add new -d, --deb-option to allow passing build options to dpkg-deb.
     Closes: #661953
 
- -- Guillem Jover <guillem@debian.org>  Sat, 08 Nov 2014 05:38:27 +0100
+ -- Guillem Jover <guillem@debian.org>  Tue, 25 Nov 2014 23:59:06 +0100
 
 dpkg-repack (1.39) unstable; urgency=medium
 
