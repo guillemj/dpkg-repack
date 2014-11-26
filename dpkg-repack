@@ -132,6 +132,7 @@ sub Extract_Control {
 		my $date = `date -R`;
 		chomp $date;
 		chomp $control[$x - 1];
+		$control[$x - 1] .= "\n";
 		$control[$x - 1] .= " .\n";
 		$control[$x - 1] .= " (Repackaged on $date by dpkg-repack.)";
 	}
