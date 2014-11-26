@@ -37,6 +37,7 @@ dpkg-repack (1.40) UNRELEASED; urgency=low
   * Use correct operator for numeric value in $> comparison.
   * Convert debian/rules from dh(1) to explicit debhelper commands.
   * Bump Standard-Version to 3.9.6 (no changed needed).
+  * Switch to source format “3.0 (native)”.
 
  -- Guillem Jover <guillem@debian.org>  Sat, 08 Nov 2014 05:38:27 +0100
 
