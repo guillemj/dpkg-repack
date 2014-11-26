@@ -42,6 +42,8 @@ dpkg-repack (1.40) UNRELEASED; urgency=low
   * Fix description mangling to add a proper blank line separator.
   * Fix example dpkg-deb invocation in dpkg-repack(1) --generate description
     to create a properly named binary package. Closes: #767220
+  * Add new -d, --deb-option to allow passing build options to dpkg-deb.
+    Closes: #661953
 
  -- Guillem Jover <guillem@debian.org>  Sat, 08 Nov 2014 05:38:27 +0100
 

@@ -31,6 +31,7 @@ my $dirty_flag;
 my $build_dir;
 my $rootdir;
 my $arch;
+my @deb_options;
 my $generate;
 
 sub Syntax {
@@ -41,6 +42,8 @@ Options:
       --root=<dir>      Take package from filesystem rooted on <dir>.
       --arch=<arch>     Force the parch to be built for architecture <arch>.
       --generate        Generate build directory but do not build deb.
+  -d, --deb-option=<option>
+                        Pass build <option> to dpkg-deb.
   -?, --help            Show this usage information.
       --version         Show the version.
 
@@ -303,6 +306,7 @@ $rootdir = '';
 my $ret = GetOptions(
 	'root|r=s', \$rootdir,
 	'arch|a=s', \$arch,
+	'deb-option|d=s@', \@deb_options,
 	'generate|g' , \$generate,
 	'help|?', sub { Syntax(); exit 0; },
 	'version', sub { Version(); exit 0; },
@@ -345,7 +349,7 @@ foreach my $packagename (@ARGV) {
 	}
 	
 	# Let dpkg-deb do its magic.
-	SafeSystem('dpkg-deb', '--build', $build_dir, '.', '');
+	SafeSystem('dpkg-deb', @deb_options, '--build', $build_dir, '.', '');
 
 	# Finish up.
 	CleanUp();
