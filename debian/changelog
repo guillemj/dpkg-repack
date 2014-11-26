@@ -1,6 +1,7 @@
 dpkg-repack (1.41) UNRELEASED; urgency=low
 
   * Actually fix the blank line insertion for the descriptor mangling.
+  * Add a Vcs-Browser field.
 
  -- Guillem Jover <guillem@debian.org>  Wed, 26 Nov 2014 06:20:43 +0100
 
