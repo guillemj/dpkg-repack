@@ -1,7 +1,7 @@
 Source: dpkg-repack
 Section: admin
 Priority: optional
-Build-Depends: debhelper (>= 7), dpkg (>= 1.9.0)
+Build-Depends: debhelper (>= 9), dpkg (>= 1.9.0)
 Maintainer: Dpkg Developers <debian-dpkg@lists.debian.org>
 Uploaders: Guillem Jover <guillem@debian.org>
 Standards-Version: 3.9.6

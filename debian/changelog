@@ -38,6 +38,7 @@ dpkg-repack (1.40) UNRELEASED; urgency=low
   * Convert debian/rules from dh(1) to explicit debhelper commands.
   * Bump Standard-Version to 3.9.6 (no changed needed).
   * Switch to source format “3.0 (native)”.
+  * Bump debhelper compatibility to level 9.
 
  -- Guillem Jover <guillem@debian.org>  Sat, 08 Nov 2014 05:38:27 +0100
 
