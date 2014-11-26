@@ -128,9 +128,9 @@ sub Extract_Control {
 	if ($indesc) {
 		my $date = `date -R`;
 		chomp $date;
-		$control[$x - 1] = $control[$x - 1] .
-		                   " .\n" .
-		                   " (Repackaged on $date by dpkg-repack.)";
+		chomp $control[$x - 1];
+		$control[$x - 1] .= " .\n";
+		$control[$x - 1] .= " (Repackaged on $date by dpkg-repack.)";
 	}
 	
 	if ($arch) {

@@ -39,6 +39,7 @@ dpkg-repack (1.40) UNRELEASED; urgency=low
   * Bump Standard-Version to 3.9.6 (no changed needed).
   * Switch to source format “3.0 (native)”.
   * Bump debhelper compatibility to level 9.
+  * Fix description mangling to add a proper blank line separator.
 
  -- Guillem Jover <guillem@debian.org>  Sat, 08 Nov 2014 05:38:27 +0100
 
