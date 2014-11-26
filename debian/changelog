@@ -35,6 +35,7 @@ dpkg-repack (1.40) UNRELEASED; urgency=low
   * Do not unnecessarily interpolate strings.
   * Remove & sigil from GetOptions function call.
   * Use correct operator for numeric value in $> comparison.
+  * Convert debian/rules from dh(1) to explicit debhelper commands.
 
  -- Guillem Jover <guillem@debian.org>  Sat, 08 Nov 2014 05:38:27 +0100
 

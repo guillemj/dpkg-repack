@@ -1,3 +1,32 @@
 #!/usr/bin/make -f
-%:
-	dh $@
+
+clean:
+	dh_testdir
+	dh_clean
+
+build-indep:
+build-arch:
+build: build-indep build-arch
+
+.PHONY: clean build-indep build-arch build
+
+binary-indep:
+	dh_testroot
+	dh_prep
+	dh_install
+	dh_installdocs
+	dh_installchangelogs
+	dh_installman
+	dh_perl
+	dh_link
+	dh_compress
+	dh_fixperms
+	dh_installdeb
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+binary-arch:
+binary: binary-indep binary-arch
+
+.PHONY: binary-indep binary-indep binary
