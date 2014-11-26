@@ -4,7 +4,7 @@ Priority: optional
 Build-Depends: debhelper (>= 7), dpkg (>= 1.9.0)
 Maintainer: Dpkg Developers <debian-dpkg@lists.debian.org>
 Uploaders: Guillem Jover <guillem@debian.org>
-Standards-Version: 3.9.5
+Standards-Version: 3.9.6
 Vcs-Git: git://anonscm.debian.org/dpkg/dpkg-repack.git
 Homepage: https://wiki.debian.org/Teams/Dpkg
 
