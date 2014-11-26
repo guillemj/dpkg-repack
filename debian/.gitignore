@@ -1,0 +1,4 @@
+dpkg-repack/
+*.log
+*.substvars
+files
