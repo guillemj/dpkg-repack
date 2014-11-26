@@ -12,10 +12,10 @@ Homepage: https://wiki.debian.org/Teams/Dpkg
 Package: dpkg-repack
 Architecture: all
 Depends: ${misc:Depends}, ${perl:Depends}
-Description: puts an unpacked .deb file back together
- dpkg-repack creates a .deb file out of a package that has already
- been installed. If any changes have been made to the package while it was
- unpacked (ie, files in /etc were modified), the new package will inherit
+Description: Debian package archiving tool
+ dpkg-repack creates a .deb file out of a package that has already been
+ installed. If any changes have been made to the package while it was
+ unpacked (i.e. files in /etc were modified), the new package will inherit
  the changes.
  .
  This utility can make it easy to copy packages from one computer to another,
