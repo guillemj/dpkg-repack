@@ -1,4 +1,4 @@
-dpkg-repack (1.41) UNRELEASED; urgency=low
+dpkg-repack (1.41) unstable; urgency=low
 
   * Actually fix the blank line insertion for the descriptor mangling.
   * Add a Vcs-Browser field.
@@ -6,7 +6,7 @@ dpkg-repack (1.41) UNRELEASED; urgency=low
   * Remove blank lines between sections in man page.
   * Mark architecture all in bold in man page.
 
- -- Guillem Jover <guillem@debian.org>  Wed, 26 Nov 2014 06:20:43 +0100
+ -- Guillem Jover <guillem@debian.org>  Sat, 11 Apr 2015 17:04:52 +0200
 
 dpkg-repack (1.40) unstable; urgency=low
 
