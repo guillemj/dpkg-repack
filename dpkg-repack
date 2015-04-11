@@ -3,7 +3,7 @@
 # dpkg-repack puts humpty-dumpty back together again.
 #
 # Copyright © 1996-2006 Joey Hess <joeyh@debian.org>
-# Copyright © 2012,2014 Guillem Jover <guillem@debian.org>
+# Copyright © 2012,2014-2015 Guillem Jover <guillem@debian.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -116,7 +116,7 @@ sub Make_Dirs {
 sub Extract_Control {
 	my $packagename = shift;
 
-	my @control = `dpkg --root=$rootdir/ -s $packagename`;
+	my @control = qx{dpkg --root=$rootdir/ -s $packagename};
 	chomp foreach @control;
 
 	# Add something to the Description to mention dpkg-repack.
@@ -129,7 +129,7 @@ sub Extract_Control {
 		}
 	}
 	if ($indesc) {
-		my $date = `date -R`;
+		my $date = qx'date -R';
 		chomp $date;
 		chomp $control[$x - 1];
 		$control[$x - 1] .= "\n";
@@ -237,7 +237,7 @@ sub Install_Files {
 	# language output.
 	my $lc_all = $ENV{LC_ALL};
 	$ENV{LC_ALL} = 'C';
-	my @filelist = split /\n/, `dpkg --root=$rootdir/ -L $packagename`;
+	my @filelist = split /\n/, qx{dpkg --root=$rootdir/ -L $packagename};
 	$ENV{LC_ALL} = $lc_all if defined $lc_all; # important to reset it.
 
 	# Set up a hash for easy lookups.
