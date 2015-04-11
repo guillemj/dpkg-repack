@@ -4,6 +4,7 @@ dpkg-repack (1.41) UNRELEASED; urgency=low
   * Add a Vcs-Browser field.
   * Slightly reword package Description.
   * Remove blank lines between sections in man page.
+  * Mark architecture all in bold in man page.
 
  -- Guillem Jover <guillem@debian.org>  Wed, 26 Nov 2014 06:20:43 +0100
 
