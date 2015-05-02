@@ -24,7 +24,7 @@ use warnings;
 use File::stat;
 use Getopt::Long;
 
-my $VERSION = '1.41';
+my $VERSION = '1.42';
 
 my $error_flag;
 my $dirty_flag;
