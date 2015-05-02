@@ -1,6 +1,7 @@
 dpkg-repack (1.42) UNRELEASED; urgency=low
 
   * Use https for the debian/copyright Format URL.
+  * Remove ancient versioned Build-Depends on dpkg.
 
  -- Guillem Jover <guillem@debian.org>  Sat, 02 May 2015 03:37:25 +0200
 
