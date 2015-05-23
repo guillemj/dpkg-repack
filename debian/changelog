@@ -3,6 +3,8 @@ dpkg-repack (1.42) UNRELEASED; urgency=low
   * Use https for the debian/copyright Format URL.
   * Remove ancient versioned Build-Depends on dpkg.
   * Do not add spurious newlines to the binary control file.
+  * Ignore case when comparing all field names, although «dpkg -s» already
+    normalizes them for known ones.
 
  -- Guillem Jover <guillem@debian.org>  Sat, 02 May 2015 03:37:25 +0200
 

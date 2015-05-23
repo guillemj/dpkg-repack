@@ -138,14 +138,14 @@ sub Extract_Control {
 	}
 	
 	if ($arch) {
-		@control = grep { !/^Architecture:/ } @control;
+		@control = grep { !/^Architecture:/i } @control;
 		push @control, "Architecture: $arch";
 	}
 
-	if (! grep { /^Status:\s+.*\s+installed/ } @control) {
+	if (! grep { /^(?i:Status):\s+.*\s+installed/ } @control) {
 		Die "Package $packagename not fully installed";
 	}
-	@control = grep { !/^Status:\s+/ } @control;
+	@control = grep { !/^Status:\s+/i } @control;
 
 	return @control;
 }
@@ -215,7 +215,7 @@ sub Install_Files {
 	my @obsolete_conffiles;
 	my $in_conffiles = 0;
 	foreach my $line (@control) {
-		if ($line =~ /^Conffiles:/) {
+		if ($line =~ /^Conffiles:/i) {
 			$in_conffiles = 1;
 		}
 		elsif ($in_conffiles && $line =~ /^ (.*)\s+([^\s]+)\s+obsolete$/) {
