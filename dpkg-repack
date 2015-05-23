@@ -139,14 +139,13 @@ sub Extract_Control {
 	
 	if ($arch) {
 		@control = grep { !/^Architecture:/ } @control;
-		push @control, "Architecture: $arch\n";
+		push @control, "Architecture: $arch";
 	}
 
 	if (! grep { /^Status:\s+.*\s+installed/ } @control) {
 		Die "Package $packagename not fully installed";
 	}
 	@control = grep { !/^Status:\s+/ } @control;
-	push @control, "\n";
 
 	return @control;
 }
