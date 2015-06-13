@@ -86,13 +86,19 @@ sub SafeSystem {
 	}
 }
 
+sub SafeChmod {
+	my ($dir, $perms) = @_;
+
+	chmod $perms, $dir or Error("Unable to change permissions on \"$dir\": $!");
+}
+
 # Make the passed directory, print an error message if it fails.
 sub SafeMkdir {
 	my ($dir, $perms) = @_;
 
 	mkdir $dir, $perms or Error("Unable to make directory, \"$dir\": $!");
 	# mkdir doesn't do sticky bits and suidness.
-	chmod $perms, $dir or Error("Unable to change permissions on \"$dir\": $!");
+	SafeChmod($dir, $perms);
 }
 
 # This removes the temporary directory where we built the package.
