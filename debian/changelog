@@ -5,6 +5,8 @@ dpkg-repack (1.42) UNRELEASED; urgency=low
   * Do not add spurious newlines to the binary control file.
   * Ignore case when comparing all field names, although «dpkg -s» already
     normalizes them for known ones.
+  * Use a proper non-deterministic temporary directory per package. This fixes
+    a possible security issue, and using --generate with multiple packages.
 
  -- Guillem Jover <guillem@debian.org>  Sat, 02 May 2015 03:37:25 +0200
 

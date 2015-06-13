@@ -22,13 +22,12 @@ use strict;
 use warnings;
 
 use File::stat;
+use File::Temp;
 use Getopt::Long;
 
 my $VERSION = '1.42';
 
 my $error_flag;
-my $dirty_flag;
-my $build_dir;
 my $rootdir;
 my $arch;
 my @deb_options;
@@ -70,7 +69,6 @@ sub Error {
 
 sub Die {
 	Error('Fatal Error:', @_);
-	CleanUp();
 	exit 1;
 }
 
@@ -101,21 +99,18 @@ sub SafeMkdir {
 	SafeChmod($dir, $perms);
 }
 
-# This removes the temporary directory where we built the package.
-sub CleanUp {
-	if ($dirty_flag) {
-		SafeSystem('rm', '-rf', $build_dir,
-		           "Unable to remove $build_dir ($!). Please remove it by hand.");
-	}
-	$dirty_flag = 0;
-}
-
 # This makes the directories we will rebuild the package in.
 sub Make_Dirs {
-	$dirty_flag = 1;
+	my %opts = (
+		TEMPLATE => 'dpkg-repack.XXXXXX',
+		CLEANUP => !$generate,
+	);
 
-	SafeMkdir $build_dir, 0755;
-	SafeMkdir "$build_dir/DEBIAN", 0755;
+	my $dir = File::Temp->newdir(%opts);
+	SafeChmod($dir, 0755);
+	SafeMkdir("$dir/DEBIAN", 0755);
+
+	return $dir;
 }
 
 # Get package control file via dpkg -s.
@@ -158,7 +153,7 @@ sub Extract_Control {
 
 # Install the control file. Pass it the text of the file.
 sub Install_Control {
-	my ($packagename, @control) = @_;
+	my ($build_dir, $packagename, @control) = @_;
 
 	open my $control_fh, '>', "$build_dir/DEBIAN/control"
 		or Die "Can't write to $build_dir/DEBIAN/control";
@@ -179,7 +174,7 @@ sub Install_Control {
 # Install all the files in the DEBIAN directory. (Except control file and
 # file list file.)
 sub Install_DEBIAN {
-	my ($packagename, @conffiles) = @_;
+	my ($build_dir, $packagename, @conffiles) = @_;
 
 	my @control_files;
 	open my $q_fh, '-|', "dpkg-query --admindir=$rootdir/var/lib/dpkg --control-path $packagename 2>/dev/null"
@@ -213,7 +208,7 @@ sub Install_DEBIAN {
 # This looks at the list of files in this package, and places them
 # all on the directory tree.
 sub Install_Files {
-	my ($packagename, @control) = @_;
+	my ($build_dir, $packagename, @control) = @_;
 
 	# There are two types of conffiles. Obsolete conffiles should be
 	# skipped, while other conffiles should be included if present.
@@ -322,7 +317,6 @@ if (not @ARGV or not $ret) {
 	Syntax();
 	exit 1;
 }
-$build_dir = "./dpkg-repack-$$";
 
 # Some sanity checks.
 if ($> != 0) {
@@ -343,10 +337,10 @@ foreach my $packagename (@ARGV) {
 	umask 022;
 
 	# Generate the directory tree.
-	Make_Dirs();
-	my @conffiles = Install_Files($packagename, @control);
-	Install_DEBIAN($packagename, @conffiles);
-	Install_Control($packagename, @control);
+	my $build_dir = Make_Dirs();
+	my @conffiles = Install_Files($build_dir, $packagename, @control);
+	Install_DEBIAN($build_dir, $packagename, @conffiles);
+	Install_Control($build_dir, $packagename, @control);
 
 	# Stop here?
 	if ($generate) {
@@ -357,8 +351,6 @@ foreach my $packagename (@ARGV) {
 	# Let dpkg-deb do its magic.
 	SafeSystem('dpkg-deb', @deb_options, '--build', $build_dir, '.', '');
 
-	# Finish up.
-	CleanUp();
 	if ($error_flag) {
 		Error('Problems were encountered in processing.');
 		Error('The package may be broken.');
