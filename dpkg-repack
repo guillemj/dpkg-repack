@@ -141,7 +141,7 @@ sub Extract_Control {
 			$control[$x - 1] .= " (Repackaged on $date by dpkg-repack.)";
 		}
 	}
-	
+
 	if ($arch) {
 		@control = grep { !/^Architecture:/ } @control;
 		push @control, "Architecture: $arch\n";
@@ -282,7 +282,7 @@ sub Install_Files {
 			# See the changelog for version 0.17 for an
 			# explanation of what I'm doing above with
 			# directory symlinks. I rely on the order of the
-			# filelist listing parent directories first, and 
+			# filelist listing parent directories first, and
 			# then their contents.
 			# There has to be a better way to do this!
 			my $f = '';
@@ -355,7 +355,7 @@ foreach my $packagename (@ARGV) {
 		Info "created $build_dir for $packagename";
 		next;
 	}
-	
+
 	# Let dpkg-deb do its magic.
 	SafeSystem('dpkg-deb', @deb_options, '--build', $build_dir, '.', '');
 
