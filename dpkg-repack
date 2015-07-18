@@ -140,7 +140,7 @@ sub Extract_Control {
 			$control[$x - 1] .= " (Repackaged on $date by dpkg-repack.)";
 		}
 	}
-	
+
 	if ($arch) {
 		@control = grep { !/^Architecture:/ } @control;
 		push @control, "Architecture: $arch\n";
