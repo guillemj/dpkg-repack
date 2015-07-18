@@ -317,7 +317,6 @@ if (not @ARGV or not $ret) {
 	Syntax();
 	exit 1;
 }
-$build_dir = "./dpkg-repack-$$";
 
 # Some sanity checks.
 if ($> != 0) {
@@ -328,6 +327,9 @@ if (exists $ENV{FAKED_MODE} && $ENV{FAKED_MODE} ne 'unknown-is-real') {
 }
 
 foreach my $packagename (@ARGV) {
+	my $random = int(1000 + rand(9999 - 1000));
+	$build_dir = "./$packagename-$random";
+
 	my @control = Extract_Control($packagename);
 	if (!@control) {
 		Die "Unable to locate $packagename in the package list.";
