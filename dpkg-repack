@@ -345,7 +345,7 @@ foreach my $packagename (@ARGV) {
 
 	# Stop here?
 	if ($generate) {
-		Info "dpkg-repack: created $build_dir for $packagename";
+		Info "created $build_dir for $packagename";
 		next;
 	}
 
