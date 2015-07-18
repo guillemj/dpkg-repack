@@ -33,6 +33,7 @@ my $rootdir;
 my $arch;
 my @deb_options;
 my $generate;
+my $no_tag_description;
 
 sub Syntax {
 	print { *STDERR } <<USAGE;
@@ -42,6 +43,8 @@ Options:
       --root=<dir>      Take package from filesystem rooted on <dir>.
       --arch=<arch>     Force the parch to be built for architecture <arch>.
       --generate        Generate build directory but do not build deb.
+  --no-tag-description
+                        Do not append tagline to control file.
   -d, --deb-option=<option>
                         Pass build <option> to dpkg-deb.
   -?, --help            Show this usage information.
@@ -120,21 +123,23 @@ sub Extract_Control {
 	chomp foreach @control;
 
 	# Add something to the Description to mention dpkg-repack.
-	my $indesc = 0;
-	my $x;
-	for ($x = 0; $x < @control; $x++) {
-		if ($control[$x] =~ /^(\S+):/) {
-			last if $indesc; # end of description
-			$indesc = 1 if lc $1 eq 'description';
+	if (!$no_tag_description) {
+		my $indesc = 0;
+		my $x;
+		for ($x = 0; $x < @control; $x++) {
+			if ($control[$x] =~ /^(\S+):/) {
+				last if $indesc; # end of description
+				$indesc = 1 if lc $1 eq 'description';
+			}
 		}
-	}
-	if ($indesc) {
-		my $date = qx'date -R';
-		chomp $date;
-		chomp $control[$x - 1];
-		$control[$x - 1] .= "\n";
-		$control[$x - 1] .= " .\n";
-		$control[$x - 1] .= " (Repackaged on $date by dpkg-repack.)";
+		if ($indesc) {
+			my $date = qx'date -R';
+			chomp $date;
+			chomp $control[$x - 1];
+			$control[$x - 1] .= "\n";
+			$control[$x - 1] .= " .\n";
+			$control[$x - 1] .= " (Repackaged on $date by dpkg-repack.)";
+		}
 	}
 	
 	if ($arch) {
@@ -308,6 +313,7 @@ my $ret = GetOptions(
 	'arch|a=s', \$arch,
 	'deb-option|d=s@', \@deb_options,
 	'generate|g' , \$generate,
+	'no-tag-description', \$no_tag_description,
 	'help|?', sub { Syntax(); exit 0; },
 	'version', sub { Version(); exit 0; },
 );
