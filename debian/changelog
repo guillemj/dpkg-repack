@@ -21,6 +21,8 @@ dpkg-repack (1.42) UNRELEASED; urgency=low
   * Rename packagename to package-name in --help output.
   * Remove duplicated program name prefix in generate Info message.
     Thanks to Brian Beffa <brbsix@gmail.com>.
+  * Remove duplicated newline in Warn message.
+    Thanks to Brian Beffa <brbsix@gmail.com>.
 
  -- Guillem Jover <guillem@debian.org>  Sat, 02 May 2015 03:37:25 +0200
 

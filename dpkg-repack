@@ -247,7 +247,7 @@ sub Install_Files {
         }
 
         if (grep { $_ eq $fn } @obsolete_conffiles) {
-            Warn "Skipping obsolete conffile $fn\n";
+            Warn("Skipping obsolete conffile $fn");
             next;
         }
 
