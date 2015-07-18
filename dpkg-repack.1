@@ -42,11 +42,6 @@ field. If you know the package architecture, you can use this option to force
 to use the right architecture.
 .
 .TP
-.BR \-d ", " \-\-deb\-option "=\fIoption\fP"
-Pass \fIoption\fP as build argument to \fBdpkg\-deb\fP.
-This option can be specified multiple times.
-.
-.TP
 .B \-\-generate
 Generate a temporary directory suitable for building a package from, but do
 not actually create the package. This is useful if you want to move files
@@ -54,6 +49,16 @@ around in the package before building it. The package can be built from
 this temporary directory by running
 "\fBdpkg\-deb \-\-build\fP \fIdir\fP \fB.\fP" as root (or by using
 \fBfakroot \-u\fP), where \fIdir\fP is the generated directory.
+.
+.TP
+.BR \-n ", " \-\-no\-tag
+Do not append timestamped "Repackaged by dpkg-repack" tagline to the package's
+control file description.
+.
+.TP
+.BR \-d ", " \-\-deb\-option "=\fIoption\fP"
+Pass \fIoption\fP as build argument to \fBdpkg\-deb\fP.
+This option can be specified multiple times.
 .
 .TP
 .I packagename
