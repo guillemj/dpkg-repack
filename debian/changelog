@@ -23,6 +23,8 @@ dpkg-repack (1.42) UNRELEASED; urgency=low
     Thanks to Brian Beffa <brbsix@gmail.com>.
   * Remove duplicated newline in Warn message.
     Thanks to Brian Beffa <brbsix@gmail.com>.
+  * Fix grammatical errors and typos in man page and --help output.
+    Thanks to Brian Beffa <brbsix@gmail.com>.
 
  -- Guillem Jover <guillem@debian.org>  Sat, 02 May 2015 03:37:25 +0200
 
