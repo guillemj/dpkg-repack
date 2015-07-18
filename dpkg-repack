@@ -332,7 +332,7 @@ foreach my $pkgname (@ARGV) {
 
     # Do we need to create the binary packages?
     if ($generate) {
-        Info "dpkg-repack: created $build_dir for $pkgname";
+        Info("created $build_dir for $pkgname");
     } else {
         # Let dpkg-deb do its magic.
         SafeSystem('dpkg-deb', @deb_options, '--build', $build_dir, '.', '');
