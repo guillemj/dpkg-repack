@@ -11,6 +11,8 @@ dpkg-repack (1.42) UNRELEASED; urgency=low
     are easier to distinguish when operating on multiple packages with
     --generate.
   * Check immediately if we cannot get any package control information.
+  * Switch to use Dpkg::Control to handle the control data. Add a dependency
+    on libdpkg-perl.
 
  -- Guillem Jover <guillem@debian.org>  Sat, 02 May 2015 03:37:25 +0200
 

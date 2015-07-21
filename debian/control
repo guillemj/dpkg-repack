@@ -11,7 +11,7 @@ Build-Depends: debhelper (>= 9)
 
 Package: dpkg-repack
 Architecture: all
-Depends: ${misc:Depends}, ${perl:Depends}
+Depends: ${misc:Depends}, ${perl:Depends}, libdpkg-perl
 Description: Debian package archiving tool
  dpkg-repack creates a .deb file out of a package that has already been
  installed. If any changes have been made to the package while it was

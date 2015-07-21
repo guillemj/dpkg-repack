@@ -23,6 +23,8 @@ use warnings;
 
 use File::stat;
 use File::Temp;
+use Dpkg::Control;
+use Dpkg::Control::Fields;
 use Getopt::Long;
 
 my $VERSION = '1.42';
@@ -115,73 +117,59 @@ sub Make_Dirs {
 }
 
 # Get package control file via dpkg -s.
-sub Extract_Control {
+sub Extract_Status {
 	my $packagename = shift;
 
-	my @control = qx{dpkg --root=$rootdir/ -s $packagename};
-	if (!@control) {
-		Die "Unable to locate $packagename in the package list.";
-	}
-	chomp foreach @control;
+	my $inst = Dpkg::Control->new(type => CTRL_FILE_STATUS);
 
-	# Add something to the Description to mention dpkg-repack.
-	my $indesc = 0;
-	my $x;
-	for ($x = 0; $x < @control; $x++) {
-		if ($control[$x] =~ /^(\S+):/) {
-			last if $indesc; # end of description
-			$indesc = 1 if lc $1 eq 'description';
-		}
-	}
-	if ($indesc) {
-		my $date = qx'date -R';
-		chomp $date;
-		chomp $control[$x - 1];
-		$control[$x - 1] .= "\n";
-		$control[$x - 1] .= " .\n";
-		$control[$x - 1] .= " (Repackaged on $date by dpkg-repack.)";
-	}
-	
-	if ($arch) {
-		@control = grep { !/^Architecture:/i } @control;
-		push @control, "Architecture: $arch";
+	open my $fh, '-|', 'dpkg', "--root=$rootdir/", '-s', $packagename
+		or Die "Unable to locate $packagename in the package list.";
+	$inst->parse($fh, "dpkg status for $packagename");
+	close $fh;
+
+	if ($inst->{Status} !~ m/^\S+\s+\S+\s+installed$/) {
+		Die "Package $packagename not fully installed: $inst->{Status}";
 	}
 
-	if (! grep { /^(?i:Status):\s+.*\s+installed/ } @control) {
-		Die "Package $packagename not fully installed";
-	}
-	@control = grep { !/^Status:\s+/i } @control;
-
-	return @control;
+	return $inst;
 }
 
-# Install the control file. Pass it the text of the file.
+# Install the control file from the installed package control information.
 sub Install_Control {
-	my ($build_dir, $packagename, @control) = @_;
+	my ($build_dir, $inst) = @_;
 
-	open my $control_fh, '>', "$build_dir/DEBIAN/control"
-		or Die "Can't write to $build_dir/DEBIAN/control";
+	my $ctrl = Dpkg::Control->new(type => CTRL_PKG_DEB);
 
-	my $skip = 0;
-	foreach (@control) {
-		# Remove the Conffiles stanza
-		if (/^(\S+):/) {
-			$skip = lc $1 eq 'conffiles';
-		}
-		print { $control_fh } "$_\n" unless $skip;
+	# XXX: Versions prior to dpkg 1.18.2 do not properly propagate the
+	# Maintainer field, workaround it here.
+	if (not field_is_allowed_in('Maintainer', CTRL_FILE_STATUS)) {
+		field_register('Maintainer', CTRL_PKG_DEB | CTRL_FILE_STATUS);
 	}
 
-	close $control_fh;
+	field_transfer_all($inst, $ctrl);
+
+	my $date = qx'date -R';
+	chomp $date;
+
+	$ctrl->{Description} .= "\n";
+	$ctrl->{Description} .= "\n";
+	$ctrl->{Description} .= "(Repackaged on $date by dpkg-repack.)";
+
+	if ($arch) {
+		$ctrl->{Architecture} = $arch;
+	}
+
+	$ctrl->save("$build_dir/DEBIAN/control");
 	SafeSystem 'chown', '0:0', "$build_dir/DEBIAN/control", '';
 }
 
 # Install all the files in the DEBIAN directory. (Except control file and
 # file list file.)
 sub Install_DEBIAN {
-	my ($build_dir, $packagename, @conffiles) = @_;
+	my ($build_dir, $inst, @conffiles) = @_;
 
 	my @control_files;
-	open my $q_fh, '-|', "dpkg-query --admindir=$rootdir/var/lib/dpkg --control-path $packagename 2>/dev/null"
+	open my $q_fh, '-|', "dpkg-query --admindir=$rootdir/var/lib/dpkg --control-path $inst->{Package} 2>/dev/null"
 		or Die "dpkg-query failed: $!";
 	while (my $fn = <$q_fh>) {
 		chomp $fn;
@@ -212,25 +200,18 @@ sub Install_DEBIAN {
 # This looks at the list of files in this package, and places them
 # all on the directory tree.
 sub Install_Files {
-	my ($build_dir, $packagename, @control) = @_;
+	my ($build_dir, $inst) = @_;
 
 	# There are two types of conffiles. Obsolete conffiles should be
 	# skipped, while other conffiles should be included if present.
 	my @conffiles = ();
 	my @obsolete_conffiles;
-	my $in_conffiles = 0;
-	foreach my $line (@control) {
-		if ($line =~ /^Conffiles:/i) {
-			$in_conffiles = 1;
-		}
-		elsif ($in_conffiles && $line =~ /^ (.*)\s+(\S+)\s+obsolete$/) {
+	foreach my $line (split /\n/, $inst->{Conffiles} // '') {
+		if ($line =~ /^(.*)\s+(\S+)\s+obsolete$/) {
 			push @obsolete_conffiles, $1;
 		}
-		elsif ($in_conffiles && $line =~ /^ (.*)\s+(\S+)$/) {
+		elsif ($line =~ /^(.*)\s+(\S+)$/) {
 			push @conffiles, $1;
-		}
-		else {
-			$in_conffiles = 0;
 		}
 	}
 
@@ -241,7 +222,7 @@ sub Install_Files {
 	# language output.
 	my $lc_all = $ENV{LC_ALL};
 	$ENV{LC_ALL} = 'C';
-	my @filelist = split /\n/, qx{dpkg --root=$rootdir/ -L $packagename};
+	my @filelist = split /\n/, qx{dpkg --root=$rootdir/ -L $inst->{Package}};
 	$ENV{LC_ALL} = $lc_all if defined $lc_all; # important to reset it.
 
 	# Set up a hash for easy lookups.
@@ -331,7 +312,7 @@ if (exists $ENV{FAKED_MODE} && $ENV{FAKED_MODE} ne 'unknown-is-real') {
 }
 
 foreach my $packagename (@ARGV) {
-	my @control = Extract_Control($packagename);
+	my $inst = Extract_Status($packagename);
 
 	# If the umask is set wrong, the directories will end up with the wrong
 	# perms. (Is this still needed?)
@@ -339,9 +320,9 @@ foreach my $packagename (@ARGV) {
 
 	# Generate the directory tree.
 	my $build_dir = Make_Dirs($packagename);
-	my @conffiles = Install_Files($build_dir, $packagename, @control);
-	Install_DEBIAN($build_dir, $packagename, @conffiles);
-	Install_Control($build_dir, $packagename, @control);
+	my @conffiles = Install_Files($build_dir, $inst);
+	Install_DEBIAN($build_dir, $inst, @conffiles);
+	Install_Control($build_dir, $inst);
 
 	# Stop here?
 	if ($generate) {
