@@ -223,10 +223,10 @@ sub Install_Files {
 		if ($line =~ /^Conffiles:/i) {
 			$in_conffiles = 1;
 		}
-		elsif ($in_conffiles && $line =~ /^ (.*)\s+([^\s]+)\s+obsolete$/) {
+		elsif ($in_conffiles && $line =~ /^ (.*)\s+(\S+)\s+obsolete$/) {
 			push @obsolete_conffiles, $1;
 		}
-		elsif ($in_conffiles && $line =~ /^ (.*)\s+([^\s]+)$/) {
+		elsif ($in_conffiles && $line =~ /^ (.*)\s+(\S+)$/) {
 			push @conffiles, $1;
 		}
 		else {
