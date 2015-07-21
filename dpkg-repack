@@ -119,6 +119,9 @@ sub Extract_Control {
 	my $packagename = shift;
 
 	my @control = qx{dpkg --root=$rootdir/ -s $packagename};
+	if (!@control) {
+		Die "Unable to locate $packagename in the package list.";
+	}
 	chomp foreach @control;
 
 	# Add something to the Description to mention dpkg-repack.
@@ -329,9 +332,6 @@ if (exists $ENV{FAKED_MODE} && $ENV{FAKED_MODE} ne 'unknown-is-real') {
 
 foreach my $packagename (@ARGV) {
 	my @control = Extract_Control($packagename);
-	if (!@control) {
-		Die "Unable to locate $packagename in the package list.";
-	}
 
 	# If the umask is set wrong, the directories will end up with the wrong
 	# perms. (Is this still needed?)
