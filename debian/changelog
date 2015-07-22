@@ -7,6 +7,9 @@ dpkg-repack (1.42) UNRELEASED; urgency=low
     normalizes them for known ones.
   * Use a proper non-deterministic temporary directory per package. This fixes
     a possible security issue, and using --generate with multiple packages.
+  * Include the package name in the temporary directory, so that they
+    are easier to distinguish when operating on multiple packages with
+    --generate.
 
  -- Guillem Jover <guillem@debian.org>  Sat, 02 May 2015 03:37:25 +0200
 

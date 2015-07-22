@@ -101,8 +101,9 @@ sub SafeMkdir {
 
 # This makes the directories we will rebuild the package in.
 sub Make_Dirs {
+	my $pkgname = shift;
 	my %opts = (
-		TEMPLATE => 'dpkg-repack.XXXXXX',
+		TEMPLATE => "dpkg-repack.$pkgname.XXXXXX",
 		CLEANUP => !$generate,
 	);
 
@@ -337,7 +338,7 @@ foreach my $packagename (@ARGV) {
 	umask 022;
 
 	# Generate the directory tree.
-	my $build_dir = Make_Dirs();
+	my $build_dir = Make_Dirs($packagename);
 	my @conffiles = Install_Files($build_dir, $packagename, @control);
 	Install_DEBIAN($build_dir, $packagename, @conffiles);
 	Install_Control($build_dir, $packagename, @control);
