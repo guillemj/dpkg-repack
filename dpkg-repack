@@ -31,8 +31,9 @@ my $dirty_flag;
 my $build_dir;
 my $rootdir;
 my $arch;
-my @deb_options;
 my $generate;
+my $no_tag;
+my @deb_options;
 
 sub Syntax {
 	print { *STDERR } <<USAGE;
@@ -40,8 +41,9 @@ Usage: dpkg-repack [option...] packagename...
 
 Options:
       --root=<dir>      Take package from filesystem rooted on <dir>.
-      --arch=<arch>     Force the parch to be built for architecture <arch>.
+      --arch=<arch>     Force the package to be built for architecture <arch>.
       --generate        Generate build directory but do not build deb.
+  -n, --no-tag          Do not append tagline to control file.
   -d, --deb-option=<option>
                         Pass build <option> to dpkg-deb.
   -?, --help            Show this usage information.
@@ -120,23 +122,25 @@ sub Extract_Control {
 	chomp foreach @control;
 
 	# Add something to the Description to mention dpkg-repack.
-	my $indesc = 0;
-	my $x;
-	for ($x = 0; $x < @control; $x++) {
-		if ($control[$x] =~ /^(\S+):/) {
-			last if $indesc; # end of description
-			$indesc = 1 if lc $1 eq 'description';
+	if (!$no_tag) {
+		my $indesc = 0;
+		my $x;
+		for ($x = 0; $x < @control; $x++) {
+			if ($control[$x] =~ /^(\S+):/) {
+				last if $indesc; # end of description
+				$indesc = 1 if lc $1 eq 'description';
+			}
+		}
+		if ($indesc) {
+			my $date = qx'date -R';
+			chomp $date;
+			chomp $control[$x - 1];
+			$control[$x - 1] .= "\n";
+			$control[$x - 1] .= " .\n";
+			$control[$x - 1] .= " (Repackaged on $date by dpkg-repack.)";
 		}
 	}
-	if ($indesc) {
-		my $date = qx'date -R';
-		chomp $date;
-		chomp $control[$x - 1];
-		$control[$x - 1] .= "\n";
-		$control[$x - 1] .= " .\n";
-		$control[$x - 1] .= " (Repackaged on $date by dpkg-repack.)";
-	}
-	
+
 	if ($arch) {
 		@control = grep { !/^Architecture:/ } @control;
 		push @control, "Architecture: $arch\n";
@@ -146,7 +150,6 @@ sub Extract_Control {
 		Die "Package $packagename not fully installed";
 	}
 	@control = grep { !/^Status:\s+/ } @control;
-	push @control, "\n";
 
 	return @control;
 }
@@ -265,7 +268,7 @@ sub Install_Files {
 		}
 
 		if (grep { $_ eq $fn } @obsolete_conffiles) {
-			Warn "Skipping obsolete conffile $fn\n";
+			Warn "Skipping obsolete conffile $fn";
 			next;
 		}
 
@@ -278,7 +281,7 @@ sub Install_Files {
 			# See the changelog for version 0.17 for an
 			# explanation of what I'm doing above with
 			# directory symlinks. I rely on the order of the
-			# filelist listing parent directories first, and 
+			# filelist listing parent directories first, and
 			# then their contents.
 			# There has to be a better way to do this!
 			my $f = '';
@@ -307,8 +310,9 @@ $rootdir = '';
 my $ret = GetOptions(
 	'root|r=s', \$rootdir,
 	'arch|a=s', \$arch,
-	'deb-option|d=s@', \@deb_options,
 	'generate|g' , \$generate,
+	'no-tag|n', \$no_tag,
+	'deb-option|d=s@', \@deb_options,
 	'help|?', sub { Syntax(); exit 0; },
 	'version', sub { Version(); exit 0; },
 );
@@ -317,7 +321,6 @@ if (not @ARGV or not $ret) {
 	Syntax();
 	exit 1;
 }
-$build_dir = "./dpkg-repack-$$";
 
 # Some sanity checks.
 if ($> != 0) {
@@ -328,6 +331,9 @@ if (exists $ENV{FAKED_MODE} && $ENV{FAKED_MODE} ne 'unknown-is-real') {
 }
 
 foreach my $packagename (@ARGV) {
+	my $random = int(1000 + rand(9999 - 1000));
+	$build_dir = "./$packagename-$random";
+
 	my @control = Extract_Control($packagename);
 	if (!@control) {
 		Die "Unable to locate $packagename in the package list.";
@@ -345,10 +351,10 @@ foreach my $packagename (@ARGV) {
 
 	# Stop here?
 	if ($generate) {
-		Info "dpkg-repack: created $build_dir for $packagename";
+		Info "created $build_dir for $packagename";
 		next;
 	}
-	
+
 	# Let dpkg-deb do its magic.
 	SafeSystem('dpkg-deb', @deb_options, '--build', $build_dir, '.', '');
 
