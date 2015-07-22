@@ -1,0 +1,47 @@
+#!/bin/sh
+
+set -e
+set -u
+
+cmp_ctrlfile()
+{
+  local pkg=$1
+  local ctrl=$2
+
+  dpkg-query --control-show $pkg $ctrl >$ADTTMP/$pkg-inst.$ctrl
+  dpkg-deb --info $ADTTMP/${pkg}_*.deb $ctrl >$ADTTMP/$pkg-pack.$ctrl
+  diff -u $ADTTMP/$pkg-inst.$ctrl $ADTTMP/$pkg-pack.$ctrl
+}
+
+cmp_listfile()
+{
+  local pkg=$1
+  local ctrl=$2
+
+  dpkg-query --listfiles $pkg | sort >$ADTTMP/$pkg-inst.list
+  dpkg-deb --fsys-tarfile $ADTTMP/${pkg}_*.deb | tar -tf - | cut -c2- \
+    | sort >$ADTTMP/$pkg-pack.list
+  diff -u $ADTTMP/$pkg-inst.list $ADTTMP/$pkg-pack.list
+}
+
+test_pkgs="dpkg dpkg-repack"
+
+cd $ADTTMP
+fakeroot -u dpkg-repack $test_pkgs
+cd $OLDPWD
+
+for pkg in $test_pkgs; do
+  for ctrl in $(dpkg-query --control-list $pkg); do
+    cmp_ctrlfile $pkg $ctrl
+  done
+done
+
+cmp_ctrlfile dpkg conffiles
+
+# FIXME: check control file
+# FIXME: check diverted files
+# FIXME: check obsolete conffiles
+# FIXME: check --generate
+# FIXME: check --arch
+# FIXME: check --deb-option
+# FIXME: check --root
