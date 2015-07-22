@@ -118,17 +118,17 @@ sub Make_Dirs {
 
 # Get package control file via dpkg -s.
 sub Extract_Status {
-	my $packagename = shift;
+	my $pkgname = shift;
 
 	my $inst = Dpkg::Control->new(type => CTRL_FILE_STATUS);
 
-	open my $fh, '-|', 'dpkg', "--root=$rootdir/", '-s', $packagename
-		or Die "Unable to locate $packagename in the package list.";
-	$inst->parse($fh, "dpkg status for $packagename");
+	open my $fh, '-|', 'dpkg', "--root=$rootdir/", '-s', $pkgname
+		or Die "Unable to locate $pkgname in the package list.";
+	$inst->parse($fh, "dpkg status for $pkgname");
 	close $fh;
 
 	if ($inst->{Status} !~ m/^\S+\s+\S+\s+installed$/) {
-		Die "Package $packagename not fully installed: $inst->{Status}";
+		Die "Package $pkgname not fully installed: $inst->{Status}";
 	}
 
 	return $inst;
@@ -311,22 +311,22 @@ if (exists $ENV{FAKED_MODE} && $ENV{FAKED_MODE} ne 'unknown-is-real') {
 	Warn 'fakeroot run without its -u flag may corrupt some file permissions.';
 }
 
-foreach my $packagename (@ARGV) {
-	my $inst = Extract_Status($packagename);
+foreach my $pkgname (@ARGV) {
+	my $inst = Extract_Status($pkgname);
 
 	# If the umask is set wrong, the directories will end up with the wrong
 	# perms. (Is this still needed?)
 	umask 022;
 
 	# Generate the directory tree.
-	my $build_dir = Make_Dirs($packagename);
+	my $build_dir = Make_Dirs($pkgname);
 	my @conffiles = Install_Files($build_dir, $inst);
 	Install_DEBIAN($build_dir, $inst, @conffiles);
 	Install_Control($build_dir, $inst);
 
 	# Stop here?
 	if ($generate) {
-		Info "dpkg-repack: created $build_dir for $packagename";
+		Info "dpkg-repack: created $build_dir for $pkgname";
 		next;
 	}
 	
