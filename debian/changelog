@@ -14,6 +14,8 @@ dpkg-repack (1.42) UNRELEASED; urgency=low
   * Switch to use Dpkg::Control to handle the control data. Add a dependency
     on libdpkg-perl.
   * Add basic autopkgtest test cases.
+  * When using --generate, also print the error summary if the tree might
+    be broken due to processing errors.
 
  -- Guillem Jover <guillem@debian.org>  Sat, 02 May 2015 03:37:25 +0200
 

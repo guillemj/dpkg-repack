@@ -324,14 +324,13 @@ foreach my $pkgname (@ARGV) {
 	Install_DEBIAN($build_dir, $inst, @conffiles);
 	Install_Control($build_dir, $inst);
 
-	# Stop here?
+	# Do we need to create the binary packages?
 	if ($generate) {
 		Info "dpkg-repack: created $build_dir for $pkgname";
-		next;
+	} else {
+		# Let dpkg-deb do its magic.
+		SafeSystem('dpkg-deb', @deb_options, '--build', $build_dir, '.', '');
 	}
-	
-	# Let dpkg-deb do its magic.
-	SafeSystem('dpkg-deb', @deb_options, '--build', $build_dir, '.', '');
 
 	if ($error_flag) {
 		Error('Problems were encountered in processing.');
