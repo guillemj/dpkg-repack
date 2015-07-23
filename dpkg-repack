@@ -208,8 +208,7 @@ sub Install_Files {
     foreach my $line (split /\n/, $inst->{Conffiles} // '') {
         if ($line =~ /^(.*)\s+(\S+)\s+obsolete$/) {
             push @obsolete_conffiles, $1;
-        }
-        elsif ($line =~ /^(.*)\s+(\S+)$/) {
+        } elsif ($line =~ /^(.*)\s+(\S+)$/) {
             push @conffiles, $1;
         }
     }
@@ -239,12 +238,10 @@ sub Install_Files {
             $fn = "$rootdir/$1";
             # Skip over that line.
             $x++;
-        }
-        elsif ($origfn =~ m/package diverts others to: (.*)/) {
+        } elsif ($origfn =~ m/package diverts others to: (.*)/) {
             # Not a file at all, skip over it.
             next;
-        }
-        else {
+        } else {
             $fn = $rootdir . $origfn;
         }
 
@@ -255,10 +252,9 @@ sub Install_Files {
 
         if (!-e $fn && !-l $fn) {
             Error "File not found: $fn" unless grep { $_ eq $fn } @conffiles;
-        }
-        elsif ((-d $fn and not -l $fn) or
-               (-d $fn and -l $fn and not $filelist{readlink($fn)}
-                and ($x + 1 <= $#filelist and $filelist[$x + 1] =~ m/^\Q$origfn\E\//))) {
+        } elsif ((-d $fn and not -l $fn) or
+                 (-d $fn and -l $fn and not $filelist{readlink($fn)} and
+                  ($x + 1 <= $#filelist and $filelist[$x + 1] =~ m/^\Q$origfn\E\//))) {
             # If the package contains a file, that locally looks like a symlink
             # pointing to a directory that is not in the package, then change
             # it to a real directory in the repacked package. This assummes
@@ -281,12 +277,10 @@ sub Install_Files {
                 SafeMkdir "$build_dir/$f", $st->mode;
                 chown($st->uid, $st->gid, "$build_dir/$f");
             }
-        }
-        elsif (-p $fn) {
+        } elsif (-p $fn) {
             # Copy a named pipe with cp -a.
             SafeSystem 'cp', '-a', $fn, "$build_dir/$origfn", '';
-        }
-        else {
+        } else {
             SafeSystem 'cp', '-pd', $fn, "$build_dir/$origfn", '';
         }
     }
