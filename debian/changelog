@@ -17,6 +17,7 @@ dpkg-repack (1.42) UNRELEASED; urgency=low
   * When using --generate, also print the error summary if the tree might
     be broken due to processing errors.
   * Automatically use fakeroot if available and not running as root.
+  * Add fakeroot to a Suggests field.
 
  -- Guillem Jover <guillem@debian.org>  Sat, 02 May 2015 03:37:25 +0200
 
