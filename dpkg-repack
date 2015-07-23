@@ -182,10 +182,9 @@ sub Install_DEBIAN {
         SafeSystem 'cp', '-p', $fn, "$build_dir/DEBIAN/$basename", '';
     }
 
-    # Conffiles have to be handled specially, because
-    # dpkg-query --control-path does not list the conffiles file.
-    # Also, we need to generate one that only contains conffiles
-    # that are still present on the filesystem.
+    # Conffiles have to be handled specially, because dpkg-query --control-path
+    # does not list the conffiles file. Also, we need to generate one that only
+    # contains conffiles that are still present on the filesystem.
     if (@conffiles) {
         open my $out_fh, '>', "$build_dir/DEBIAN/conffiles"
             or Die "write conffiles: $!";
@@ -215,11 +214,10 @@ sub Install_Files {
         }
     }
 
-    # I need a list of all the files, for later lookups
-    # when I test to see where symlinks point to.
-    # Note that because I parse the output of the command (for
-    # diversions, below) it's important to make sure it runs with English
-    # language output.
+    # We need a list of all the files, for later lookups when we test to
+    # see where symlinks point to. Note that because we parse the output
+    # of the command (for diversions, below) it's important to make sure
+    # it runs with English language output.
     my $lc_all = $ENV{LC_ALL};
     $ENV{LC_ALL} = 'C';
     my @filelist = split /\n/, qx{dpkg --root=$rootdir/ -L $inst->{Package}};
@@ -232,17 +230,18 @@ sub Install_Files {
     for (my $x = 0; $x <= $#filelist; $x++) {
         my $origfn = $filelist[$x];
 
-        # dpkg -L spits out extra lines to report diversions.
-        # we have to parse those (ugly..), to find out where the
-        # file was diverted to, and use the diverted file.
+        # dpkg -L spits out extra lines to report diversions. We have to
+        # parse those (ugly), to find out where the file was diverted to,
+        # and use the diverted file.
         if (defined $filelist[$x + 1] &&
             ($filelist[$x + 1] =~ m/locally diverted to: (.*)/ ||
              $filelist[$x + 1] =~ m/diverted by .*? to: (.*)/)) {
             $fn = "$rootdir/$1";
-            $x++; # skip over that line.
+            # Skip over that line.
+            $x++;
         }
         elsif ($origfn =~ m/package diverts others to: (.*)/) {
-            # not a file at all, skip over it
+            # Not a file at all, skip over it.
             next;
         }
         else {
@@ -260,12 +259,20 @@ sub Install_Files {
         elsif ((-d $fn and not -l $fn) or
                (-d $fn and -l $fn and not $filelist{readlink($fn)}
                 and ($x + 1 <= $#filelist and $filelist[$x + 1] =~ m/^\Q$origfn\E\//))) {
-            # See the changelog for version 0.17 for an
-            # explanation of what I'm doing above with
-            # directory symlinks. I rely on the order of the
-            # filelist listing parent directories first, and 
-            # then their contents.
-            # There has to be a better way to do this!
+            # If the package contains a file, that locally looks like a symlink
+            # pointing to a directory that is not in the package, then change
+            # it to a real directory in the repacked package. This assummes
+            # that in this case, the symlink was a local change (e.g., /usr
+            # is a symlink).
+            #
+            # However, if the directory in question contains no files in the
+            # filelist for this package, don't do that, just preserve the
+            # symlink in the repacked package. This handles the case where a
+            # package contains a symlink to a directory elsewhere.
+            #
+            # We rely on the order of the filelist listing parent directories
+            # first, and then their contents. There has to be a better way to
+            # do this!
             my $f = '';
             foreach my $dir (split(m/\/+/, $origfn)) {
                 $f .= "/$dir";
