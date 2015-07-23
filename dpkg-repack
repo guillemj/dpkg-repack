@@ -23,6 +23,7 @@ use warnings;
 
 use File::stat;
 use File::Temp;
+use Dpkg::Path qw(find_command);
 use Dpkg::Control;
 use Dpkg::Control::Fields;
 use Getopt::Long;
@@ -288,6 +289,18 @@ sub Install_Files {
     return @conffiles;
 }
 
+# Some sanity checks.
+if ($> != 0) {
+    # Try to exec self with fakeroot if we are not running as root.
+    if (find_command('fakeroot')) {
+        exec 'fakeroot', '-u', $0, @ARGV;
+    }
+    Die 'This program should be run as root (or you could use fakeroot -u). Aborting.';
+}
+if (exists $ENV{FAKED_MODE} && $ENV{FAKED_MODE} ne 'unknown-is-real') {
+    Warn 'fakeroot run without its -u flag may corrupt some file permissions.';
+}
+
 # Parse parameters.
 $rootdir = '';
 my $ret = GetOptions(
@@ -302,14 +315,6 @@ my $ret = GetOptions(
 if (not @ARGV or not $ret) {
     Syntax();
     exit 1;
-}
-
-# Some sanity checks.
-if ($> != 0) {
-    Die 'This program should be run as root (or you could use fakeroot -u). Aborting.';
-}
-if (exists $ENV{FAKED_MODE} && $ENV{FAKED_MODE} ne 'unknown-is-real') {
-    Warn 'fakeroot run without its -u flag may corrupt some file permissions.';
 }
 
 foreach my $pkgname (@ARGV) {
