@@ -38,7 +38,7 @@ my $generate;
 
 sub Syntax {
     print { *STDERR } <<USAGE;
-Usage: dpkg-repack [option...] packagename...
+Usage: dpkg-repack [option...] package-name...
 
 Options:
       --root=<dir>      Take package from filesystem rooted on <dir>.
@@ -49,7 +49,7 @@ Options:
   -?, --help            Show this usage information.
       --version         Show the version.
 
-<packagename> is the name of the package(s) to attempt to repack.
+<package-name> is the name of the package(s) to attempt to repack.
 USAGE
 }
 

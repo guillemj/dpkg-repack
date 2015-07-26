@@ -18,6 +18,7 @@ dpkg-repack (1.42) UNRELEASED; urgency=low
     be broken due to processing errors.
   * Automatically use fakeroot if available and not running as root.
   * Add fakeroot to a Suggests field.
+  * Rename packagename to package-name in --help output.
 
  -- Guillem Jover <guillem@debian.org>  Sat, 02 May 2015 03:37:25 +0200
 
