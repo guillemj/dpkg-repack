@@ -31,6 +31,7 @@ dpkg-repack (1.42) UNRELEASED; urgency=low
     Closes: #788627
   * Switch git repository URLs from git:// to https:// in README and
     debian/control Vcs-Git field.
+  * Bump Standard-Version to 3.9.7 (no changed needed).
 
  -- Guillem Jover <guillem@debian.org>  Sat, 02 May 2015 03:37:25 +0200
 
