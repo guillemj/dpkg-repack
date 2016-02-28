@@ -29,6 +29,8 @@ dpkg-repack (1.42) UNRELEASED; urgency=low
     Based on a patch by Brian Beffa <brbsix@gmail.com>. Closes: #788628
   * Add a --tag value to mark the package version as repackaged.
     Closes: #788627
+  * Switch git repository URLs from git:// to https:// in README and
+    debian/control Vcs-Git field.
 
  -- Guillem Jover <guillem@debian.org>  Sat, 02 May 2015 03:37:25 +0200
 
