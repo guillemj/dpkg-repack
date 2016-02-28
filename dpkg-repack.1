@@ -56,6 +56,26 @@ this temporary directory by running
 \fBfakroot \-u\fP), where \fIdir\fP is the generated directory.
 .
 .TP
+.BR \-\-tag "=\fIthing\fP[,...]"
+Specify a comma-separated list of things to tag in the package as having
+been repackaged.
+The current list of \fIthing\fPs to tag is:
+.RS
+.TP
+.B none
+Tag nothing.
+This can be specified first to be augmented by more specific \fIthing\fPs.
+.TP
+.B description
+Append a timestamped "Repackaged by dpkg-repack" tagline to the package's
+control file \fBDescription\fP field.
+This tag is enabled by default.
+.TP
+.B all
+Tag everything.
+.RE
+.
+.TP
 .I package-name
 The name of the package to attempt to repack. Multiple packages can be listed.
 .

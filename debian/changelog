@@ -25,6 +25,8 @@ dpkg-repack (1.42) UNRELEASED; urgency=low
     Thanks to Brian Beffa <brbsix@gmail.com>.
   * Fix grammatical errors and typos in man page and --help output.
     Thanks to Brian Beffa <brbsix@gmail.com>.
+  * Add a --tag option to select what to mark as being repackaged.
+    Based on a patch by Brian Beffa <brbsix@gmail.com>. Closes: #788628
 
  -- Guillem Jover <guillem@debian.org>  Sat, 02 May 2015 03:37:25 +0200
 
