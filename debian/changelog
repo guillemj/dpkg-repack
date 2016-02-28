@@ -1,4 +1,4 @@
-dpkg-repack (1.42) UNRELEASED; urgency=low
+dpkg-repack (1.42) unstable; urgency=medium
 
   * Use https for the debian/copyright Format URL.
   * Remove ancient versioned Build-Depends on dpkg.
@@ -33,7 +33,7 @@ dpkg-repack (1.42) UNRELEASED; urgency=low
     debian/control Vcs-Git field.
   * Bump Standard-Version to 3.9.7 (no changed needed).
 
- -- Guillem Jover <guillem@debian.org>  Sat, 02 May 2015 03:37:25 +0200
+ -- Guillem Jover <guillem@debian.org>  Sun, 28 Feb 2016 23:10:41 +0100
 
 dpkg-repack (1.41) unstable; urgency=low
 
