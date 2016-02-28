@@ -38,6 +38,7 @@ my $generate;
 my $tags = '';
 my %tag = (
     description => 1,
+    version => 0,
 );
 
 sub Syntax {
@@ -49,7 +50,7 @@ Options:
       --arch=<arch>     Force the package to be built for architecture <arch>.
       --generate        Generate build directory but do not build deb.
       --tag=<type>      Tag the package as being repackaged.
-                          Types: none, description, all.
+                          Types: none, description, version, all.
   -d, --deb-option=<option>
                         Pass build <option> to dpkg-deb.
   -?, --help            Show this usage information.
@@ -163,6 +164,9 @@ sub Install_Control {
         $ctrl->{Description} .= "\n";
         $ctrl->{Description} .= "\n";
         $ctrl->{Description} .= "(Repackaged on $date by dpkg-repack.)";
+    }
+    if ($tag{version}) {
+        $ctrl->{Version} .= '+repack';
     }
 
     if ($arch) {

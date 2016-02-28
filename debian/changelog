@@ -27,6 +27,8 @@ dpkg-repack (1.42) UNRELEASED; urgency=low
     Thanks to Brian Beffa <brbsix@gmail.com>.
   * Add a --tag option to select what to mark as being repackaged.
     Based on a patch by Brian Beffa <brbsix@gmail.com>. Closes: #788628
+  * Add a --tag value to mark the package version as repackaged.
+    Closes: #788627
 
  -- Guillem Jover <guillem@debian.org>  Sat, 02 May 2015 03:37:25 +0200
 
