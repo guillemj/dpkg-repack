@@ -1,6 +1,6 @@
 dpkg-repack (1.43) UNRELEASED; urgency=medium
 
-  *
+  * Fix variable name botched in a last-minute rebase.
 
  -- Guillem Jover <guillem@debian.org>  Mon, 29 Feb 2016 09:01:23 +0100
 

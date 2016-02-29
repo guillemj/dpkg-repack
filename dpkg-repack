@@ -332,7 +332,7 @@ foreach my $type (split /,/, $tags) {
         $tag{$_} = 0 foreach (keys %tag);
     } elsif ($type eq 'all') {
         $tag{$_} = 1 foreach (keys %tag);
-    } elsif (exists $tag{$name}) {
+    } elsif (exists $tag{$type}) {
         $tag{$type} = 1;
     } else {
         Die("unknown --tag type '$type'");
