@@ -13,6 +13,11 @@ build: build-indep build-arch
 binary-indep:
 	dh_testroot
 	dh_prep
+
+ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
+	prove
+endif
+
 	dh_install
 	dh_installdocs
 	dh_installchangelogs
