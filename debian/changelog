@@ -1,3 +1,9 @@
+dpkg-repack (1.44) UNRELEASED; urgency=medium
+
+  * Spelling fixes. Thanks to Josh Soref <jsoref@gmail.com>.
+
+ -- Guillem Jover <guillem@debian.org>  Thu, 09 Mar 2017 03:50:08 +0100
+
 dpkg-repack (1.43) unstable; urgency=medium
 
   * Fix variable name botched in a last-minute rebase.
@@ -220,7 +226,7 @@ dpkg-repack (1.24) unstable; urgency=low
 dpkg-repack (1.23) unstable; urgency=low
 
   * Man page typo. Closes: #362044
-  * Patch from Tomas Pospisek to use cp -a whe copying a named pipe,
+  * Patch from Tomas Pospisek to use cp -a when copying a named pipe,
     as cp -pd will read from the pipe. Closes: #287319
 
  -- Joey Hess <joeyh@debian.org>  Mon, 15 May 2006 17:15:11 -0500
@@ -262,7 +268,7 @@ dpkg-repack (1.18) unstable; urgency=low
 
 dpkg-repack (1.17) unstable; urgency=low
 
-  * Swtich from build-depend-indep to build-depends.
+  * Switch from build-depend-indep to build-depends.
 
  -- Joey Hess <joeyh@debian.org>  Mon,  8 Sep 2003 20:45:07 -0400
 
@@ -283,7 +289,7 @@ dpkg-repack (1.15) unstable; urgency=low
 dpkg-repack (1.14) unstable; urgency=low
 
   * fakeroot's new -u flag should be used if using dpkg-repack with fakeroot.
-    Otherwise permisions of non-root-owned files can be messed up. Warn about
+    Otherwise permissions of non-root-owned files can be messed up. Warn about
     this if -u is not used.
   * Other minor changes.
 
@@ -330,7 +336,7 @@ dpkg-repack (1.8) unstable; urgency=low
 
 dpkg-repack (1.7) unstable; urgency=low
 
-  * Fixed uninitalized value if the last item in a package's file list
+  * Fixed uninitialized value if the last item in a package's file list
     was a symlink to a directory that also exists in the package.
     Closes: #88978
   * Removed the debstd-style output.
@@ -442,10 +448,10 @@ dpkg-repack (0.19) unstable; urgency=low
 
 dpkg-repack (0.18) unstable; urgency=low
 
-  * Removed some debugging output I accidentially put in the last version.
-  * Workes now for packages that have filenames with spaces in them (like
+  * Removed some debugging output I accidentally put in the last version.
+  * Works now for packages that have filenames with spaces in them (like
     maelstrom).
-  * Checged the descripton to remove the "attempts to". It should always
+  * Changed the description to remove the "attempts to". It should always
     work. (heh)
 
  -- Joey Hess <joeyh@debian.org>  Thu, 28 May 1998 06:14:27 -0400
@@ -454,13 +460,13 @@ dpkg-repack (0.17) unstable; urgency=low
 
   * Uses dpkg for querying the status file and getting the file list, rather
     than doing it by hand. However, dpkg-repack still accesses the dpkg
-    database directly, becuase it copies maintainer scripts, etc, from
+    database directly, because it copies maintainer scripts, etc, from
     there. There is no way to get that information via dpkg.
   * Fixed  bug #22603 - a failure when eg. /usr is a symlink.
     .
     If the package contains a file, that locally looks like a symlink
     pointing to a directory that is not in the package, then change it to a
-    real directory in the repacked package. This assummes that in this case,
+    real directory in the repacked package. This assumes that in this case,
     the symlink was a local change (eg, /usr is a symlink).
     .
     However, if the directory in question contains no files in the filelist
