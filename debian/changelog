@@ -2,6 +2,7 @@ dpkg-repack (1.44) UNRELEASED; urgency=medium
 
   * Spelling fixes. Thanks to Josh Soref <jsoref@gmail.com>.
   * Line-wrap dependency fields.
+  * Bump Standard-Version to 4.1.4 (no changed needed).
 
  -- Guillem Jover <guillem@debian.org>  Thu, 09 Mar 2017 03:50:08 +0100
 
