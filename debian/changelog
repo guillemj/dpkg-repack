@@ -1,6 +1,7 @@
 dpkg-repack (1.44) UNRELEASED; urgency=medium
 
   * Spelling fixes. Thanks to Josh Soref <jsoref@gmail.com>.
+  * Line-wrap dependency fields.
 
  -- Guillem Jover <guillem@debian.org>  Thu, 09 Mar 2017 03:50:08 +0100
 
