@@ -208,6 +208,8 @@ sub Install_DEBIAN {
         close $out_fh;
         SafeSystem 'chown', '0:0', "$build_dir/DEBIAN/conffiles", '';
     }
+
+    Install_Control($build_dir, $inst);
 }
 
 # This looks at the list of files in this package, and places them
@@ -355,7 +357,6 @@ foreach my $pkgname (@ARGV) {
     my $build_dir = Make_Dirs($pkgname);
     my @conffiles = Install_Files($build_dir, $inst);
     Install_DEBIAN($build_dir, $inst, @conffiles);
-    Install_Control($build_dir, $inst);
 
     # Do we need to create the binary packages?
     if ($generate) {
