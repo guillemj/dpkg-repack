@@ -180,10 +180,10 @@ sub Install_Control {
 # Install all the files in the DEBIAN directory. (Except control file and
 # file list file.)
 sub Install_DEBIAN {
-    my ($build_dir, $inst, @conffiles) = @_;
+    my ($pkgname, $build_dir, $inst, @conffiles) = @_;
 
     my @control_files;
-    open my $q_fh, '-|', "dpkg-query --admindir=$rootdir/var/lib/dpkg --control-path $inst->{Package} 2>/dev/null"
+    open my $q_fh, '-|', "dpkg-query --admindir=$rootdir/var/lib/dpkg --control-path $pkgname 2>/dev/null"
         or Die "dpkg-query failed: $!";
     while (my $fn = <$q_fh>) {
         chomp $fn;
@@ -215,7 +215,7 @@ sub Install_DEBIAN {
 # This looks at the list of files in this package, and places them
 # all on the directory tree.
 sub Install_Files {
-    my ($build_dir, $inst) = @_;
+    my ($pkgname, $build_dir, $inst) = @_;
 
     # There are two types of conffiles. Obsolete conffiles should be
     # skipped, while other conffiles should be included if present.
@@ -235,7 +235,7 @@ sub Install_Files {
     # it runs with English language output.
     my $lc_all = $ENV{LC_ALL};
     $ENV{LC_ALL} = 'C';
-    my @filelist = split /\n/, qx{dpkg --root=$rootdir/ -L $inst->{Package}};
+    my @filelist = split /\n/, qx{dpkg --root=$rootdir/ -L $pkgname};
     $ENV{LC_ALL} = $lc_all if defined $lc_all; # important to reset it.
 
     # Set up a hash for easy lookups.
@@ -355,8 +355,8 @@ foreach my $pkgname (@ARGV) {
 
     # Generate the directory tree.
     my $build_dir = Make_Dirs($pkgname);
-    my @conffiles = Install_Files($build_dir, $inst);
-    Install_DEBIAN($build_dir, $inst, @conffiles);
+    my @conffiles = Install_Files($pkgname, $build_dir, $inst);
+    Install_DEBIAN($pkgname, $build_dir, $inst, @conffiles);
 
     # Do we need to create the binary packages?
     if ($generate) {
