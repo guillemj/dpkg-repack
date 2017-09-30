@@ -7,6 +7,9 @@ dpkg-repack (1.44) UNRELEASED; urgency=medium
   * Use the provided pkgname when calling dpkg commands, instead of partially
     reconstructing it from metadata, as we might end up not matching the same
     arch-qualifying the user specified. Closes: #870724
+  * Use Dpkg::IPC instead of qx() or open() subcommand pipe support. This will
+    give more accurate error messages and will check all function return codes
+    involved.
 
  -- Guillem Jover <guillem@debian.org>  Thu, 09 Mar 2017 03:50:08 +0100
 

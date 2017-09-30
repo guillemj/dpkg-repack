@@ -3,7 +3,7 @@
 # dpkg-repack puts humpty-dumpty back together again.
 #
 # Copyright © 1996-2006 Joey Hess <joeyh@debian.org>
-# Copyright © 2012,2014-2016 Guillem Jover <guillem@debian.org>
+# Copyright © 2012, 2014-2017 Guillem Jover <guillem@debian.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@ use warnings;
 use File::stat;
 use File::Temp;
 use Dpkg::Path qw(find_command);
+use Dpkg::IPC;
 use Dpkg::Control;
 use Dpkg::Control::Fields;
 use Getopt::Long;
@@ -130,10 +131,11 @@ sub Extract_Status {
 
     my $inst = Dpkg::Control->new(type => CTRL_FILE_STATUS);
 
-    open my $fh, '-|', 'dpkg', "--root=$rootdir/", '-s', $pkgname
-        or Die "Unable to locate $pkgname in the package list.";
+    my $fh;
+    my @cmd = ('dpkg', "--root=$rootdir/", '-s', $pkgname);
+    my $pid = spawn(exec => \@cmd, to_pipe => \$fh);
     $inst->parse($fh, "dpkg status for $pkgname");
-    close $fh;
+    wait_child($pid, cmdline => "@cmd");
 
     if ($inst->{Status} !~ m/^\S+\s+\S+\s+installed$/) {
         Die "Package $pkgname not fully installed: $inst->{Status}";
@@ -182,14 +184,18 @@ sub Install_Control {
 sub Install_DEBIAN {
     my ($pkgname, $build_dir, $inst, @conffiles) = @_;
 
+    my $fh;
+    my @cmd = ('dpkg-query', "--admindir=$rootdir/var/lib/dpkg",
+                             '--control-path', $pkgname);
+    my $pid = spawn(exec => \@cmd, to_pipe => \$fh);
+
     my @control_files;
-    open my $q_fh, '-|', "dpkg-query --admindir=$rootdir/var/lib/dpkg --control-path $pkgname 2>/dev/null"
-        or Die "dpkg-query failed: $!";
-    while (my $fn = <$q_fh>) {
+    while (my $fn = <$fh>) {
         chomp $fn;
         push @control_files, $fn;
     }
-    close $q_fh;
+
+    wait_child($pid, cmdline => "@cmd");
 
     foreach my $fn (@control_files) {
         my ($basename) = $fn =~ m/^.*\.(.*?)$/;
@@ -233,10 +239,10 @@ sub Install_Files {
     # see where symlinks point to. Note that because we parse the output
     # of the command (for diversions, below) it's important to make sure
     # it runs with English language output.
-    my $lc_all = $ENV{LC_ALL};
-    $ENV{LC_ALL} = 'C';
-    my @filelist = split /\n/, qx{dpkg --root=$rootdir/ -L $pkgname};
-    $ENV{LC_ALL} = $lc_all if defined $lc_all; # important to reset it.
+    my $filelist;
+    spawn(exec => [ 'dpkg', "--root=$rootdir/", '-L', $pkgname ],
+          env => { LC_ALL => 'C' }, to_string => \$filelist, wait_child => 1);
+    my @filelist = split /\n/, $filelist;
 
     # Set up a hash for easy lookups.
     my %filelist = map { $_ => 1 } @filelist;
