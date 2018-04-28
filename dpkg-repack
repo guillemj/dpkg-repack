@@ -44,7 +44,7 @@ my %tag = (
 );
 
 sub Syntax {
-    print { *STDERR } <<USAGE;
+    print { *STDERR } <<'USAGE';
 Usage: dpkg-repack [option...] package-name...
 
 Options:
