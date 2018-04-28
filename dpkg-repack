@@ -295,8 +295,8 @@ sub Install_Files {
             my $f = '';
             foreach my $dir (split(m/\/+/, $origfn)) {
                 $f .= "/$dir";
-                next if -d $build_dir . $f;
-                my $st = stat($rootdir . $f);
+                next if -d "$build_dir/$f";
+                my $st = stat "$rootdir/$f";
                 SafeMkdir "$build_dir/$f", $st->mode;
                 chown($st->uid, $st->gid, "$build_dir/$f");
             }
