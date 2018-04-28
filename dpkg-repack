@@ -23,6 +23,7 @@ use warnings;
 
 use File::stat;
 use File::Temp;
+use List::Util qw(any none);
 use Dpkg::Path qw(find_command);
 use Dpkg::IPC;
 use Dpkg::Control;
@@ -267,13 +268,13 @@ sub Install_Files {
             $fn = $rootdir . $origfn;
         }
 
-        if (grep { $_ eq $fn } @obsolete_conffiles) {
+        if (any { $_ eq $fn } @obsolete_conffiles) {
             Warn("Skipping obsolete conffile $fn");
             next;
         }
 
         if (!-e $fn && !-l $fn) {
-            Error "File not found: $fn" unless grep { $_ eq $fn } @conffiles;
+            Error "File not found: $fn" if none { $_ eq $fn } @conffiles;
         } elsif ((-d $fn and not -l $fn) or
                  (-d $fn and -l $fn and not $filelist{readlink($fn)} and
                   ($x + 1 <= $#filelist and $filelist[$x + 1] =~ m/^\Q$origfn\E\//))) {
