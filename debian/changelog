@@ -11,6 +11,7 @@ dpkg-repack (1.44) UNRELEASED; urgency=medium
     give more accurate error messages and will check all function return codes
     involved.
   * Namespace debhelper files with package names.
+  * Update Vcs URLs to point to the new hosting site.
 
  -- Guillem Jover <guillem@debian.org>  Thu, 09 Mar 2017 03:50:08 +0100
 
