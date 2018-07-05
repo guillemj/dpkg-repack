@@ -2,7 +2,7 @@ dpkg-repack (1.44) UNRELEASED; urgency=medium
 
   * Spelling fixes. Thanks to Josh Soref <jsoref@gmail.com>.
   * Line-wrap dependency fields.
-  * Bump Standard-Version to 4.1.4 (no changed needed).
+  * Bump Standard-Version to 4.1.5 (no changed needed).
   * Bump debhelper compatibility to level 10.
   * Use the provided pkgname when calling dpkg commands, instead of partially
     reconstructing it from metadata, as we might end up not matching the same
