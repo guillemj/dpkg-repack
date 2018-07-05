@@ -10,6 +10,7 @@ dpkg-repack (1.44) UNRELEASED; urgency=medium
   * Use Dpkg::IPC instead of qx() or open() subcommand pipe support. This will
     give more accurate error messages and will check all function return codes
     involved.
+  * Namespace debhelper files with package names.
 
  -- Guillem Jover <guillem@debian.org>  Thu, 09 Mar 2017 03:50:08 +0100
 
