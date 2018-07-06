@@ -14,6 +14,7 @@ dpkg-repack (1.44) UNRELEASED; urgency=medium
   * Update Vcs URLs to point to the new hosting site.
   * Move author information in man page from a dedicated section into a proper
     copyright and license header.
+  * Rewrite man page from groff to POD.
 
  -- Guillem Jover <guillem@debian.org>  Thu, 09 Mar 2017 03:50:08 +0100
 

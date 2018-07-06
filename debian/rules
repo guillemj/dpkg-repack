@@ -1,16 +1,28 @@
 #!/usr/bin/make -f
 
+include /usr/share/dpkg/default.mk
+
+MANDATE := $(shell TZ=UTC0 LC_ALL=C date --date='@$(SOURCE_DATE_EPOCH)' '+%F')
+
 clean:
 	dh_testdir
 	dh_clean
 
-build-indep:
+dpkg-repack.1: dpkg-repack.pod
+	pod2man \
+	  --section 1 \
+	  --center='dpkg suite' \
+	  --date='$(MANDATE)' \
+	  --release='$(DEB_VERSION)' \
+	  $< $@
+
+build-indep: dpkg-repack.1
 build-arch:
 build: build-indep build-arch
 
 .PHONY: clean build-indep build-arch build
 
-binary-indep:
+binary-indep: build-indep
 	dh_testroot
 	dh_prep
 
