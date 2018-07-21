@@ -15,6 +15,7 @@ dpkg-repack (1.44) UNRELEASED; urgency=medium
   * Move author information in man page from a dedicated section into a proper
     copyright and license header.
   * Rewrite man page from groff to POD.
+  * Set Rules-Requires-Root to no.
 
  -- Guillem Jover <guillem@debian.org>  Thu, 09 Mar 2017 03:50:08 +0100
 
