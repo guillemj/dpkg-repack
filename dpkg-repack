@@ -30,7 +30,7 @@ use Dpkg::Control;
 use Dpkg::Control::Fields;
 use Getopt::Long;
 
-my $VERSION = '1.43';
+my $VERSION = '1.44';
 
 my $error_flag;
 my $rootdir;

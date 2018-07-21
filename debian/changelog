@@ -1,4 +1,4 @@
-dpkg-repack (1.44) UNRELEASED; urgency=medium
+dpkg-repack (1.44) unstable; urgency=medium
 
   * Spelling fixes. Thanks to Josh Soref <jsoref@gmail.com>.
   * Line-wrap dependency fields.
@@ -17,7 +17,7 @@ dpkg-repack (1.44) UNRELEASED; urgency=medium
   * Rewrite man page from groff to POD.
   * Set Rules-Requires-Root to no.
 
- -- Guillem Jover <guillem@debian.org>  Thu, 09 Mar 2017 03:50:08 +0100
+ -- Guillem Jover <guillem@debian.org>  Sat, 21 Jul 2018 13:20:21 +0200
 
 dpkg-repack (1.43) unstable; urgency=medium
 
