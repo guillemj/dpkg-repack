@@ -15,6 +15,7 @@ Build-Depends:
 
 Package: dpkg-repack
 Architecture: all
+Multi-Arch: foreign
 Depends:
  ${misc:Depends},
  ${perl:Depends},
