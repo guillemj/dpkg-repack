@@ -5,6 +5,7 @@ dpkg-repack (1.45) UNRELEASED; urgency=medium
   * Bump debhelper compatibility to level 11.
   * Update copyright years.
   * Remove unused last argument from SafeSystem() function.
+  * Use the .. operator instead of a C-style for loop.
 
  -- Guillem Jover <guillem@debian.org>  Sun, 30 Sep 2018 00:33:32 +0200
 

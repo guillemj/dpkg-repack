@@ -49,6 +49,7 @@ my @policies = qw(
     CodeLayout::ProhibitQuotedWordLists
     CodeLayout::ProhibitTrailingWhitespace
     CodeLayout::RequireConsistentNewlines
+    ControlStructures::ProhibitCStyleForLoops
     ControlStructures::ProhibitLabelsWithSpecialBlockNames
     ControlStructures::ProhibitMutatingListFunctions
     ControlStructures::ProhibitNegativeExpressionsInUnlessAndUntilConditions

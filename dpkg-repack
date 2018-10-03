@@ -248,7 +248,7 @@ sub Install_Files {
     my %filelist = map { $_ => 1 } @filelist;
 
     my $fn;
-    for (my $x = 0; $x <= $#filelist; $x++) {
+    foreach my $x (0 .. $#filelist) {
         my $origfn = $filelist[$x];
 
         # dpkg -L spits out extra lines to report diversions. We have to
