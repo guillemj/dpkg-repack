@@ -86,12 +86,11 @@ sub Die {
 
 # Run a system command, and print an error message if it fails.
 sub SafeSystem {
-    my $errormessage = pop @_;
+    my (@command) = @_;
 
-    my $ret = system @_;
+    my $ret = system @command;
     if (int($ret / 256) > 0) {
-        $errormessage = 'Error running: ' . join ' ', @_
-            if !$errormessage;
+        my $errormessage = 'Error running: ' . join ' ', @command;
         Error($errormessage);
     }
 }
@@ -177,7 +176,7 @@ sub Install_Control {
     }
 
     $ctrl->save("$build_dir/DEBIAN/control");
-    SafeSystem 'chown', '0:0', "$build_dir/DEBIAN/control", '';
+    SafeSystem 'chown', '0:0', "$build_dir/DEBIAN/control";
 }
 
 # Install all the files in the DEBIAN directory. (Except control file and
@@ -200,7 +199,7 @@ sub Install_DEBIAN {
 
     foreach my $fn (@control_files) {
         my ($basename) = $fn =~ m/^.*\.(.*?)$/;
-        SafeSystem 'cp', '-p', $fn, "$build_dir/DEBIAN/$basename", '';
+        SafeSystem 'cp', '-p', $fn, "$build_dir/DEBIAN/$basename";
     }
 
     # Conffiles have to be handled specially, because dpkg-query --control-path
@@ -213,7 +212,7 @@ sub Install_DEBIAN {
             print { $out_fh } "$_\n";
         }
         close $out_fh;
-        SafeSystem 'chown', '0:0', "$build_dir/DEBIAN/conffiles", '';
+        SafeSystem 'chown', '0:0', "$build_dir/DEBIAN/conffiles";
     }
 
     Install_Control($build_dir, $inst);
@@ -302,9 +301,9 @@ sub Install_Files {
             }
         } elsif (-p $fn) {
             # Copy a named pipe with cp -a.
-            SafeSystem 'cp', '-a', $fn, "$build_dir/$origfn", '';
+            SafeSystem 'cp', '-a', $fn, "$build_dir/$origfn";
         } else {
-            SafeSystem 'cp', '-pd', $fn, "$build_dir/$origfn", '';
+            SafeSystem 'cp', '-pd', $fn, "$build_dir/$origfn";
         }
     }
 
@@ -370,7 +369,7 @@ foreach my $pkgname (@ARGV) {
         Info("created $build_dir for $pkgname");
     } else {
         # Let dpkg-deb do its magic.
-        SafeSystem('dpkg-deb', @deb_options, '--build', $build_dir, '.', '');
+        SafeSystem('dpkg-deb', @deb_options, '--build', $build_dir, '.');
     }
 
     if ($error_flag) {
