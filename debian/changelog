@@ -3,6 +3,7 @@ dpkg-repack (1.45) UNRELEASED; urgency=medium
   * Mark package as Multi-Arch foreign.
   * Bump Standard-Version to 4.2.1 (no changed needed).
   * Bump debhelper compatibility to level 11.
+  * Update copyright years.
 
  -- Guillem Jover <guillem@debian.org>  Sun, 30 Sep 2018 00:33:32 +0200
 
