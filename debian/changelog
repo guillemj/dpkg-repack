@@ -6,6 +6,7 @@ dpkg-repack (1.45) UNRELEASED; urgency=medium
   * Update copyright years.
   * Remove unused last argument from SafeSystem() function.
   * Use the .. operator instead of a C-style for loop.
+  * Remove trailing whitespace.
 
  -- Guillem Jover <guillem@debian.org>  Sun, 30 Sep 2018 00:33:32 +0200
 
@@ -423,7 +424,7 @@ dpkg-repack (1.0) unstable; urgency=low
 dpkg-repack (0.25) unstable; urgency=low
 
   * Depend on gcc, because it uses dpkg --build which brain-deadly requires
-    dpkg be present (and of course dpkg doesn't depend on gcc..) 
+    dpkg be present (and of course dpkg doesn't depend on gcc..)
     (Closes: #40985)
 
  -- Joey Hess <joeyh@debian.org>  Thu,  8 Jul 1999 11:20:26 -0700
