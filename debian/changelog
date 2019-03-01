@@ -1,4 +1,4 @@
-dpkg-repack (1.45) UNRELEASED; urgency=medium
+dpkg-repack (1.45) unstable; urgency=medium
 
   * Mark package as Multi-Arch foreign.
   * Bump Standard-Version to 4.3.0 (no changed needed).
@@ -8,7 +8,7 @@ dpkg-repack (1.45) UNRELEASED; urgency=medium
   * Use the .. operator instead of a C-style for loop.
   * Remove trailing whitespace.
 
- -- Guillem Jover <guillem@debian.org>  Sun, 30 Sep 2018 00:33:32 +0200
+ -- Guillem Jover <guillem@debian.org>  Sat, 02 Mar 2019 00:41:43 +0100
 
 dpkg-repack (1.44) unstable; urgency=medium
 
