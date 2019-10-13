@@ -45,7 +45,7 @@ my %tag = (
 
 sub Syntax {
     print { *STDERR } <<'USAGE';
-Usage: dpkg-repack [option...] package-name...
+Usage: dpkg-repack [<option>...] <package-name>...
 
 Options:
       --root=<dir>      Take package from filesystem rooted on <dir>.

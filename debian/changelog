@@ -9,6 +9,7 @@ dpkg-repack (1.46) UNRELEASED; urgency=medium
   * Configure Getopt::Long with «posix_default bundling_values no_ignore_case».
   * Remove backwards compatibility workaround for libdpkg-perl < 1.18.2,
     satisfied in oldstable.
+  * Surround replacement names with <> in --help output.
 
  -- Guillem Jover <guillem@debian.org>  Sun, 13 Oct 2019 17:33:44 +0200
 
