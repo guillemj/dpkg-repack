@@ -1,3 +1,9 @@
+dpkg-repack (1.46) UNRELEASED; urgency=medium
+
+  * Bump Standard-Version to 4.4.1 (no changed needed).
+
+ -- Guillem Jover <guillem@debian.org>  Sun, 13 Oct 2019 17:33:44 +0200
+
 dpkg-repack (1.45) unstable; urgency=medium
 
   * Mark package as Multi-Arch foreign.
