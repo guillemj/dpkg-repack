@@ -10,7 +10,7 @@ Homepage: https://wiki.debian.org/Teams/Dpkg
 Rules-Requires-Root: no
 Build-Depends:
  dpkg-dev (>= 1.17.14),
- debhelper-compat (= 11),
+ debhelper-compat (= 12),
  libtest-strict-perl <!nocheck>,
 
 Package: dpkg-repack
