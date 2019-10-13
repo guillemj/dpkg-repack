@@ -150,12 +150,6 @@ sub Install_Control {
 
     my $ctrl = Dpkg::Control->new(type => CTRL_PKG_DEB);
 
-    # XXX: Versions prior to dpkg 1.18.2 do not properly propagate the
-    # Maintainer field, workaround it here.
-    if (not field_is_allowed_in('Maintainer', CTRL_FILE_STATUS)) {
-        field_register('Maintainer', CTRL_PKG_DEB | CTRL_FILE_STATUS);
-    }
-
     field_transfer_all($inst, $ctrl);
 
     # Add something to the Description to mention dpkg-repack.
