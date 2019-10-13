@@ -6,6 +6,7 @@ dpkg-repack (1.46) UNRELEASED; urgency=medium
   * Remove dpkg-dev Build-Dpends, satisfied in oldstable.
   * Remove Documentation::RequirePodLinksIncludeText perlcritic suppression.
     The test was bogus and has now been removed from perlcritic.
+  * Configure Getopt::Long with «posix_default bundling_values no_ignore_case».
 
  -- Guillem Jover <guillem@debian.org>  Sun, 13 Oct 2019 17:33:44 +0200
 
