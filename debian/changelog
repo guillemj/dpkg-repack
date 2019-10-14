@@ -18,6 +18,7 @@ dpkg-repack (1.46) UNRELEASED; urgency=medium
     ad-hoc implementations anymore for problem reporting, and can use the
     ones in libdpkg-perl. Even though they are private, because this is a
     sibling project, we can cope with the lack of interface guarantees.
+  * Update copyright years.
 
  -- Guillem Jover <guillem@debian.org>  Sun, 13 Oct 2019 17:33:44 +0200
 
