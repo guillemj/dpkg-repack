@@ -304,6 +304,29 @@ sub Install_Files {
     return @conffiles;
 }
 
+sub Archive_Package {
+    my $pkgname = shift;
+
+    my $inst = Extract_Status($pkgname);
+
+    # If the umask is set wrong, the directories will end up with the wrong
+    # perms. (Is this still needed?)
+    umask 022;
+
+    # Generate the directory tree.
+    my $build_dir = Make_Dirs($pkgname);
+    my @conffiles = Install_Files($pkgname, $build_dir, $inst);
+    Install_DEBIAN($pkgname, $build_dir, $inst, @conffiles);
+
+    # Do we need to create the binary packages?
+    if ($generate) {
+        Info("created $build_dir for $pkgname");
+    } else {
+        # Let dpkg-deb do its magic.
+        SafeSystem('dpkg-deb', @deb_options, '--build', $build_dir, '.');
+    }
+}
+
 # Some sanity checks.
 if ($> != 0) {
     # Try to exec self with fakeroot if we are not running as root.
@@ -347,24 +370,7 @@ if (not @ARGV or not $ret) {
 }
 
 foreach my $pkgname (@ARGV) {
-    my $inst = Extract_Status($pkgname);
-
-    # If the umask is set wrong, the directories will end up with the wrong
-    # perms. (Is this still needed?)
-    umask 022;
-
-    # Generate the directory tree.
-    my $build_dir = Make_Dirs($pkgname);
-    my @conffiles = Install_Files($pkgname, $build_dir, $inst);
-    Install_DEBIAN($pkgname, $build_dir, $inst, @conffiles);
-
-    # Do we need to create the binary packages?
-    if ($generate) {
-        Info("created $build_dir for $pkgname");
-    } else {
-        # Let dpkg-deb do its magic.
-        SafeSystem('dpkg-deb', @deb_options, '--build', $build_dir, '.');
-    }
+    Archive_Package($pkgname);
 
     if ($error_flag) {
         Error('Problems were encountered in processing.');

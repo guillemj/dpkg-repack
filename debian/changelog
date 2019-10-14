@@ -10,6 +10,7 @@ dpkg-repack (1.46) UNRELEASED; urgency=medium
   * Remove backwards compatibility workaround for libdpkg-perl < 1.18.2,
     satisfied in oldstable.
   * Surround replacement names with <> in --help output.
+  * Refactor package archival into a new Archive_Package() function.
 
  -- Guillem Jover <guillem@debian.org>  Sun, 13 Oct 2019 17:33:44 +0200
 
