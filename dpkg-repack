@@ -86,11 +86,7 @@ sub Die {
 sub SafeSystem {
     my (@command) = @_;
 
-    my $ret = system @command;
-    if (int($ret / 256) > 0) {
-        my $errormessage = 'Error running: ' . join ' ', @command;
-        Error($errormessage);
-    }
+    spawn(exec => [ @command ], wait_child => 1);
 }
 
 sub SafeChmod {
