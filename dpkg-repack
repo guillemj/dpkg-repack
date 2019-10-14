@@ -32,7 +32,6 @@ use Getopt::Long qw(:config posix_default bundling_values no_ignore_case);
 
 my $VERSION = '1.44';
 
-my $error_flag;
 my $rootdir;
 my $arch;
 my @deb_options;
@@ -76,7 +75,6 @@ sub Warn {
 
 sub Error {
     Warn @_;
-    $error_flag = 1;
 }
 
 sub Die {
@@ -370,11 +368,11 @@ if (not @ARGV or not $ret) {
 }
 
 foreach my $pkgname (@ARGV) {
-    Archive_Package($pkgname);
-
-    if ($error_flag) {
-        Error('Problems were encountered in processing.');
-        Error('The package may be broken.');
-        $error_flag = 0;
-    }
+    eval {
+        Archive_Package($pkgname);
+        1;
+    } or do {
+        Warn('Problems were encountered in processing.');
+        Warn('The package may be broken.');
+    };
 }

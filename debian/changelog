@@ -11,6 +11,8 @@ dpkg-repack (1.46) UNRELEASED; urgency=medium
     satisfied in oldstable.
   * Surround replacement names with <> in --help output.
   * Refactor package archival into a new Archive_Package() function.
+  * Use a block eval to trap errors from Archive_Package(), so that we will
+    detect any errors not just the ones coming from Error() calls.
 
  -- Guillem Jover <guillem@debian.org>  Sun, 13 Oct 2019 17:33:44 +0200
 
