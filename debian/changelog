@@ -14,6 +14,10 @@ dpkg-repack (1.46) UNRELEASED; urgency=medium
   * Use a block eval to trap errors from Archive_Package(), so that we will
     detect any errors not just the ones coming from Error() calls.
   * Switch SafeSystem to use Dpkg::IPC::spawn().
+  * Switch to Dpkg::ErrorHandling reporting functions. We do not need the
+    ad-hoc implementations anymore for problem reporting, and can use the
+    ones in libdpkg-perl. Even though they are private, because this is a
+    sibling project, we can cope with the lack of interface guarantees.
 
  -- Guillem Jover <guillem@debian.org>  Sun, 13 Oct 2019 17:33:44 +0200
 

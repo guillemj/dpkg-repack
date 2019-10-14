@@ -24,6 +24,7 @@ use warnings;
 use File::stat;
 use File::Temp;
 use List::Util qw(any none);
+use Dpkg::ErrorHandling;
 use Dpkg::Path qw(find_command);
 use Dpkg::IPC;
 use Dpkg::Control;
@@ -65,23 +66,6 @@ sub Version {
     print 'dpkg-repack ' . $VERSION . "\n";
 }
 
-sub Info {
-    print "dpkg-repack: @_\n";
-}
-
-sub Warn {
-    print { *STDERR } "dpkg-repack: @_\n";
-}
-
-sub Error {
-    Warn @_;
-}
-
-sub Die {
-    Error('Fatal Error:', @_);
-    exit 1;
-}
-
 # Run a system command, and print an error message if it fails.
 sub SafeSystem {
     my (@command) = @_;
@@ -92,14 +76,14 @@ sub SafeSystem {
 sub SafeChmod {
     my ($dir, $perms) = @_;
 
-    chmod $perms, $dir or Error("Unable to change permissions on \"$dir\": $!");
+    chmod $perms, $dir or syserr("cannot change permissions on '$dir'");
 }
 
 # Make the passed directory, print an error message if it fails.
 sub SafeMkdir {
     my ($dir, $perms) = @_;
 
-    mkdir $dir, $perms or Error("Unable to make directory, \"$dir\": $!");
+    mkdir $dir, $perms or syserr("cannot make directory '$dir'");
     # mkdir doesn't do sticky bits and suidness.
     SafeChmod($dir, $perms);
 }
@@ -132,7 +116,7 @@ sub Extract_Status {
     wait_child($pid, cmdline => "@cmd");
 
     if ($inst->{Status} !~ m/^\S+\s+\S+\s+installed$/) {
-        Die "Package $pkgname not fully installed: $inst->{Status}";
+        error("package $pkgname is not fully installed: $inst->{Status}");
     }
 
     return $inst;
@@ -195,7 +179,7 @@ sub Install_DEBIAN {
     # contains conffiles that are still present on the filesystem.
     if (@conffiles) {
         open my $out_fh, '>', "$build_dir/DEBIAN/conffiles"
-            or Die "write conffiles: $!";
+            or error("write conffiles: $!");
         foreach (@conffiles) {
             print { $out_fh } "$_\n";
         }
@@ -256,12 +240,12 @@ sub Install_Files {
         }
 
         if (any { $_ eq $fn } @obsolete_conffiles) {
-            Warn("Skipping obsolete conffile $fn");
+            warning("skipping obsolete conffile $fn");
             next;
         }
 
         if (!-e $fn && !-l $fn) {
-            Error "File not found: $fn" if none { $_ eq $fn } @conffiles;
+            error("cannot find file '$fn'") if none { $_ eq $fn } @conffiles;
         } elsif ((-d $fn and not -l $fn) or
                  (-d $fn and -l $fn and not $filelist{readlink($fn)} and
                   ($x + 1 <= $#filelist and $filelist[$x + 1] =~ m/^\Q$origfn\E\//))) {
@@ -314,7 +298,7 @@ sub Archive_Package {
 
     # Do we need to create the binary packages?
     if ($generate) {
-        Info("created $build_dir for $pkgname");
+        info("created $build_dir for $pkgname");
     } else {
         # Let dpkg-deb do its magic.
         SafeSystem('dpkg-deb', @deb_options, '--build', $build_dir, '.');
@@ -327,10 +311,10 @@ if ($> != 0) {
     if (find_command('fakeroot')) {
         exec 'fakeroot', '-u', $0, @ARGV;
     }
-    Die 'This program should be run as root (or you could use fakeroot -u). Aborting.';
+    error('this program should be run as root (or you could use fakeroot -u); aborting');
 }
 if (exists $ENV{FAKED_MODE} && $ENV{FAKED_MODE} ne 'unknown-is-real') {
-    Warn 'fakeroot run without its -u flag may corrupt some file permissions.';
+    warning('fakeroot run without its -u flag may corrupt some file permissions');
 }
 
 # Parse parameters.
@@ -354,7 +338,7 @@ foreach my $type (split /,/, $tags) {
     } elsif (exists $tag{$type}) {
         $tag{$type} = 1;
     } else {
-        Die("unknown --tag type '$type'");
+        error("unknown --tag type '$type'");
     }
 }
 
@@ -368,7 +352,6 @@ foreach my $pkgname (@ARGV) {
         Archive_Package($pkgname);
         1;
     } or do {
-        Warn('Problems were encountered in processing.');
-        Warn('The package may be broken.');
+        warning("problems found processing $pkgname, the package may be broken");
     };
 }
