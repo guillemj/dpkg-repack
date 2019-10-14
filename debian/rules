@@ -36,6 +36,7 @@ endif
 	dh_installman
 	dh_perl
 	dh_link
+	dh_lintian
 	dh_compress
 	dh_fixperms
 	dh_installdeb

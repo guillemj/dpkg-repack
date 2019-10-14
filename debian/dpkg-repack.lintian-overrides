@@ -1,0 +1,3 @@
+# We use the path to dpkg-query --admindir, which is fine. Even if the tool
+# had a --root argument, we'd still be assuming the default inside the chroot.
+dpkg-repack: uses-dpkg-database-directly usr/bin/dpkg-repack

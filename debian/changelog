@@ -19,6 +19,7 @@ dpkg-repack (1.46) UNRELEASED; urgency=medium
     ones in libdpkg-perl. Even though they are private, because this is a
     sibling project, we can cope with the lack of interface guarantees.
   * Update copyright years.
+  * Add lintian override for dpkg internal database usage false positive.
 
  -- Guillem Jover <guillem@debian.org>  Sun, 13 Oct 2019 17:33:44 +0200
 
