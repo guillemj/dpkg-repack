@@ -1,4 +1,4 @@
-dpkg-repack (1.46) UNRELEASED; urgency=medium
+dpkg-repack (1.46) unstable; urgency=medium
 
   * Bump Standard-Version to 4.4.1 (no changed needed).
   * Switch from debian/compat to debhelper-compat in Build-Depends.
@@ -21,7 +21,7 @@ dpkg-repack (1.46) UNRELEASED; urgency=medium
   * Update copyright years.
   * Add lintian override for dpkg internal database usage false positive.
 
- -- Guillem Jover <guillem@debian.org>  Sun, 13 Oct 2019 17:33:44 +0200
+ -- Guillem Jover <guillem@debian.org>  Sat, 19 Oct 2019 04:51:29 +0200
 
 dpkg-repack (1.45) unstable; urgency=medium
 
