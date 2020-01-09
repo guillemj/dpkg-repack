@@ -352,6 +352,7 @@ foreach my $pkgname (@ARGV) {
         Archive_Package($pkgname);
         1;
     } or do {
+        print { \*STDERR } "$@";
         warning("problems found processing $pkgname, the package may be broken");
     };
 }
