@@ -245,7 +245,7 @@ sub Install_Files {
         }
 
         if (!-e $fn && !-l $fn) {
-            error("cannot find file '$fn'") if none { $_ eq $fn } @conffiles;
+            warning("cannot find file '$fn'") if none { $_ eq $fn } @conffiles;
         } elsif ((-d $fn and not -l $fn) or
                  (-d $fn and -l $fn and not $filelist{readlink($fn)} and
                   ($x + 1 <= $#filelist and $filelist[$x + 1] =~ m/^\Q$origfn\E\//))) {
