@@ -4,9 +4,10 @@ include /usr/share/dpkg/default.mk
 
 MANDATE := $(shell TZ=UTC0 LC_ALL=C date --date='@$(SOURCE_DATE_EPOCH)' '+%F')
 
-clean:
-	dh_testdir
-	dh_clean
+%:
+	dh $@
+
+execute_before_dh_auto_build-indep: dpkg-repack.1
 
 dpkg-repack.1: dpkg-repack.pod
 	pod2man \
@@ -16,35 +17,5 @@ dpkg-repack.1: dpkg-repack.pod
 	  --release='$(DEB_VERSION)' \
 	  $< $@
 
-build-indep: dpkg-repack.1
-build-arch:
-build: build-indep build-arch
-
-.PHONY: clean build-indep build-arch build
-
-binary-indep: build-indep
-	dh_testroot
-	dh_prep
-
-ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
+override_dh_auto_test:
 	prove
-endif
-
-	dh_install
-	dh_installdocs
-	dh_installchangelogs
-	dh_installman
-	dh_perl
-	dh_link
-	dh_lintian
-	dh_compress
-	dh_fixperms
-	dh_installdeb
-	dh_gencontrol
-	dh_md5sums
-	dh_builddeb
-
-binary-arch:
-binary: binary-indep binary-arch
-
-.PHONY: binary-indep binary-indep binary

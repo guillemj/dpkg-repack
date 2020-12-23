@@ -1,3 +1,4 @@
+debhelper-build-stamp
 dpkg-repack/
 *.log
 *.substvars
