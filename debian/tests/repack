@@ -8,9 +8,9 @@ cmp_ctrlfile()
   local pkg=$1
   local ctrl=$2
 
-  dpkg-query --control-show $pkg $ctrl >$ADTTMP/$pkg-inst.$ctrl
-  dpkg-deb --info $ADTTMP/${pkg}_*.deb $ctrl >$ADTTMP/$pkg-pack.$ctrl
-  diff -u $ADTTMP/$pkg-inst.$ctrl $ADTTMP/$pkg-pack.$ctrl
+  dpkg-query --control-show $pkg $ctrl >$pkg-inst.$ctrl
+  dpkg-deb --info ${pkg}_*.deb $ctrl >$pkg-pack.$ctrl
+  diff -u $pkg-inst.$ctrl $pkg-pack.$ctrl
 }
 
 cmp_listfile()
@@ -18,17 +18,16 @@ cmp_listfile()
   local pkg=$1
   local ctrl=$2
 
-  dpkg-query --listfiles $pkg | sort >$ADTTMP/$pkg-inst.list
-  dpkg-deb --fsys-tarfile $ADTTMP/${pkg}_*.deb | tar -tf - | cut -c2- \
-    | sort >$ADTTMP/$pkg-pack.list
-  diff -u $ADTTMP/$pkg-inst.list $ADTTMP/$pkg-pack.list
+  dpkg-query --listfiles $pkg | sort >$pkg-inst.list
+  dpkg-deb --fsys-tarfile ${pkg}_*.deb | tar -tf - | cut -c2- \
+    | sort >$pkg-pack.list
+  diff -u $pkg-inst.list $pkg-pack.list
 }
 
 test_pkgs="dpkg dpkg-repack"
 
 cd $ADTTMP
 fakeroot -u dpkg-repack $test_pkgs
-cd $OLDPWD
 
 for pkg in $test_pkgs; do
   for ctrl in $(dpkg-query --control-list $pkg); do

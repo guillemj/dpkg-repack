@@ -3,6 +3,7 @@ dpkg-repack (1.47) UNRELEASED; urgency=medium
   * Switch to Standard-Version 4.5.1 (no changed needed).
   * Switch to debhelper compatibility level 13.
   * Switch to the dh sequencer.
+  * Run the autopkgtest from within the autopkgtest temporary directory.
 
  -- Guillem Jover <guillem@debian.org>  Wed, 23 Dec 2020 04:33:48 +0100
 
