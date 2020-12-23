@@ -26,7 +26,7 @@ cmp_listfile()
 
 test_pkgs="dpkg dpkg-repack"
 
-cd $ADTTMP
+cd $AUTOPKGTEST_TMP
 fakeroot -u dpkg-repack $test_pkgs
 
 for pkg in $test_pkgs; do

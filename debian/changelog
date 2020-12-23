@@ -4,6 +4,7 @@ dpkg-repack (1.47) UNRELEASED; urgency=medium
   * Switch to debhelper compatibility level 13.
   * Switch to the dh sequencer.
   * Run the autopkgtest from within the autopkgtest temporary directory.
+  * Use AUTOPKGTEST_TMP instead of deprecated ADTTMP.
 
  -- Guillem Jover <guillem@debian.org>  Wed, 23 Dec 2020 04:33:48 +0100
 
