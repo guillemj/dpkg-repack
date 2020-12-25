@@ -1,4 +1,4 @@
-dpkg-repack (1.47) UNRELEASED; urgency=medium
+dpkg-repack (1.47) unstable; urgency=medium
 
   * Switch to Standard-Version 4.5.1 (no changed needed).
   * Switch to debhelper compatibility level 13.
@@ -8,7 +8,7 @@ dpkg-repack (1.47) UNRELEASED; urgency=medium
   * Do not make missing conffiles a fatal error. Closes: #947951
   * When catching errors during package processing, print them.
 
- -- Guillem Jover <guillem@debian.org>  Wed, 23 Dec 2020 04:33:48 +0100
+ -- Guillem Jover <guillem@debian.org>  Fri, 25 Dec 2020 14:07:59 +0100
 
 dpkg-repack (1.46) unstable; urgency=medium
 
