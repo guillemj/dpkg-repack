@@ -16,11 +16,10 @@ cmp_ctrlfile()
 cmp_listfile()
 {
   local pkg=$1
-  local ctrl=$2
 
   dpkg-query --listfiles $pkg | sort >$pkg-inst.list
   dpkg-deb --fsys-tarfile ${pkg}_*.deb | tar -tf - | cut -c2- \
-    | sort >$pkg-pack.list
+    | sed -e 's,^/$,/.,;s,/$,,g' | sort >$pkg-pack.list
   diff -u $pkg-inst.list $pkg-pack.list
 }
 
@@ -33,6 +32,7 @@ for pkg in $test_pkgs; do
   for ctrl in $(dpkg-query --control-list $pkg); do
     cmp_ctrlfile $pkg $ctrl
   done
+  cmp_listfile $pkg
 done
 
 cmp_ctrlfile dpkg conffiles
