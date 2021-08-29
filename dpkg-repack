@@ -79,6 +79,15 @@ sub SafeChmod {
     chmod $perms, $dir or syserr("cannot change permissions on '$dir'");
 }
 
+sub SafeChown {
+    my ($uid, $gid, @pathnames) = @_;
+
+    my $nr = chown $uid, $gid, @pathnames;
+    if ($nr != scalar @pathnames) {
+        syserr("cannot change ownership on '@pathnames'");
+    }
+}
+
 # Make the passed directory, print an error message if it fails.
 sub SafeMkdir {
     my ($dir, $perms) = @_;
@@ -148,7 +157,7 @@ sub Install_Control {
     }
 
     $ctrl->save("$build_dir/DEBIAN/control");
-    SafeSystem 'chown', '0:0', "$build_dir/DEBIAN/control";
+    SafeChown(0, 0, "$build_dir/DEBIAN/control");
 }
 
 # Install all the files in the DEBIAN directory. (Except control file and
@@ -184,7 +193,7 @@ sub Install_DEBIAN {
             print { $out_fh } "$_\n";
         }
         close $out_fh;
-        SafeSystem 'chown', '0:0', "$build_dir/DEBIAN/conffiles";
+        SafeChown(0, 0, "$build_dir/DEBIAN/conffiles");
     }
 
     Install_Control($build_dir, $inst);
