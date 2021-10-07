@@ -1,12 +1,13 @@
 dpkg-repack (1.48) UNRELEASED; urgency=medium
 
   * Fix and call cmp_listfile in autopkgtest.
+  * Fix typo for Standards-Version field name in debian/changelog.
 
  -- Guillem Jover <guillem@debian.org>  Tue, 19 Oct 2021 03:18:10 +0200
 
 dpkg-repack (1.47) unstable; urgency=medium
 
-  * Switch to Standard-Version 4.5.1 (no changed needed).
+  * Switch to Standards-Version 4.5.1 (no changed needed).
   * Switch to debhelper compatibility level 13.
   * Switch to the dh sequencer.
   * Run the autopkgtest from within the autopkgtest temporary directory.
@@ -18,7 +19,7 @@ dpkg-repack (1.47) unstable; urgency=medium
 
 dpkg-repack (1.46) unstable; urgency=medium
 
-  * Bump Standard-Version to 4.4.1 (no changed needed).
+  * Bump Standards-Version to 4.4.1 (no changed needed).
   * Switch from debian/compat to debhelper-compat in Build-Depends.
   * Switch to debhelper compatibility level 12.
   * Remove dpkg-dev Build-Dpends, satisfied in oldstable.
@@ -44,7 +45,7 @@ dpkg-repack (1.46) unstable; urgency=medium
 dpkg-repack (1.45) unstable; urgency=medium
 
   * Mark package as Multi-Arch foreign.
-  * Bump Standard-Version to 4.3.0 (no changed needed).
+  * Bump Standards-Version to 4.3.0 (no changed needed).
   * Bump debhelper compatibility to level 11.
   * Update copyright years.
   * Remove unused last argument from SafeSystem() function.
@@ -57,7 +58,7 @@ dpkg-repack (1.44) unstable; urgency=medium
 
   * Spelling fixes. Thanks to Josh Soref <jsoref@gmail.com>.
   * Line-wrap dependency fields.
-  * Bump Standard-Version to 4.1.5 (no changed needed).
+  * Bump Standards-Version to 4.1.5 (no changed needed).
   * Bump debhelper compatibility to level 10.
   * Use the provided pkgname when calling dpkg commands, instead of partially
     reconstructing it from metadata, as we might end up not matching the same
@@ -114,7 +115,7 @@ dpkg-repack (1.42) unstable; urgency=medium
     Closes: #788627
   * Switch git repository URLs from git:// to https:// in README and
     debian/control Vcs-Git field.
-  * Bump Standard-Version to 3.9.7 (no changed needed).
+  * Bump Standards-Version to 3.9.7 (no changed needed).
 
  -- Guillem Jover <guillem@debian.org>  Sun, 28 Feb 2016 23:10:41 +0100
 
@@ -166,7 +167,7 @@ dpkg-repack (1.40) unstable; urgency=low
   * Remove & sigil from GetOptions function call.
   * Use correct operator for numeric value in $> comparison.
   * Convert debian/rules from dh(1) to explicit debhelper commands.
-  * Bump Standard-Version to 3.9.6 (no changed needed).
+  * Bump Standards-Version to 3.9.6 (no changed needed).
   * Switch to source format “3.0 (native)”.
   * Bump debhelper compatibility to level 9.
   * Fix description mangling to add a proper blank line separator.
