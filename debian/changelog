@@ -1,4 +1,4 @@
-dpkg-repack (1.48) UNRELEASED; urgency=medium
+dpkg-repack (1.48) unstable; urgency=medium
 
   * Fix and call cmp_listfile in autopkgtest.
   * Fix typo for Standards-Version field name in debian/changelog.
@@ -8,7 +8,7 @@ dpkg-repack (1.48) UNRELEASED; urgency=medium
   * Update copyright years.
   * Improve markup and formatting in man page.
 
- -- Guillem Jover <guillem@debian.org>  Tue, 19 Oct 2021 03:18:10 +0200
+ -- Guillem Jover <guillem@debian.org>  Tue, 19 Oct 2021 03:23:31 +0200
 
 dpkg-repack (1.47) unstable; urgency=medium
 
