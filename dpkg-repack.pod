@@ -30,7 +30,7 @@ been installed on your system.
 If any changes have been made to the package while it was unpacked (e.g.
 conffiles files in /etc modified), the new package will inherit the changes.
 (There are exceptions to this, including changes to configuration files that
-are not conffiles, including those managed by ucf.)
+are not conffiles, including those managed by L<ucf(1)>.)
 
 This utility can make it easy to copy packages from one computer to another,
 or to recreate packages that are installed on your system, but no longer
@@ -45,8 +45,8 @@ Note: B<dpkg-repack> will place the created package in the current directory.
 =item B<--root=>I<dir>
 
 Take package from filesystem rooted on I<dir>. This is useful if, for example,
-you have another computer nfs mounted on /mnt, then you can use B<--root=/mnt>
-to reassemble packages from that computer.
+you have another computer NFS mounted on F</mnt>, then you can use
+B<--root=/mnt> to reassemble packages from that computer.
 
 =item B<--arch=>I<architecture>
 
