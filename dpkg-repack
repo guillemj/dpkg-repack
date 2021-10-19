@@ -208,9 +208,12 @@ sub Install_Files {
     # skipped, while other conffiles should be included if present.
     my @conffiles = ();
     my @obsolete_conffiles;
+    my @removing_conffiles;
     foreach my $line (split /\n/, $inst->{Conffiles} // '') {
         if ($line =~ /^(.*)\s+(\S+)\s+obsolete$/) {
             push @obsolete_conffiles, $1;
+        } elsif ($line =~ /^(.*)\s+(\S+)\s+remove-on-upgrade$/) {
+            push @removing_conffiles, $1
         } elsif ($line =~ /^(.*)\s+(\S+)$/) {
             push @conffiles, $1;
         }
@@ -250,6 +253,10 @@ sub Install_Files {
 
         if (any { $_ eq $fn } @obsolete_conffiles) {
             warning("skipping obsolete conffile $fn");
+            next;
+        }
+        if (any { $_ eq $fn } @removing_conffiles) {
+            warning("skipping remove-on-upgrade conffile $fn");
             next;
         }
 

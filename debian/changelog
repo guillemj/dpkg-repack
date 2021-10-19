@@ -4,6 +4,7 @@ dpkg-repack (1.48) UNRELEASED; urgency=medium
   * Fix typo for Standards-Version field name in debian/changelog.
   * Switch to Standards-Version 4.6.0 (no changed needed).
   * Use builtin chown instead of invoking the command.
+  * Add support for remove-on-upgrade conffile flag. Closes: #996791
 
  -- Guillem Jover <guillem@debian.org>  Tue, 19 Oct 2021 03:18:10 +0200
 
