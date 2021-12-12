@@ -1,0 +1,11 @@
+image: debian:sid
+
+before_script:
+  - apt-get update -qq
+  - apt-get build-dep -qq -y -P dpkg-repack/author-tests .
+
+# Run the test suite.
+check:
+  stage: test
+  script:
+    - AUTHOR_TESTING=1 prove
