@@ -11,6 +11,7 @@ Rules-Requires-Root: no
 Build-Depends:
  debhelper-compat (= 13),
  libtest-strict-perl <!nocheck>,
+ libtest-perl-critic-perl <dpkg-repack/author-tests>,
 
 Package: dpkg-repack
 Architecture: all
