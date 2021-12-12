@@ -19,6 +19,8 @@ Multi-Arch: foreign
 Depends:
  ${misc:Depends},
  ${perl:Depends},
+# Needed for dpkg-query --root support.
+ dpkg (>= 1.21.0),
  libdpkg-perl,
 Suggests:
  fakeroot,

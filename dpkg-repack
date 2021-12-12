@@ -119,7 +119,7 @@ sub Extract_Status {
     my $inst = Dpkg::Control->new(type => CTRL_FILE_STATUS);
 
     my $fh;
-    my @cmd = ('dpkg', "--root=$rootdir/", '-s', $pkgname);
+    my @cmd = ('dpkg-query', "--root=$rootdir/", '-s', $pkgname);
     my $pid = spawn(exec => \@cmd, to_pipe => \$fh);
     $inst->parse($fh, "dpkg status for $pkgname");
     wait_child($pid, cmdline => "@cmd");
@@ -166,7 +166,7 @@ sub Install_DEBIAN {
     my ($pkgname, $build_dir, $inst, @conffiles) = @_;
 
     my $fh;
-    my @cmd = ('dpkg-query', "--admindir=$rootdir/var/lib/dpkg",
+    my @cmd = ('dpkg-query', "--root=$rootdir/",
                              '--control-path', $pkgname);
     my $pid = spawn(exec => \@cmd, to_pipe => \$fh);
 
@@ -224,7 +224,7 @@ sub Install_Files {
     # of the command (for diversions, below) it's important to make sure
     # it runs with English language output.
     my $filelist;
-    spawn(exec => [ 'dpkg', "--root=$rootdir/", '-L', $pkgname ],
+    spawn(exec => [ 'dpkg-query', "--root=$rootdir/", '-L', $pkgname ],
           env => { LC_ALL => 'C' }, to_string => \$filelist, wait_child => 1);
     my @filelist = split /\n/, $filelist;
 
