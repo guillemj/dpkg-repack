@@ -124,7 +124,7 @@ Test::Perl::Critic->import(
     -only => 1,
 );
 
-my @files = qw(dpkg-repack);
+my @files = qw(dpkg-repack.pl);
 
 plan tests => scalar @files;
 

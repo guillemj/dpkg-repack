@@ -31,7 +31,7 @@ use Dpkg::Control;
 use Dpkg::Control::Fields;
 use Getopt::Long qw(:config posix_default bundling_values no_ignore_case);
 
-my $VERSION = '1.48';
+my $VERSION = 'x.y';
 
 my $rootdir;
 my $arch;

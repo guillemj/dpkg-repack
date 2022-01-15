@@ -11,7 +11,7 @@ eval q{
 };
 plan skip_all => 'Test::Strict required for testing syntax' if $@;
 
-my @files = qw(dpkg-repack);
+my @files = qw(dpkg-repack.pl);
 
 plan tests => scalar @files * 3;
 

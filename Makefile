@@ -18,6 +18,8 @@ SOURCE_DATE_EPOCH ?= $(shell dpkg-parsechangelog -STimestamp)
 MAN_DATE := $(shell TZ=UTC0 LC_ALL=C date --date='@$(SOURCE_DATE_EPOCH)' '+%F')
 
 INSTALL = install
+SED = sed
+CHMOD = chmod
 POD2MAN = pod2man
 PROVE = prove
 
@@ -31,7 +33,13 @@ all: build
 	  --release='$(DEB_VERSION)' \
 	  $< $@
 
-build: dpkg-repack.1
+%: %.pl
+	$(SED) \
+	  -e "s:my \$$VERSION = .*;:my \$$VERSION = '$(DEB_VERSION)';:" \
+	  <$< >$@
+	$(CHMOD) +x $@
+
+build: dpkg-repack dpkg-repack.1
 
 install: build
 	$(INSTALL) -d $(DESTDIR)/usr/bin
@@ -49,4 +57,4 @@ dist:
 	  $(DEB_VERSION)
 
 clean:
-	$(RM) dpkg-repack.1
+	$(RM) dpkg-repack dpkg-repack.1
