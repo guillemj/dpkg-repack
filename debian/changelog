@@ -1,8 +1,14 @@
-dpkg-repack (1.49) UNRELEASED; urgency=medium
+dpkg-repack (1.49) unstable; urgency=medium
 
-  *
+  * Switch to use dpkg-query with its new --root support.
+  * Build system:
+    - Add a new gitlab-ci.yml file.
+    - Move build system from debian/rules to an actual Makefile.
+    - Replace the program version at install time.
+  * Packaging:
+    - Add author test dependencies under a build-profile.
 
- -- Guillem Jover <guillem@debian.org>  Sun, 12 Dec 2021 03:57:43 +0100
+ -- Guillem Jover <guillem@debian.org>  Sat, 15 Jan 2022 22:24:49 +0100
 
 dpkg-repack (1.48) unstable; urgency=medium
 
