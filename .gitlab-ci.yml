@@ -8,4 +8,4 @@ before_script:
 check:
   stage: test
   script:
-    - AUTHOR_TESTING=1 prove
+    - AUTHOR_TESTING=1 make test

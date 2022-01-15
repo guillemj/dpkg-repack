@@ -1,21 +1,4 @@
 #!/usr/bin/make -f
 
-include /usr/share/dpkg/default.mk
-
-MANDATE := $(shell TZ=UTC0 LC_ALL=C date --date='@$(SOURCE_DATE_EPOCH)' '+%F')
-
 %:
 	dh $@
-
-execute_before_dh_auto_build-indep: dpkg-repack.1
-
-dpkg-repack.1: dpkg-repack.pod
-	pod2man \
-	  --section 1 \
-	  --center='dpkg suite' \
-	  --date='$(MANDATE)' \
-	  --release='$(DEB_VERSION)' \
-	  $< $@
-
-override_dh_auto_test:
-	prove
