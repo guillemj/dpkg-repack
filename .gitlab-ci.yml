@@ -2,7 +2,7 @@ image: debian:sid
 
 before_script:
   - apt-get update -qq
-  - apt-get build-dep -qq -y -P dpkg-repack/author-tests .
+  - apt-get build-dep -qq -y -P pkg.dpkg-repack.author-tests .
 
 # Run the test suite.
 check:
