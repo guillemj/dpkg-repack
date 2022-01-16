@@ -1,3 +1,9 @@
+dpkg-repack (1.50) UNRELEASED; urgency=medium
+
+  *
+
+ -- Guillem Jover <guillem@debian.org>  Sun, 16 Jan 2022 12:30:31 +0100
+
 dpkg-repack (1.49) unstable; urgency=medium
 
   * Switch to use dpkg-query with its new --root support.
