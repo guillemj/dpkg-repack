@@ -1,8 +1,10 @@
-dpkg-repack (1.50) UNRELEASED; urgency=medium
+dpkg-repack (1.50) unstable; urgency=medium
 
-  *
+  * Packaging:
+    - Replace experimental usage of «/» in build profile. Closes: #1003814
+    - Add missing «pkg.» namespace for local build profile.
 
- -- Guillem Jover <guillem@debian.org>  Sun, 16 Jan 2022 12:30:31 +0100
+ -- Guillem Jover <guillem@debian.org>  Sun, 16 Jan 2022 12:31:45 +0100
 
 dpkg-repack (1.49) unstable; urgency=medium
 
