@@ -51,6 +51,7 @@ Options:
       --root=<dir>      Take package from filesystem rooted on <dir>.
       --arch=<arch>     Force the package to be built for architecture <arch>.
       --generate        Generate build directory but do not build deb.
+                          To build use: "dpkg-deb --build dpkg-repack.../ .".
       --tag=<type>      Tag the package as being repackaged.
                           Types: none, description, version, all.
   -d, --deb-option=<option>
@@ -313,11 +314,13 @@ sub Archive_Package {
     Install_DEBIAN($pkgname, $build_dir, $inst, @conffiles);
 
     # Do we need to create the binary packages?
+    my @cmd = ('dpkg-deb', @deb_options, '--build', $build_dir, '.');
     if ($generate) {
         info("created $build_dir for $pkgname");
+        info("to build use: \"@cmd\"");
     } else {
         # Let dpkg-deb do its magic.
-        SafeSystem('dpkg-deb', @deb_options, '--build', $build_dir, '.');
+        SafeSystem(@cmd);
     }
 }
 
