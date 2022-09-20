@@ -26,11 +26,7 @@ For older releases check:
 Source Repository
 -----------------
 
-The primary repository can be browsed at:
-
-  <https://git.dpkg.org/cgit/dpkg/dpkg-repack.git>
-
-and cloned from:
+The primary repository can be browsed and cloned from:
 
   <https://git.dpkg.org/git/dpkg/dpkg-repack.git>
 
