@@ -1,8 +1,16 @@
-dpkg-repack (1.51) UNRELEASED; urgency=medium
+dpkg-repack (1.51) unstable; urgency=medium
 
-  *
+  * Show the command to rebuild the .deb in more places.
+    Thanks to Paul Wise <pabs@debian.org>. Closes: #1020320
+  * Documentation:
+    - Refer to the main git repository as primary.
+    - Switch URLs from http:// to https://.
+    - Use a single clone and browsing URL for the source tree.
+    - Use deb.debian.org instead of ftp.debian.org for source archive.
+  * Build system:
+    - Fix build-profile in gitlab-ci.yml file.
 
- -- Guillem Jover <guillem@debian.org>  Sun, 16 Jan 2022 23:47:16 +0100
+ -- Guillem Jover <guillem@debian.org>  Tue, 04 Oct 2022 03:54:04 +0200
 
 dpkg-repack (1.50) unstable; urgency=medium
 
