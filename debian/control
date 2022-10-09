@@ -3,7 +3,7 @@ Section: admin
 Priority: optional
 Maintainer: Dpkg Developers <debian-dpkg@lists.debian.org>
 Uploaders: Guillem Jover <guillem@debian.org>
-Standards-Version: 4.6.0
+Standards-Version: 4.6.1
 Vcs-Browser: https://git.dpkg.org/cgit/dpkg/dpkg-repack.git
 Vcs-Git: https://git.dpkg.org/git/dpkg/dpkg-repack.git
 Homepage: https://wiki.debian.org/Teams/Dpkg
