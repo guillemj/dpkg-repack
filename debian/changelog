@@ -1,8 +1,15 @@
-dpkg-repack (1.52) UNRELEASED; urgency=medium
+dpkg-repack (1.52) unstable; urgency=medium
 
-  *
+  * Documentation:
+    - Clarify description in README.
+    - Update copyright years.
+  * Code internals:
+    - Add missing semicolon after statement.
+  * Packaging:
+    - Switch to Standards-Version 4.6.2 (no changed needed).
+    - Do not trim debian/changelog.
 
- -- Guillem Jover <guillem@debian.org>  Sun, 09 Oct 2022 23:45:32 +0200
+ -- Guillem Jover <guillem@debian.org>  Sat, 07 Jan 2023 23:40:57 +0100
 
 dpkg-repack (1.51) unstable; urgency=medium
 
