@@ -214,7 +214,7 @@ sub Install_Files {
         if ($line =~ /^(.*)\s+(\S+)\s+obsolete$/) {
             push @obsolete_conffiles, $1;
         } elsif ($line =~ /^(.*)\s+(\S+)\s+remove-on-upgrade$/) {
-            push @removing_conffiles, $1
+            push @removing_conffiles, $1;
         } elsif ($line =~ /^(.*)\s+(\S+)$/) {
             push @conffiles, $1;
         }
