@@ -181,7 +181,7 @@ sub Install_DEBIAN {
 
     foreach my $fn (@control_files) {
         my ($basename) = $fn =~ m/^.*\.(.*?)$/;
-        SafeSystem 'cp', '-p', $fn, "$build_dir/DEBIAN/$basename";
+        SafeSystem('cp', '-p', $fn, "$build_dir/DEBIAN/$basename");
     }
 
     # Conffiles have to be handled specially, because dpkg-query --control-path
@@ -285,14 +285,14 @@ sub Install_Files {
                 $f .= "/$dir";
                 next if -d "$build_dir/$f";
                 my $st = stat "$rootdir/$f";
-                SafeMkdir "$build_dir/$f", $st->mode;
+                SafeMkdir("$build_dir/$f", $st->mode);
                 chown($st->uid, $st->gid, "$build_dir/$f");
             }
         } elsif (-p $fn) {
             # Copy a named pipe with cp -a.
-            SafeSystem 'cp', '-a', $fn, "$build_dir/$origfn";
+            SafeSystem('cp', '-a', $fn, "$build_dir/$origfn");
         } else {
-            SafeSystem 'cp', '-pd', $fn, "$build_dir/$origfn";
+            SafeSystem('cp', '-pd', $fn, "$build_dir/$origfn");
         }
     }
 
