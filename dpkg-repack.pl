@@ -125,7 +125,7 @@ sub Extract_Status {
     $inst->parse($fh, "dpkg status for $pkgname");
     wait_child($pid, cmdline => "@cmd");
 
-    if ($inst->{Status} !~ m/^\S+\s+\S+\s+installed$/) {
+    if ($inst->{Status} !~ m{^\S+\s+\S+\s+installed$}) {
         error("package $pkgname is not fully installed: $inst->{Status}");
     }
 
@@ -180,7 +180,7 @@ sub Install_DEBIAN {
     wait_child($pid, cmdline => "@cmd");
 
     foreach my $fn (@control_files) {
-        my ($basename) = $fn =~ m/^.*\.(.*?)$/;
+        my ($basename) = $fn =~ m{^.*\.(.*?)$};
         SafeSystem('cp', '-p', $fn, "$build_dir/DEBIAN/$basename");
     }
 
@@ -210,12 +210,12 @@ sub Install_Files {
     my @conffiles = ();
     my @obsolete_conffiles;
     my @removing_conffiles;
-    foreach my $line (split /\n/, $inst->{Conffiles} // '') {
-        if ($line =~ /^(.*)\s+(\S+)\s+obsolete$/) {
+    foreach my $line (split m{\n}, $inst->{Conffiles} // '') {
+        if ($line =~ m{^(.*)\s+(\S+)\s+obsolete$}) {
             push @obsolete_conffiles, $1;
-        } elsif ($line =~ /^(.*)\s+(\S+)\s+remove-on-upgrade$/) {
+        } elsif ($line =~ m{^(.*)\s+(\S+)\s+remove-on-upgrade$}) {
             push @removing_conffiles, $1;
-        } elsif ($line =~ /^(.*)\s+(\S+)$/) {
+        } elsif ($line =~ m{/^(.*)\s+(\S+)$}) {
             push @conffiles, $1;
         }
     }
@@ -227,7 +227,7 @@ sub Install_Files {
     my $filelist;
     spawn(exec => [ 'dpkg-query', "--root=$rootdir/", '-L', $pkgname ],
           env => { LC_ALL => 'C' }, to_string => \$filelist, wait_child => 1);
-    my @filelist = split /\n/, $filelist;
+    my @filelist = split m{\n}, $filelist;
 
     # Set up a hash for easy lookups.
     my %filelist = map { $_ => 1 } @filelist;
@@ -240,12 +240,12 @@ sub Install_Files {
         # parse those (ugly), to find out where the file was diverted to,
         # and use the diverted file.
         if (defined $filelist[$x + 1] &&
-            ($filelist[$x + 1] =~ m/locally diverted to: (.*)/ ||
-             $filelist[$x + 1] =~ m/diverted by .*? to: (.*)/)) {
+            ($filelist[$x + 1] =~ m{locally diverted to: (.*)} ||
+             $filelist[$x + 1] =~ m{diverted by .*? to: (.*)})) {
             $fn = "$rootdir/$1";
             # Skip over that line.
             $x++;
-        } elsif ($origfn =~ m/package diverts others to: (.*)/) {
+        } elsif ($origfn =~ m{package diverts others to: (.*)}) {
             # Not a file at all, skip over it.
             next;
         } else {
@@ -265,7 +265,7 @@ sub Install_Files {
             warning("cannot find file '$fn'") if none { $_ eq $fn } @conffiles;
         } elsif ((-d $fn and not -l $fn) or
                  (-d $fn and -l $fn and not $filelist{readlink $fn} and
-                  ($x + 1 <= $#filelist and $filelist[$x + 1] =~ m/^\Q$origfn\E\//))) {
+                  ($x + 1 <= $#filelist and $filelist[$x + 1] =~ m{^\Q$origfn\E/}))) {
             # If the package contains a file, that locally looks like a symlink
             # pointing to a directory that is not in the package, then change
             # it to a real directory in the repacked package. This assumes
@@ -281,7 +281,7 @@ sub Install_Files {
             # first, and then their contents. There has to be a better way to
             # do this!
             my $f = '';
-            foreach my $dir (split m/\/+/, $origfn) {
+            foreach my $dir (split m{/+}, $origfn) {
                 $f .= "/$dir";
                 next if -d "$build_dir/$f";
                 my $st = stat "$rootdir/$f";
@@ -349,7 +349,7 @@ my $ret = GetOptions(
 );
 
 # Handle metadata tagging.
-foreach my $type (split /,/, $tags) {
+foreach my $type (split m{,}, $tags) {
     if ($type eq 'none') {
         $tag{$_} = 0 foreach (keys %tag);
     } elsif ($type eq 'all') {
