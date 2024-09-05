@@ -1,2 +1,5 @@
-Tests: repack
-Depends: @, fakeroot
+Tests:
+ repack
+Depends:
+ @,
+ fakeroot,
