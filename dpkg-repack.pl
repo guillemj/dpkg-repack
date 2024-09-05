@@ -264,7 +264,7 @@ sub Install_Files {
         if (!-e $fn && !-l $fn) {
             warning("cannot find file '$fn'") if none { $_ eq $fn } @conffiles;
         } elsif ((-d $fn and not -l $fn) or
-                 (-d $fn and -l $fn and not $filelist{readlink($fn)} and
+                 (-d $fn and -l $fn and not $filelist{readlink $fn} and
                   ($x + 1 <= $#filelist and $filelist[$x + 1] =~ m/^\Q$origfn\E\//))) {
             # If the package contains a file, that locally looks like a symlink
             # pointing to a directory that is not in the package, then change
@@ -281,12 +281,12 @@ sub Install_Files {
             # first, and then their contents. There has to be a better way to
             # do this!
             my $f = '';
-            foreach my $dir (split(m/\/+/, $origfn)) {
+            foreach my $dir (split m/\/+/, $origfn) {
                 $f .= "/$dir";
                 next if -d "$build_dir/$f";
                 my $st = stat "$rootdir/$f";
                 SafeMkdir("$build_dir/$f", $st->mode);
-                chown($st->uid, $st->gid, "$build_dir/$f");
+                chown $st->uid, $st->gid, "$build_dir/$f";
             }
         } elsif (-p $fn) {
             # Copy a named pipe with cp -a.
