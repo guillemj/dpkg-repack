@@ -180,7 +180,7 @@ sub Install_DEBIAN {
     wait_child($pid, cmdline => "@cmd");
 
     foreach my $fn (@control_files) {
-        my ($basename) = $fn =~ m{^.*\.(.*?)$};
+        my ($basename) = $fn =~ m{^.*[.](.*?)$};
         SafeSystem('cp', '-p', $fn, "$build_dir/DEBIAN/$basename");
     }
 
