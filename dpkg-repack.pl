@@ -43,7 +43,7 @@ my %tag = (
     version => 0,
 );
 
-sub Syntax {
+sub usage {
     print { *STDERR } <<'USAGE';
 Usage: dpkg-repack [<option>...] <package-name>...
 
@@ -63,24 +63,24 @@ Options:
 USAGE
 }
 
-sub Version {
+sub version {
     print 'dpkg-repack ' . $VERSION . "\n";
 }
 
 # Run a system command, and print an error message if it fails.
-sub SafeSystem {
+sub safe_system {
     my (@command) = @_;
 
     spawn(exec => [ @command ], wait_child => 1);
 }
 
-sub SafeChmod {
+sub safe_chmod {
     my ($dir, $perms) = @_;
 
     chmod $perms, $dir or syserr("cannot change permissions on '$dir'");
 }
 
-sub SafeChown {
+sub safe_chown {
     my ($uid, $gid, @pathnames) = @_;
 
     my $nr = chown $uid, $gid, @pathnames;
@@ -90,16 +90,16 @@ sub SafeChown {
 }
 
 # Make the passed directory, print an error message if it fails.
-sub SafeMkdir {
+sub safe_mkdir {
     my ($dir, $perms) = @_;
 
     mkdir $dir, $perms or syserr("cannot make directory '$dir'");
     # mkdir doesn't do sticky bits and suidness.
-    SafeChmod($dir, $perms);
+    safe_chmod($dir, $perms);
 }
 
 # This makes the directories we will rebuild the package in.
-sub Make_Dirs {
+sub make_deb_dirs {
     my $pkgname = shift;
     my %opts = (
         TEMPLATE => "dpkg-repack.$pkgname.XXXXXX",
@@ -107,14 +107,14 @@ sub Make_Dirs {
     );
 
     my $dir = File::Temp->newdir(%opts);
-    SafeChmod($dir, 0755);
-    SafeMkdir("$dir/DEBIAN", 0755);
+    safe_chmod($dir, 0755);
+    safe_mkdir("$dir/DEBIAN", 0755);
 
     return $dir;
 }
 
 # Get package control file via dpkg -s.
-sub Extract_Status {
+sub extract_status {
     my $pkgname = shift;
 
     my $inst = Dpkg::Control->new(type => CTRL_FILE_STATUS);
@@ -133,7 +133,7 @@ sub Extract_Status {
 }
 
 # Install the control file from the installed package control information.
-sub Install_Control {
+sub make_control_file {
     my ($build_dir, $inst) = @_;
 
     my $ctrl = Dpkg::Control->new(type => CTRL_PKG_DEB);
@@ -158,12 +158,12 @@ sub Install_Control {
     }
 
     $ctrl->save("$build_dir/DEBIAN/control");
-    SafeChown(0, 0, "$build_dir/DEBIAN/control");
+    safe_chown(0, 0, "$build_dir/DEBIAN/control");
 }
 
 # Install all the files in the DEBIAN directory. (Except control file and
 # file list file.)
-sub Install_DEBIAN {
+sub populate_deb_ctrl {
     my ($pkgname, $build_dir, $inst, @conffiles) = @_;
 
     my $fh;
@@ -181,7 +181,7 @@ sub Install_DEBIAN {
 
     foreach my $fn (@control_files) {
         my ($basename) = $fn =~ m{^.*[.](.*?)$};
-        SafeSystem('cp', '-p', $fn, "$build_dir/DEBIAN/$basename");
+        safe_system('cp', '-p', $fn, "$build_dir/DEBIAN/$basename");
     }
 
     # Conffiles have to be handled specially, because dpkg-query --control-path
@@ -194,15 +194,15 @@ sub Install_DEBIAN {
             print { $out_fh } "$_\n";
         }
         close $out_fh;
-        SafeChown(0, 0, "$build_dir/DEBIAN/conffiles");
+        safe_chown(0, 0, "$build_dir/DEBIAN/conffiles");
     }
 
-    Install_Control($build_dir, $inst);
+    make_control_file($build_dir, $inst);
 }
 
 # This looks at the list of files in this package, and places them
 # all on the directory tree.
-sub Install_Files {
+sub populate_deb_fsys {
     my ($pkgname, $build_dir, $inst) = @_;
 
     # There are two types of conffiles. Obsolete conffiles should be
@@ -285,33 +285,33 @@ sub Install_Files {
                 $f .= "/$dir";
                 next if -d "$build_dir/$f";
                 my $st = stat "$rootdir/$f";
-                SafeMkdir("$build_dir/$f", $st->mode);
+                safe_mkdir("$build_dir/$f", $st->mode);
                 chown $st->uid, $st->gid, "$build_dir/$f";
             }
         } elsif (-p $fn) {
             # Copy a named pipe with cp -a.
-            SafeSystem('cp', '-a', $fn, "$build_dir/$origfn");
+            safe_system('cp', '-a', $fn, "$build_dir/$origfn");
         } else {
-            SafeSystem('cp', '-pd', $fn, "$build_dir/$origfn");
+            safe_system('cp', '-pd', $fn, "$build_dir/$origfn");
         }
     }
 
     return @conffiles;
 }
 
-sub Archive_Package {
+sub archive_package {
     my $pkgname = shift;
 
-    my $inst = Extract_Status($pkgname);
+    my $inst = extract_status($pkgname);
 
     # If the umask is set wrong, the directories will end up with the wrong
     # perms. (Is this still needed?)
     umask 022;
 
     # Generate the directory tree.
-    my $build_dir = Make_Dirs($pkgname);
-    my @conffiles = Install_Files($pkgname, $build_dir, $inst);
-    Install_DEBIAN($pkgname, $build_dir, $inst, @conffiles);
+    my $build_dir = make_deb_dirs($pkgname);
+    my @conffiles = populate_deb_fsys($pkgname, $build_dir, $inst);
+    populate_deb_ctrl($pkgname, $build_dir, $inst, @conffiles);
 
     # Do we need to create the binary packages?
     my @cmd = ('dpkg-deb', @deb_options, '--build', $build_dir, '.');
@@ -320,7 +320,7 @@ sub Archive_Package {
         info("to build use: \"@cmd\"");
     } else {
         # Let dpkg-deb do its magic.
-        SafeSystem(@cmd);
+        safe_system(@cmd);
     }
 }
 
@@ -344,8 +344,8 @@ my $ret = GetOptions(
     'deb-option|d=s@', \@deb_options,
     'generate|g' , \$generate,
     'tag=s', \$tags,
-    'help|?', sub { Syntax(); exit 0; },
-    'version', sub { Version(); exit 0; },
+    'help|?', sub { usage(); exit 0; },
+    'version', sub { version(); exit 0; },
 );
 
 # Handle metadata tagging.
@@ -362,13 +362,13 @@ foreach my $type (split m{,}, $tags) {
 }
 
 if (not @ARGV or not $ret) {
-    Syntax();
+    usage();
     exit 1;
 }
 
 foreach my $pkgname (@ARGV) {
     eval {
-        Archive_Package($pkgname);
+        archive_package($pkgname);
         1;
     } or do {
         print { \*STDERR } "$@";
