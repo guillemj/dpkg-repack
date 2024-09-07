@@ -100,6 +100,7 @@ my @policies = qw(
     ValuesAndExpressions::ProhibitComplexVersion
     ValuesAndExpressions::ProhibitInterpolationOfLiterals
     ValuesAndExpressions::ProhibitLongChainsOfMethodCalls
+    ValuesAndExpressions::ProhibitMagicNumbers
     ValuesAndExpressions::ProhibitMismatchedOperators
     ValuesAndExpressions::ProhibitMixedBooleanOperators
     ValuesAndExpressions::ProhibitQuotesAsQuotelikeOperatorDelimiters
