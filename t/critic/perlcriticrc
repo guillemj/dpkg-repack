@@ -62,6 +62,9 @@ allowed_values = all_integers
 # BUG: Too many false positives.
 [-ControlStructures::ProhibitUnreachableCode]
 
+# Not relevant anymore, the mentioned problems were fixed in Perl 5.14.
+[-ErrorHandling::RequireCheckingReturnValueOfEval]
+
 # Here complex is meant as long, but long is not necessarily complex.
 [-Modules::ProhibitExcessMainComplexity]
 
