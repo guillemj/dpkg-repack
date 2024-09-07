@@ -20,11 +20,11 @@ use Test::More;
 
 plan skip_all => 'author test' if not $ENV{AUTHOR_TESTING};
 
-eval qq{
+eval q{
     use Test::Perl::Critic;
     1;
 } or do {
-    plan skip_all => "requires module Test::Perl::Critic";
+    plan skip_all => 'requires module Test::Perl::Critic';
 };
 
 my @policies = qw(
