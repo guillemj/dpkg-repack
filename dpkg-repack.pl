@@ -315,7 +315,7 @@ sub archive_package {
     populate_deb_ctrl($pkgname, $build_dir, $inst, @conffiles);
 
     # Do we need to create the binary packages?
-    my @cmd = ('dpkg-deb', @deb_options, '--build', $build_dir, '.');
+    my @cmd = ('dpkg-deb', @deb_options, '--build', $build_dir, q{.});
     if ($generate) {
         info("created $build_dir for $pkgname");
         info("to build use: \"@cmd\"");
@@ -372,7 +372,7 @@ foreach my $pkgname (@ARGV) {
         archive_package($pkgname);
         1;
     } or do {
-        print { \*STDERR } "$@";
+        print { \*STDERR } qq{$@};
         warning("problems found processing $pkgname, the package may be broken");
     };
 }

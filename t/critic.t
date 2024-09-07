@@ -105,6 +105,7 @@ my @policies = qw(
     ValuesAndExpressions::ProhibitMagicNumbers
     ValuesAndExpressions::ProhibitMismatchedOperators
     ValuesAndExpressions::ProhibitMixedBooleanOperators
+    ValuesAndExpressions::ProhibitNoisyQuotes
     ValuesAndExpressions::ProhibitQuotesAsQuotelikeOperatorDelimiters
     ValuesAndExpressions::ProhibitSpecialLiteralHeredocTerminator
     ValuesAndExpressions::ProhibitVersionStrings
