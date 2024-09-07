@@ -64,6 +64,7 @@ my @policies = qw(
     InputOutput::ProhibitReadlineInForLoop
     InputOutput::ProhibitTwoArgOpen
     InputOutput::RequireBracedFileHandleWithPrint
+    InputOutput::RequireCheckedClose
     InputOutput::RequireCheckedOpen
     InputOutput::RequireEncodingWithUTF8Layer
     Miscellanea::ProhibitFormats

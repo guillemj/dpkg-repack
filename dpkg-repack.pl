@@ -193,7 +193,8 @@ sub populate_deb_ctrl {
         foreach (@conffiles) {
             print { $out_fh } "$_\n";
         }
-        close $out_fh;
+        close $out_fh
+            or error("cannot write conffiles: $!");
         safe_chown(0, 0, "$build_dir/DEBIAN/conffiles");
     }
 
