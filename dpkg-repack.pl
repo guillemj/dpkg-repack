@@ -37,7 +37,7 @@ my $rootdir;
 my $arch;
 my @deb_options;
 my $generate;
-my $tags = '';
+my $tags = q{};
 my %tag = (
     description => 1,
     version => 0,
@@ -210,7 +210,7 @@ sub populate_deb_fsys {
     my @conffiles = ();
     my @obsolete_conffiles;
     my @removing_conffiles;
-    foreach my $line (split m{\n}, $inst->{Conffiles} // '') {
+    foreach my $line (split m{\n}, $inst->{Conffiles} // q{}) {
         if ($line =~ m{^(.*)\s+(\S+)\s+obsolete$}) {
             push @obsolete_conffiles, $1;
         } elsif ($line =~ m{^(.*)\s+(\S+)\s+remove-on-upgrade$}) {
@@ -280,7 +280,7 @@ sub populate_deb_fsys {
             # We rely on the order of the filelist listing parent directories
             # first, and then their contents. There has to be a better way to
             # do this!
-            my $f = '';
+            my $f = q{};
             foreach my $dir (split m{/+}, $origfn) {
                 $f .= "/$dir";
                 next if -d "$build_dir/$f";
@@ -337,7 +337,7 @@ if (exists $ENV{FAKED_MODE} && $ENV{FAKED_MODE} ne 'unknown-is-real') {
 }
 
 # Parse parameters.
-$rootdir = '';
+$rootdir = q{};
 my $ret = GetOptions(
     'root|r=s', \$rootdir,
     'arch|a=s', \$arch,

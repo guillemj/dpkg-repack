@@ -98,6 +98,7 @@ my @policies = qw(
     TestingAndDebugging::RequireUseWarnings
     ValuesAndExpressions::ProhibitCommaSeparatedStatements
     ValuesAndExpressions::ProhibitComplexVersion
+    ValuesAndExpressions::ProhibitEmptyQuotes
     ValuesAndExpressions::ProhibitInterpolationOfLiterals
     ValuesAndExpressions::ProhibitLongChainsOfMethodCalls
     ValuesAndExpressions::ProhibitMagicNumbers
