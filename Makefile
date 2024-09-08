@@ -56,6 +56,9 @@ install: build
 check:
 	$(PROVE) $(PROVE_OPTS)
 
+authorcheck:
+	AUTHOR_TESTING=1 $(MAKE) check
+
 dist:
 	git archive \
 	  --prefix=dpkg-repack-$(DEB_VERSION)/ \
