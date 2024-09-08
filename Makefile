@@ -47,7 +47,7 @@ install: build
 	$(INSTALL) -d $(DESTDIR)/usr/share/man/man1
 	$(INSTALL) dpkg-repack.1 $(DESTDIR)/usr/share/man/man1
 
-test:
+check:
 	$(PROVE)
 
 dist:
