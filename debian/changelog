@@ -1,3 +1,29 @@
+dpkg-repack (1.53) unstable; urgency=medium
+
+  * Build system:
+    - Rename test target to check.
+    - Pass -j to prove if DEB_BUILD_OPTIONS contains parallel=%.
+    - Add an explicit authorcheck target.
+  * Code internals:
+    - Use parenthesis for non-builtin functions.
+    - Do not use parenthesis for builtin functions.
+    - Use m{} instead of // or m//.
+    - Use character classes instead of escaping metacharacters.
+    - Rename functions to decapitalize them and use more clear names.
+    - Use q{} instead of ''.
+    - Check close() return value.
+    - Use q{} instead of '' for noisy quotes.
+    - Update copyright years.
+  * Packaging:
+    - Switch to Standards-Version 4.7.0 (no changed needed).
+    - Wrap and sort tests control file.
+  * Test suite:
+    - Do not interpolate literals.
+    - Allow octal literals.
+    - Disable perlcritic ErrorHandling::RequireCheckingReturnValueOfEval.
+
+ -- Guillem Jover <guillem@debian.org>  Tue, 24 Sep 2024 19:56:56 +0200
+
 dpkg-repack (1.52) unstable; urgency=medium
 
   * Documentation:
