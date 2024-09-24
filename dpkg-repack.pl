@@ -3,7 +3,7 @@
 # dpkg-repack puts humpty-dumpty back together again.
 #
 # Copyright © 1996-2006 Joey Hess <joeyh@debian.org>
-# Copyright © 2012, 2014-2023 Guillem Jover <guillem@debian.org>
+# Copyright © 2012-2024 Guillem Jover <guillem@debian.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
