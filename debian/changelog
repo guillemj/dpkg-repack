@@ -1,3 +1,9 @@
+dpkg-repack (1.54) unstable; urgency=medium
+
+  * Fix Conffiles field regex.
+
+ -- Guillem Jover <guillem@debian.org>  Wed, 25 Sep 2024 03:59:06 +0200
+
 dpkg-repack (1.53) unstable; urgency=medium
 
   * Build system:
