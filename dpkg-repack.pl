@@ -216,7 +216,7 @@ sub populate_deb_fsys {
             push @obsolete_conffiles, $1;
         } elsif ($line =~ m{^(.*)\s+(\S+)\s+remove-on-upgrade$}) {
             push @removing_conffiles, $1;
-        } elsif ($line =~ m{/^(.*)\s+(\S+)$}) {
+        } elsif ($line =~ m{^(.*)\s+(\S+)$}) {
             push @conffiles, $1;
         }
     }
