@@ -42,7 +42,8 @@ my %tag = (
     version => 0,
 );
 
-sub usage {
+sub usage()
+{
     print { *STDERR } <<'USAGE';
 Usage: dpkg-repack [<option>...] <package-name>...
 
@@ -62,26 +63,24 @@ Options:
 USAGE
 }
 
-sub version {
+sub version()
+{
     print 'dpkg-repack ' . $VERSION . "\n";
 }
 
 # Run a system command, and print an error message if it fails.
-sub safe_system {
-    my (@command) = @_;
-
+sub safe_system(@command)
+{
     spawn(exec => [ @command ], wait_child => 1);
 }
 
-sub safe_chmod {
-    my ($dir, $perms) = @_;
-
+sub safe_chmod($dir, $perms)
+{
     chmod $perms, $dir or syserr("cannot change permissions on '$dir'");
 }
 
-sub safe_chown {
-    my ($uid, $gid, @pathnames) = @_;
-
+sub safe_chown($uid, $gid, @pathnames)
+{
     my $nr = chown $uid, $gid, @pathnames;
     if ($nr != scalar @pathnames) {
         syserr("cannot change ownership on '@pathnames'");
@@ -89,17 +88,16 @@ sub safe_chown {
 }
 
 # Make the passed directory, print an error message if it fails.
-sub safe_mkdir {
-    my ($dir, $perms) = @_;
-
+sub safe_mkdir($dir, $perms)
+{
     mkdir $dir, $perms or syserr("cannot make directory '$dir'");
     # mkdir doesn't do sticky bits and suidness.
     safe_chmod($dir, $perms);
 }
 
 # This makes the directories we will rebuild the package in.
-sub make_deb_dirs {
-    my $pkgname = shift;
+sub make_deb_dirs($pkgname)
+{
     my %opts = (
         TEMPLATE => "dpkg-repack.$pkgname.XXXXXX",
         CLEANUP => !$generate,
@@ -113,9 +111,8 @@ sub make_deb_dirs {
 }
 
 # Get package control file via dpkg -s.
-sub extract_status {
-    my $pkgname = shift;
-
+sub extract_status($pkgname)
+{
     my $inst = Dpkg::Control->new(type => CTRL_FILE_STATUS);
 
     my $fh;
@@ -132,9 +129,8 @@ sub extract_status {
 }
 
 # Install the control file from the installed package control information.
-sub make_control_file {
-    my ($build_dir, $inst) = @_;
-
+sub make_control_file($build_dir, $inst)
+{
     my $ctrl = Dpkg::Control->new(type => CTRL_PKG_DEB);
 
     field_transfer_all($inst, $ctrl);
@@ -162,9 +158,8 @@ sub make_control_file {
 
 # Install all the files in the DEBIAN directory. (Except control file and
 # file list file.)
-sub populate_deb_ctrl {
-    my ($pkgname, $build_dir, $inst, @conffiles) = @_;
-
+sub populate_deb_ctrl($pkgname, $build_dir, $inst, @conffiles)
+{
     my $fh;
     my @cmd = ('dpkg-query', "--root=$rootdir/",
                              '--control-path', $pkgname);
@@ -202,9 +197,8 @@ sub populate_deb_ctrl {
 
 # This looks at the list of files in this package, and places them
 # all on the directory tree.
-sub populate_deb_fsys {
-    my ($pkgname, $build_dir, $inst) = @_;
-
+sub populate_deb_fsys($pkgname, $build_dir, $inst)
+{
     # There are two types of conffiles. Obsolete conffiles should be
     # skipped, while other conffiles should be included if present.
     my @conffiles = ();
@@ -299,9 +293,8 @@ sub populate_deb_fsys {
     return @conffiles;
 }
 
-sub archive_package {
-    my $pkgname = shift;
-
+sub archive_package($pkgname)
+{
     my $inst = extract_status($pkgname);
 
     # If the umask is set wrong, the directories will end up with the wrong
