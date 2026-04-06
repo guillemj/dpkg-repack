@@ -366,11 +366,10 @@ if (not @ARGV or not $ret) {
 }
 
 foreach my $pkgname (@ARGV) {
-    eval {
+    try {
         archive_package($pkgname);
-        1;
-    } or do {
-        print { \*STDERR } qq{$@};
+    } catch ($e) {
+        print { \*STDERR } qq{$e};
         warning("problems found processing $pkgname, the package may be broken");
-    };
+    }
 }
