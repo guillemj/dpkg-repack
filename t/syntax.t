@@ -1,7 +1,6 @@
 #!/usr/bin/perl
 
-use strict;
-use warnings;
+use v5.40;
 
 use Test::More;
 
@@ -10,6 +9,9 @@ eval q{
     $Test::Strict::TEST_WARNINGS = 1;
 };
 plan skip_all => 'Test::Strict required for testing syntax' if $@;
+
+# XXX: Remove once https://github.com/manwar/Test-Strict/pull/37 gets released.
+eval 'push @Test::Strict::MODULES_ENABLING_WARNINGS, "v5.40"';
 
 my @files = qw(dpkg-repack.pl);
 

@@ -107,3 +107,6 @@ allowed_values = all_integers
 
 # BUG: False positives on long hex numbers, even when separated.
 [-ValuesAndExpressions::RequireNumberSeparators]
+
+# We do not support perl versions that do not support v-strings.
+[-ValuesAndExpressions::ProhibitVersionStrings]
