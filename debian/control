@@ -1,6 +1,5 @@
 Source: dpkg-repack
 Section: admin
-Priority: optional
 Maintainer: Dpkg Developers <debian-dpkg@lists.debian.org>
 Uploaders: Guillem Jover <guillem@debian.org>
 Vcs-Browser: https://git.dpkg.org/cgit/dpkg/dpkg-repack.git
