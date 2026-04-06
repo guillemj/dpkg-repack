@@ -7,7 +7,6 @@ Vcs-Browser: https://git.dpkg.org/cgit/dpkg/dpkg-repack.git
 Vcs-Git: https://git.dpkg.org/git/dpkg/dpkg-repack.git
 Homepage: https://wiki.debian.org/Teams/Dpkg
 Standards-Version: 4.7.0
-Rules-Requires-Root: no
 Build-Depends:
  debhelper-compat (= 13),
  debhelper (>= 13.10),
