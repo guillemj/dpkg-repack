@@ -5,7 +5,7 @@ Uploaders: Guillem Jover <guillem@debian.org>
 Vcs-Browser: https://git.dpkg.org/cgit/dpkg/dpkg-repack.git
 Vcs-Git: https://git.dpkg.org/git/dpkg/dpkg-repack.git
 Homepage: https://wiki.debian.org/Teams/Dpkg
-Standards-Version: 4.7.0
+Standards-Version: 4.7.4
 Build-Depends:
  debhelper-compat (= 13),
  libtest-strict-perl <!nocheck>,
