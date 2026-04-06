@@ -41,6 +41,7 @@ my %tag = (
     description => 1,
     version => 0,
 );
+my $source_date_epoch = 0;
 
 sub usage()
 {
@@ -181,6 +182,17 @@ sub populate_deb_ctrl($pkgname, $build_dir, $inst, @conffiles)
 
     foreach my $fn (@control_files) {
         my ($basename) = $fn =~ m{^.*[.](.*?)$};
+
+        # XXX: We need to fetch the build date, but the Debian changelog is
+        # installed under a packaging controlled directory on the filesystem,
+        # which might be different depending on whether this is a native or
+        # non-native package. Instead we try to use the md5sums file which
+        # should always be present in the .deb.
+        if ($basename eq 'md5sums') {
+            my $st = stat $fn;
+            $source_date_epoch = $st->mtime;
+        }
+
         safe_system('cp', '-p', $fn, "$build_dir/DEBIAN/$basename");
     }
 
@@ -318,6 +330,8 @@ sub archive_package($pkgname)
         info("created $build_dir for $pkgname");
         info("to build use: \"@cmd\"");
     } else {
+        $ENV{SOURCE_DATE_EPOCH} = "$source_date_epoch" if $source_date_epoch;
+
         # Let dpkg-deb do its magic.
         safe_system(@cmd);
     }

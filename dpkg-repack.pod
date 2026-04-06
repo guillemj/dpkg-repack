@@ -32,6 +32,12 @@ conffiles files in /etc modified), the new package will inherit the changes.
 (There are exceptions to this, including changes to configuration files that
 are not conffiles, including those managed by L<ucf(1)>.)
 
+The tool will try to make the package reproducible towards its original,
+but any changes on the filesystem or the default B<--tag> option values,
+will prevent that.
+Using B<--tag=none> might make it possible to reproduce the original package,
+but it will not guarantee it.
+
 This utility can make it easy to copy packages from one computer to another,
 or to recreate packages that are installed on your system, but no longer
 available elsewhere.
@@ -80,6 +86,8 @@ been repackaged. The current list of I<thing>s to tag is:
 
 Tag nothing. This can be specified first to be augmented by more specific
 I<thing>s.
+
+This option is required to try to generate a reproducible package.
 
 =item B<description>
 
