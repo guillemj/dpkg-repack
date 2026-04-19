@@ -97,6 +97,8 @@ control file B<Description> field. This tag is enabled by default.
 =item B<version>
 
 Append a "+repack" tag to the package version.
+This option might invalidate versioned dependencies from other packages,
+for example B<Depends> or B<Breaks> relationships.
 
 =item B<all>
 
