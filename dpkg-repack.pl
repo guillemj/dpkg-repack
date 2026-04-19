@@ -48,16 +48,22 @@ sub usage()
 Usage: dpkg-repack [<option>...] <package-name>...
 
 Options:
-      --root=<dir>      Take package from filesystem rooted on <dir>.
-      --arch=<arch>     Force the package to be built for architecture <arch>.
-      --generate        Generate build directory but do not build deb.
-                          To build use: "dpkg-deb --build dpkg-repack.../ .".
-      --tag=<type>      Tag the package as being repackaged.
-                          Types: none, description, version, all.
+      --root=<dir>
+          Take package from filesystem rooted on <dir>.
+      --arch=<arch>
+          Force the package to be built for architecture <arch>.
+      --generate
+          Generate build directory but do not build deb. To build use:
+            "dpkg-deb --build dpkg-repack.../ .".
+      --tag=<type>
+          Tag the package as being repackaged. Types:
+            none, description, version, all.
   -d, --deb-option=<option>
-                        Pass build <option> to dpkg-deb.
-  -?, --help            Show this usage information.
-      --version         Show the version.
+          Pass build <option> to dpkg-deb.
+  -?, --help
+          Show this usage information.
+      --version
+          Show the version.
 
 <package-name> is the name of the package(s) to attempt to repack.
 USAGE
