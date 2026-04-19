@@ -5,6 +5,16 @@ Uploaders: Guillem Jover <guillem@debian.org>
 Vcs-Browser: https://git.dpkg.org/cgit/dpkg/dpkg-repack.git
 Vcs-Git: https://git.dpkg.org/git/dpkg/dpkg-repack.git
 Homepage: https://wiki.debian.org/Teams/Dpkg
+Description: Debian package archiving tool
+ dpkg-repack creates a .deb file out of a package that has already been
+ installed. If any changes have been made to the package while it was
+ unpacked (i.e. files in /etc were modified), the new package will inherit
+ the changes.
+ .
+ This utility can make it easy to copy packages from one computer to another,
+ or to recreate packages that are installed on your system, but no longer
+ available elsewhere, or to store the current state of a package before you
+ upgrade it.
 Standards-Version: 4.7.4
 Build-Depends:
  debhelper-compat (= 13),
@@ -20,13 +30,5 @@ Depends:
  libdpkg-perl,
 Suggests:
  fakeroot,
-Description: Debian package archiving tool
- dpkg-repack creates a .deb file out of a package that has already been
- installed. If any changes have been made to the package while it was
- unpacked (i.e. files in /etc were modified), the new package will inherit
- the changes.
- .
- This utility can make it easy to copy packages from one computer to another,
- or to recreate packages that are installed on your system, but no longer
- available elsewhere, or to store the current state of a package before you
- upgrade it.
+Description: ${source:Synopsis}
+ ${source:Extended-Description}
