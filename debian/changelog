@@ -1,3 +1,27 @@
+dpkg-repack (1.55) unstable; urgency=medium
+
+  * Rework --help output to list option descriptions on the next line.
+  * Infer the SOURCE_DATE_EPOCH from the md5sums file. Closes: #870750
+  * Documentation:
+    - man: Mention that version tagging might invalidate dependencies.
+    - man: Use L<> instead of B<>(N) to refer to external man pages.
+  * Code internals:
+    - Switch to «use v5.40» instead of «use strict» and «use warnings».
+    - Switch to use sub signatures.
+    - Use try/catch instead of eval/or-do.
+    - Update copyright years.
+  * Packaging:
+    - Remove «Rules-Requires-Root: no», which is the current default.
+    - Remove «Priority: optional», which is the current default.
+    - Remove build dependency on debhelper (>= 13.10), implied by
+      debhelper-compat (= 13) since Debian bookworm.
+    - Remove versioned Build-Depends on dpkg-dev, satisfied since Debian
+      trixie.
+    - Switch to Standards-Version 4.7.4 (no changed needed).
+    - Refactor common description into a source stanza Description field.
+
+ -- Guillem Jover <guillem@debian.org>  Mon, 20 Apr 2026 02:27:42 +0200
+
 dpkg-repack (1.54) unstable; urgency=medium
 
   * Fix Conffiles field regex.
